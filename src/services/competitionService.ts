@@ -19,8 +19,8 @@ interface ResponseWrapper {
 }
 
 export const competitionService = {
-  async getCompetitions(): Promise<Competition[]> {
-    const response = await api.get<ResponseWrapper>("/events?year=2025");
+  async getCompetitions(year: number): Promise<Competition[]> {
+    const response = await api.get<ResponseWrapper>(`/events?year=${year}`);
     const competitions = response.data.events.filter(
       (competition) =>
         competition !== null &&
