@@ -41,7 +41,7 @@ function RunnerDetailsPage() {
     <div className="px-4 py-6">
       <Breadcrumbs items={[
         { label: 'Home', path: '/competitions', isHome: true },
-        { label: 'Competition', path: `/competitions/${source}/${id}` },
+        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
         { label: category?.name || 'Category', path: `/competitions/${source}/${id}/categories/${categoryName}` },
         { label: runner.fullName, path: `/competitions/${source}/${id}/categories/${categoryName}/runners/${runnerId}` }
       ]} />

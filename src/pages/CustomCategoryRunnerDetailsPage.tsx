@@ -18,6 +18,7 @@ function CustomCategoryRunnerDetailsPage() {
   const customCategoryContext = useCustomCategory();
   
   const [runner, setRunner] = useState<ranking.RankingRunner | null>(null);
+  const [competition, setCompetition] = useState<{ name: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,6 +60,7 @@ function CustomCategoryRunnerDetailsPage() {
 
         // Fetch competition data
         const competition = await competitionService.getCompetitionById(source, id);
+        setCompetition({ name: competition.name });
 
         // Get selected category runners
         const selectedCats = competition.categories?.filter(cat => 
@@ -229,7 +231,7 @@ function CustomCategoryRunnerDetailsPage() {
     <div className="px-4 py-6">
       <Breadcrumbs items={[
         { label: 'Home', path: '/competitions', isHome: true },
-        { label: 'Competition', path: `/competitions/${source}/${id}` },
+        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
         { label: 'Custom Category', path: `/competitions/${source}/${id}/custom` },
         { label: runner.fullName, path: `/competitions/${source}/${id}/custom/runners/${runnerId}` }
       ]} />

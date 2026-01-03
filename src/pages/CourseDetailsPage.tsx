@@ -58,7 +58,8 @@ function CourseDetailsPage() {
     <div className="px-4 py-6">
       <Breadcrumbs items={[
         { label: 'Home', path: '/competitions', isHome: true },
-        { label: 'Competition', path: `/competitions/${source}/${id}` },
+        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
+        { label: 'Courses', path: `/competitions/${source}/${id}/courses` },
         { label: courseCode || 'Course', path: `/competitions/${source}/${id}/courses/${courseCode}` }
       ]} />
 

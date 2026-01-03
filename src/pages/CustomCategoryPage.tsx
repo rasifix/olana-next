@@ -1,45 +1,22 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Outlet } from 'react-router-dom';
-import { Competition, Runner } from '../types';
-import { competitionService } from '../services/competitionService';
+import { useParams, Outlet } from 'react-router-dom';
+import { Runner } from '../types';
 import { ranking, parseTime, formatTime } from '@rasifix/orienteering-utils';
 import SplitGraph from '../components/SplitGraph';
 import RankingTable from '../components/RankingTable';
 import { CustomCategoryProvider } from '../contexts/CustomCategoryContext';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { useCompetition } from '../contexts/CompetitionContext';
 
 function CustomCategoryPage() {
   const { source, id } = useParams<{ source: string; id: string }>();
-  const navigate = useNavigate();
-  const [competition, setCompetition] = useState<Competition | null>(null);
+  const { competition } = useCompetition();
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
   const [availableLegs, setAvailableLegs] = useState<string[]>([]);
   const [selectedLegs, setSelectedLegs] = useState<Set<string>>(new Set());
   const [rankedRunners, setRankedRunners] = useState<ranking.RankingRunner[] | null>(null);
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadCompetition = async () => {
-      if (!source || !id) return;
-
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await competitionService.getCompetitionById(source, id);
-        setCompetition(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load competition');
-        console.error('Error loading competition:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadCompetition();
-  }, [source, id]);
 
   // When categories are selected, find common legs
   useEffect(() => {
@@ -201,10 +178,8 @@ function CustomCategoryPage() {
       return timeA - timeB;
     });
 
-    console.log('Adjusted Runners:', sortedRunners);
     // Use parseRanking to calculate the ranking
     const ranked = ranking.parseRanking(sortedRunners);
-    console.log('parsed Ranking:', ranked);
     setRankedRunners(ranked.runners);
   };
 
@@ -231,32 +206,6 @@ function CustomCategoryPage() {
       .filter(Boolean);
   };
 
-  if (loading) {
-    return (
-      <div className="px-4 py-6">
-        <div className="flex justify-center items-center py-8">
-          <div className="text-gray-600">Loading competition...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !competition) {
-    return (
-      <div className="px-4 py-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          {error || 'Competition not found'}
-        </div>
-        <button
-          onClick={() => navigate(`/competitions/${source}/${id}`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to competition
-        </button>
-      </div>
-    );
-  }
-
   const categoriesParam = Array.from(selectedCategories).join(',');
   const legsParam = Array.from(selectedLegs).join(',');
 
@@ -268,7 +217,7 @@ function CustomCategoryPage() {
       <div className="px-4 py-6">
         <Breadcrumbs items={[
           { label: 'Home', path: '/competitions', isHome: true },
-          { label: 'Competition', path: `/competitions/${source}/${id}` },
+          { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
           { label: 'Custom Category', path: `/competitions/${source}/${id}/custom` }
         ]} />
 
@@ -283,7 +232,7 @@ function CustomCategoryPage() {
               1. Select Categories to Combine
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {competition.categories?.map(category => (
+              {competition!.categories?.map(category => (
                 <label
                   key={category.name}
                   className="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"

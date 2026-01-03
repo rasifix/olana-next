@@ -64,6 +64,7 @@ function CategoryDetailsPage() {
       <Breadcrumbs items={[
         { label: 'Home', path: '/competitions', isHome: true },
         { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
+        { label: 'Categories', path: `/competitions/${source}/${id}/categories` },
         { label: categoryName || 'Category', path: `/competitions/${source}/${id}/categories/${categoryName}` }
       ]} />
 

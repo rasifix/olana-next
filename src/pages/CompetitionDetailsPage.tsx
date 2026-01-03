@@ -4,6 +4,8 @@ import { competitionService } from '../services/competitionService';
 import LegsList from '../components/LegsList';
 import ControlsList from '../components/ControlsList';
 import Breadcrumbs from '../components/Breadcrumbs';
+import RunnersBadge from '../components/RunnersBadge';
+import CategoryCard from '../components/CategoryCard';
 import { useCompetition } from '../contexts/CompetitionContext';
 
 function CompetitionDetailsPage() {
@@ -115,36 +117,6 @@ function CompetitionDetailsPage() {
           </nav>
         </div>
 
-        {/* Courses Tab */}
-        {activeTab === 'courses' && (
-          <div>
-            {courses.length > 0 ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {courses.map((course) => (
-                  <Link
-                    key={course.id}
-                    to={`/competitions/${source}/${id}/courses/${encodeURIComponent(course.id)}`}
-                    className="bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-colors block"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 p-4">
-                        <h4 className="font-semibold text-gray-900">
-                          {course.name}
-                        </h4>
-                        <span className="text-sm text-gray-600">
-                          🎯 {course.controls} • 📏 {course.distance}m • ⛰️ {course.ascent}m • 🏃 {course.runners || 0}
-                        </span>
-                      </div>
-                    </div> 
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500">No courses available</p>
-            )}
-          </div>
-        )}
-
         {/* Categories Tab */}
         {activeTab === 'categories' && (
           <div>
@@ -156,21 +128,45 @@ function CompetitionDetailsPage() {
                     to={`/competitions/${source}/${id}/categories/${encodeURIComponent(category.name)}`}
                     className="bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-colors block"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 p-4">
-                        <h4 className="font-semibold text-gray-900">
-                          {category.name}
-                        </h4>
-                        <span className="text-sm text-gray-600">
-                          🎯 {category.controls} • 📏 {category.distance}m • ⛰️ {category.ascent}m • 🏃 {category.runners?.length || 0}
-                        </span>
-                      </div>
-                    </div> 
+                    <CategoryCard
+                      name={category.name}
+                      controls={category.controls}
+                      distance={category.distance}
+                      ascent={category.ascent}
+                      runnerCount={category.runners?.length || 0}
+                    />
                   </Link>
                 ))}
               </div>
             ) : (
               <p className="text-gray-500">No categories available</p>
+            )}
+          </div>
+        )}
+
+        {/* Courses Tab */}
+        {activeTab === 'courses' && (
+          <div>
+            {courses.length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {courses.map((course) => (
+                  <Link
+                    key={course.id}
+                    to={`/competitions/${source}/${id}/courses/${encodeURIComponent(course.id)}`}
+                    className="bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-colors block"
+                  >
+                    <CategoryCard
+                      name={course.name}
+                      controls={course.controls}
+                      distance={course.distance}
+                      ascent={course.ascent}
+                      runnerCount={course.runners || 0}
+                    />
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No courses available</p>
             )}
           </div>
         )}
