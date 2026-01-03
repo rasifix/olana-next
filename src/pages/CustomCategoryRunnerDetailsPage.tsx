@@ -166,8 +166,8 @@ function CustomCategoryRunnerDetailsPage() {
         }).filter((r) => r !== null);
 
         // Calculate ranking
-        const ranked = ranking.parseRanking(adjustedRunners as any);
-        const rankedRunner = ranked.runners.find((r: any) => r.id === runnerId);
+        const ranked = ranking.parseRanking(adjustedRunners);
+        const rankedRunner = ranked.runners.find((r) => r.id === runnerId);
         
         if (rankedRunner) {
           setRunner(rankedRunner);

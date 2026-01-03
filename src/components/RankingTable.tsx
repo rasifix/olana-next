@@ -100,7 +100,7 @@ function RankingTable({
             <tbody className="bg-white divide-y divide-gray-200">
               {runners.map((runner, index) => (
                 <tr 
-                  key={(runner as any).id || index} 
+                  key={runner.id || index} 
                   className={`hover:bg-gray-100 ${selectedRunners.has(index) ? 'bg-rust-50' : ''}`}
                 >
                   <td className="px-4 py-3 whitespace-nowrap text-sm">

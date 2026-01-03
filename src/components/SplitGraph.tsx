@@ -37,11 +37,8 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
   const graphData = useMemo(() => {
     if (runners.length === 0) return null;
 
-    // Debug: Log runner data
-    console.log('SplitGraph runners:', runners);
-
     // Calculate maximum spread across all runners
-    let spread = [Number.MAX_VALUE, Number.MIN_VALUE];
+    const spread = [Number.MAX_VALUE, Number.MIN_VALUE];
     runners.forEach(runner => {
       runner.splits?.forEach(split => {
         const seconds = split.overall?.idealBehind ?? 0;

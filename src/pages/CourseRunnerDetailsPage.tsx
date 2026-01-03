@@ -21,7 +21,7 @@ function CourseRunnerDetailsPage() {
     try {
       const courseData = competitionService.getCourseRankings(competition, courseCode);
       const ranked = ranking.parseRanking(courseData.runners || []);
-      const selectedRunner = ranked.runners.find((r: any) => r.id == runnerId) || null;
+      const selectedRunner = ranked.runners.find((r) => r.id == runnerId) || null;
       
       return { runner: selectedRunner, courseName: courseCode };
     } catch (err) {

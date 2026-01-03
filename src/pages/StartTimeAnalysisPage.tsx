@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { StartTimeRunner } from '../types';
 import { competitionService } from '../services/competitionService';
 import StartTimeGraph from '../components/StartTimeGraph';
 import Breadcrumbs from '../components/Breadcrumbs';

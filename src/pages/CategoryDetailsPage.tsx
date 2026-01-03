@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Category } from '../types';
 import { ranking } from '@rasifix/orienteering-utils';
 import SplitGraph from '../components/SplitGraph';
 import RankingTable from '../components/RankingTable';
@@ -101,7 +100,7 @@ function CategoryDetailsPage() {
             showYearColumn={true}
             renderName={(runner) => (
               <Link 
-                to={`/competitions/${source}/${id}/categories/${encodeURIComponent(categoryName!)}/runners/${(runner as any).id}`}
+                to={`/competitions/${source}/${id}/categories/${encodeURIComponent(categoryName!)}/runners/${runner.id}`}
                 className="text-rust-600 hover:text-rust-800 hover:underline"
               >
                 {runner.fullName}

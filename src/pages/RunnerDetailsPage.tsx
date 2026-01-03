@@ -24,7 +24,7 @@ function RunnerDetailsPage() {
     if (!foundCategory) return { category: null, runner: null };
     
     const ranked = ranking.parseRanking(foundCategory.runners || []);
-    const selectedRunner = ranked.runners.find((r: any) => r.id === runnerId) || null;
+    const selectedRunner = ranked.runners.find((r) => r.id === runnerId) || null;
     
     return { category: foundCategory, runner: selectedRunner };
   }, [competition, categoryName, runnerId]);

@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ControlDetails } from '../types';
 import { competitionService } from '../services/competitionService';
 import RunnersBadge from '../components/RunnersBadge';
 import LegCard from '../components/LegCard';

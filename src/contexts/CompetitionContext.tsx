@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useParams, Outlet } from 'react-router-dom';
 import { Competition } from '../types';
 import { competitionService } from '../services/competitionService';

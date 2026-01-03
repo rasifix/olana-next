@@ -8,7 +8,6 @@ import {
   Control,
   ControlDetails,
   StartTimeRunner,
-  StartTimeResponse,
 } from "../types";
 import { buildCourseSummaries, buildCourseDetails } from "./course-builder";
 import { buildLegs, buildDetailedLegs } from "./leg-builder";

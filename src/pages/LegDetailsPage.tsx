@@ -1,6 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { LegDetails } from '../types';
 import { competitionService } from '../services/competitionService';
 import { parseTime, formatTime } from '@rasifix/orienteering-utils';
 import Breadcrumbs from '../components/Breadcrumbs';
