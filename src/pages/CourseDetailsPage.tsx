@@ -1,51 +1,32 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Category } from '../types';
+import { useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { competitionService } from '../services/competitionService';
 import { ranking } from '@rasifix/orienteering-utils';
 import SplitGraph from '../components/SplitGraph';
 import RankingTable from '../components/RankingTable';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { useCompetition } from '../contexts/CompetitionContext';
 
 function CourseDetailsPage() {
   const { source, id, courseCode } = useParams<{ source: string; id: string; courseCode: string }>();
-  const navigate = useNavigate();
-  const [category, setCategory] = useState<Category | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [rankingData, setRankingData] = useState<ranking.Ranking | null>(null);
+  const { competition } = useCompetition();
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
 
-  useEffect(() => {
-    const loadCourse = async () => {
-      if (!source || !id || !courseCode) return;
+  const category = useMemo(() => {
+    if (!competition || !courseCode) return null;
+    try {
+      return competitionService.getCourseRankings(competition, courseCode);
+    } catch (err) {
+      console.error('Error loading course:', err);
+      return null;
+    }
+  }, [competition, courseCode]);
 
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await competitionService.getCourseRankings(source, id, courseCode);
-        console.log('Course data received:', data);
-        setCategory(data);
-        
-        // Calculate rankings for all runners in the course
-        if (data.runners && data.runners.length > 0) {
-          const parsed = ranking.parseRanking(data.runners);
-          console.log('Parsed ranking:', parsed);
-          setRankingData(parsed);
-        } else {
-          console.warn('No runners found in course data');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load course');
-        console.error('Error loading course:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadCourse();
-  }, [source, id, courseCode]);
+  const rankingData = useMemo(() => {
+    if (!category?.runners || category.runners.length === 0) return null;
+    return ranking.parseRanking(category.runners);
+  }, [category]);
 
   const handleRunnerToggle = (index: number) => {
     const newSelected = new Set(selectedRunners);
@@ -59,44 +40,12 @@ function CourseDetailsPage() {
     setSelectedRunners(newSelected);
   };
 
-  if (loading) {
-    return (
-      <div className="px-4 py-6">
-        <div className="flex justify-center items-center py-8">
-          <div className="text-gray-600">Loading course...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="px-4 py-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error loading course: {error}
-        </div>
-        <button
-          onClick={() => navigate(`/competitions/${source}/${id}`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to competition
-        </button>
-      </div>
-    );
-  }
-
   if (!category || !rankingData) {
     return (
       <div className="px-4 py-6">
         <div className="text-center py-8 text-gray-500">
           Course not found
         </div>
-        <button
-          onClick={() => navigate(`/competitions/${source}/${id}`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to competition
-        </button>
       </div>
     );
   }

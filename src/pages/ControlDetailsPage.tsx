@@ -1,63 +1,25 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { ControlDetails } from '../types';
 import { competitionService } from '../services/competitionService';
 import RunnersBadge from '../components/RunnersBadge';
 import LegCard from '../components/LegCard';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { useCompetition } from '../contexts/CompetitionContext';
 
 function ControlDetailsPage() {
   const { source, id, controlCode } = useParams<{ source: string; id: string; controlCode: string }>();
-  const navigate = useNavigate();
-  const [control, setControl] = useState<ControlDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { competition } = useCompetition();
 
-  useEffect(() => {
-    const loadControl = async () => {
-      if (!source || !id || !controlCode) return;
-
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await competitionService.getControlDetails(source, id, controlCode);
-        setControl(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load control');
-        console.error('Error loading control:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadControl();
-  }, [source, id, controlCode]);
-
-  if (loading) {
-    return (
-      <div className="px-4 py-6">
-        <div className="flex justify-center items-center py-8">
-          <div className="text-gray-600">Loading control details...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="px-4 py-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error loading control: {error}
-        </div>
-        <button
-          onClick={() => navigate(`/competitions/${source}/${id}/controls`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to controls
-        </button>
-      </div>
-    );
-  }
+  const control = useMemo(() => {
+    if (!competition || !controlCode) return null;
+    try {
+      return competitionService.getControlDetails(competition, controlCode);
+    } catch (err) {
+      console.error('Error loading control:', err);
+      return null;
+    }
+  }, [competition, controlCode]);
 
   if (!control) {
     return (
@@ -65,12 +27,6 @@ function ControlDetailsPage() {
         <div className="text-center py-8 text-gray-500">
           Control not found
         </div>
-        <button
-          onClick={() => navigate(`/competitions/${source}/${id}/controls`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to controls
-        </button>
       </div>
     );
   }

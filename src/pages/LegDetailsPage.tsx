@@ -4,36 +4,29 @@ import { LegDetails } from '../types';
 import { competitionService } from '../services/competitionService';
 import { parseTime, formatTime } from '@rasifix/orienteering-utils';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { useCompetition } from '../contexts/CompetitionContext';
 
 function LegDetailsPage() {
   const { source, id, legId } = useParams<{ source: string; id: string; legId: string }>();
   const navigate = useNavigate();
-  const [leg, setLeg] = useState<LegDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { competition } = useCompetition();
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
 
+  const leg = useMemo(() => {
+    if (!competition || !legId) return null;
+    try {
+      return competitionService.getLegDetails(competition, legId);
+    } catch (err) {
+      console.error('Error loading leg:', err);
+      return null;
+    }
+  }, [competition, legId]);
+
   useEffect(() => {
-    const loadLeg = async () => {
-      if (!source || !id || !legId) return;
-
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await competitionService.getLegDetails(source, id, legId);
-        setLeg(data);
-        // Initialize with all categories selected
-        setSelectedCategories(new Set(data.categories));
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load leg');
-        console.error('Error loading leg:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadLeg();
-  }, [source, id, legId]);
+    if (leg) {
+      setSelectedCategories(new Set(leg.categories));
+    }
+  }, [leg]);
 
   // Filter and recalculate rankings based on selected categories
   const filteredRunners = useMemo(() => {
@@ -112,32 +105,6 @@ function LegDetailsPage() {
     }
     return '-';
   };
-
-  if (loading) {
-    return (
-      <div className="px-4 py-6">
-        <div className="flex justify-center items-center py-8">
-          <div className="text-gray-600">Loading leg details...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="px-4 py-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error loading leg: {error}
-        </div>
-        <button
-          onClick={() => navigate(`/competitions/${source}/${id}`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to competition
-        </button>
-      </div>
-    );
-  }
 
   if (!leg) {
     return (

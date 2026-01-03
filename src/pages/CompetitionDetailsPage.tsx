@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
-import { Competition, Course, Leg, Control } from '../types';
 import { competitionService } from '../services/competitionService';
 import LegsList from '../components/LegsList';
 import ControlsList from '../components/ControlsList';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { useCompetition } from '../contexts/CompetitionContext';
 
 function CompetitionDetailsPage() {
   const { source, id, tab } = useParams<{ source: string; id: string; tab?: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const [competition, setCompetition] = useState<Competition | null>(null);
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [legs, setLegs] = useState<Leg[]>([]);
-  const [controls, setControls] = useState<Control[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { competition } = useCompetition();
 
   // Redirect to categories tab if no tab specified
   useEffect(() => {
@@ -26,86 +21,32 @@ function CompetitionDetailsPage() {
 
   const activeTab = tab || 'categories';
 
-  useEffect(() => {
-    const loadCompetition = async () => {
-      if (!source || !id) return;
+  // Calculate data from competition using useMemo
+  const courses = useMemo(() => {
+    if (!competition) return [];
+    return competitionService.getCourses(competition);
+  }, [competition]);
 
-      try {
-        setLoading(true);
-        setError(null);
-        const [competitionData, coursesData, legsData, controlsData] = await Promise.all([
-          competitionService.getCompetitionById(source, id),
-          competitionService.getCourses(source, id),
-          competitionService.getLegs(source, id),
-          competitionService.getControls(source, id)
-        ]);
-        setCompetition(competitionData);
-        setCourses(coursesData);
-        setLegs(legsData);
-        setControls(controlsData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load competition');
-        console.error('Error loading competition:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const legs = useMemo(() => {
+    if (!competition) return [];
+    return competitionService.getLegs(competition);
+  }, [competition]);
 
-    loadCompetition();
-  }, [source, id]);
-
-  if (loading) {
-    return (
-      <div className="px-4 py-6">
-        <div className="flex justify-center items-center py-8">
-          <div className="text-gray-600">Loading competition...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="px-4 py-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error loading competition: {error}
-        </div>
-        <button
-          onClick={() => navigate('/competitions')}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to competitions
-        </button>
-      </div>
-    );
-  }
-
-  if (!competition) {
-    return (
-      <div className="px-4 py-6">
-        <div className="text-center py-8 text-gray-500">
-          Competition not found
-        </div>
-        <button
-          onClick={() => navigate('/competitions')}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to competitions
-        </button>
-      </div>
-    );
-  }
+  const controls = useMemo(() => {
+    if (!competition) return [];
+    return competitionService.getControls(competition);
+  }, [competition]);
 
   return (
     <div className="px-4 py-6">
       <Breadcrumbs items={[
         { label: 'Home', path: '/competitions', isHome: true },
-        { label: competition.name, path: `/competitions/${source}/${id}` }
+        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` }
       ]} />
 
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          {competition.name}
+          {competition?.name}
         </h2>
 
         {/* Tab Navigation */}
@@ -119,7 +60,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Categories ({competition.categories?.length || 0})
+              Categories ({competition?.categories?.length || 0})
             </Link>
             <Link
               to={`/competitions/${source}/${id}/courses`}
@@ -207,7 +148,7 @@ function CompetitionDetailsPage() {
         {/* Categories Tab */}
         {activeTab === 'categories' && (
           <div>
-            {competition.categories && competition.categories.length > 0 ? (
+            {competition?.categories && competition.categories.length > 0 ? (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {competition.categories.map((category, index) => (
                   <Link

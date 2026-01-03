@@ -1,86 +1,31 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Competition, Category } from '../types';
-import { competitionService } from '../services/competitionService';
+import { useMemo, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { Category } from '../types';
 import { ranking } from '@rasifix/orienteering-utils';
 import SplitGraph from '../components/SplitGraph';
 import RankingTable from '../components/RankingTable';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { useCompetition } from '../contexts/CompetitionContext';
 
 
 function CategoryDetailsPage() {
   const { source, id, categoryName } = useParams<{ source: string; id: string; categoryName: string }>();
-  const navigate = useNavigate();
-  const [competition, setCompetition] = useState<Competition | null>(null);
-  const [category, setCategory] = useState<Category | null>(null);
-  const [rankedRunners, setRankedRunners] = useState<ranking.RankingRunner[]>([]);
+  const { competition } = useCompetition();
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadCategoryDetails = async () => {
-      if (!source || !id || !categoryName) return;
+  const category = useMemo(() => {
+    if (!competition || !categoryName) return null;
+    return competition.categories?.find(
+      cat => cat.name === decodeURIComponent(categoryName)
+    ) || null;
+  }, [competition, categoryName]);
 
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await competitionService.getCompetitionById(source, id);
-        setCompetition(data);
-
-        // Find the category by name
-        const foundCategory = data.categories?.find(
-          cat => cat.name === decodeURIComponent(categoryName)
-        );
-
-        if (foundCategory) {
-          setCategory(foundCategory);
-
-          // Calculate ranking using orienteering-utils
-          const runners = foundCategory.runners || [];
-          const ranked = ranking.parseRanking(runners);
-          console.log('Ranked:', ranked);
-          setRankedRunners(ranked.runners);
-        } else {
-          setError('Category not found');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load category');
-        console.error('Error loading category:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadCategoryDetails();
-  }, [source, id, categoryName]);
-
-  if (loading) {
-    return (
-      <div className="px-4 py-6">
-        <div className="flex justify-center items-center py-8">
-          <div className="text-gray-600">Loading category details...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="px-4 py-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error: {error}
-        </div>
-        <button
-          onClick={() => navigate(`/competitions/${source}/${id}`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to competition
-        </button>
-      </div>
-    );
-  }
+  const rankedRunners = useMemo(() => {
+    if (!category) return [];
+    const ranked = ranking.parseRanking(category.runners || []);
+    return ranked.runners;
+  }, [category]);
 
   if (!category) {
     return (
@@ -88,12 +33,6 @@ function CategoryDetailsPage() {
         <div className="text-center py-8 text-gray-500">
           Category not found
         </div>
-        <button
-          onClick={() => navigate(`/competitions/${source}/${id}`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
-        >
-          ← Back to competition
-        </button>
       </div>
     );
   }

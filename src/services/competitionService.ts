@@ -60,18 +60,11 @@ export const competitionService = {
     return response.data;
   },
 
-  async getCourses(source: string, id: string): Promise<Course[]> {
-    const competition = await this.getCompetitionById(source, id);
-    const courseSummaries = buildCourseSummaries(competition.categories || []);
-    return courseSummaries;
+  getCourses(competition: Competition): Course[] {
+    return buildCourseSummaries(competition.categories || []);
   },
 
-  async getCourseRankings(
-    source: string,
-    id: string,
-    courseCode: string
-  ): Promise<Category> {
-    const competition = await this.getCompetitionById(source, id);
+  getCourseRankings(competition: Competition, courseCode: string): Category {
     const courseDetails = buildCourseDetails(competition.categories || []);
     const course = courseDetails.find((c) => c.id === courseCode);
 
@@ -95,19 +88,13 @@ export const competitionService = {
     };
   },
 
-  async getLegs(source: string, id: string): Promise<Leg[]> {
-    const competition = await this.getCompetitionById(source, id);
+  getLegs(competition: Competition): Leg[] {
     const legs = buildLegs(competition.categories || []);
     console.log('getLegs result:', legs.slice(0, 2)); // Debug: check first 2 legs
     return legs;
   },
 
-  async getLegDetails(
-    source: string,
-    id: string,
-    legId: string
-  ): Promise<LegDetails> {
-    const competition = await this.getCompetitionById(source, id);
+  getLegDetails(competition: Competition, legId: string): LegDetails {
     const legs = buildDetailedLegs(competition.categories || []);
     const leg = legs.find((l) => l.id === legId);
 
@@ -131,30 +118,23 @@ export const competitionService = {
     };
   },
 
-  async getControls(source: string, id: string): Promise<Control[]> {
-    const competition = await this.getCompetitionById(source, id);
+  getControls(competition: Competition): Control[] {
     return defineControls(competition.categories || []);
   },
 
-  async getControlDetails(
-    source: string,
-    id: string,
-    controlCode: string
-  ): Promise<ControlDetails> {
-    const competition = await this.getCompetitionById(source, id);
+  getControlDetails(competition: Competition, controlCode: string): ControlDetails {
     return defineControl(competition.categories || [], controlCode);
   },
 
-  async getStartTimes(source: string, id: string): Promise<StartTimeRunner[]> {
-    const competition = await this.getCompetitionById(source, id);
-
+  getStartTimes(competition: Competition): StartTimeRunner[] {
     const result: StartTimeRunner[] = [];
+    const timeRegex = /^\d{1,2}:\d{2}(:\d{2})?$/;
 
     competition.categories.forEach((category) => {
       let last: number | null = null;
       let pos = 1;
       const filtered = category.runners.filter(
-        (runner) => parseTime(runner.time) !== null
+        (runner) => runner.time && timeRegex.test(runner.time)
       );
       filtered.forEach((runner, idx) => {
         if (last != null) {

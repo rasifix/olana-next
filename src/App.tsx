@@ -11,6 +11,7 @@ import CustomCategoryPage from './pages/CustomCategoryPage';
 import CustomCategoryRunnerDetailsPage from './pages/CustomCategoryRunnerDetailsPage';
 import StartTimeAnalysisPage from './pages/StartTimeAnalysisPage';
 import CompassLogo from './components/CompassLogo';
+import { CompetitionProvider } from './contexts/CompetitionContext';
 
 function App() {
   return (
@@ -28,17 +29,19 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/competitions" replace />} />
               <Route path="/competitions" element={<CompetitionsPage />} />
-              <Route path="/competitions/:source/:id" element={<CompetitionDetailsPage />} />
-              <Route path="/competitions/:source/:id/:tab" element={<CompetitionDetailsPage />} />
-              <Route path="/competitions/:source/:id/courses/:courseCode" element={<CourseDetailsPage />} />
-              <Route path="/competitions/:source/:id/courses/:courseCode/runners/:runnerId" element={<CourseRunnerDetailsPage />} />
-              <Route path="/competitions/:source/:id/categories/:categoryName" element={<CategoryDetailsPage />} />
-              <Route path="/competitions/:source/:id/categories/:categoryName/runners/:runnerId" element={<RunnerDetailsPage />} />
-              <Route path="/competitions/:source/:id/legs/:legId" element={<LegDetailsPage />} />
-              <Route path="/competitions/:source/:id/controls/:controlCode" element={<ControlDetailsPage />} />
-              <Route path="/competitions/:source/:id/custom" element={<CustomCategoryPage />} />
-              <Route path="/competitions/:source/:id/custom/runners/:runnerId" element={<CustomCategoryRunnerDetailsPage />} />
-              <Route path="/competitions/:source/:id/starttime" element={<StartTimeAnalysisPage />} />
+              <Route path="/competitions/:source/:id" element={<CompetitionProvider />}>
+                <Route index element={<CompetitionDetailsPage />} />
+                <Route path=":tab" element={<CompetitionDetailsPage />} />
+                <Route path="courses/:courseCode" element={<CourseDetailsPage />} />
+                <Route path="courses/:courseCode/runners/:runnerId" element={<CourseRunnerDetailsPage />} />
+                <Route path="categories/:categoryName" element={<CategoryDetailsPage />} />
+                <Route path="categories/:categoryName/runners/:runnerId" element={<RunnerDetailsPage />} />
+                <Route path="legs/:legId" element={<LegDetailsPage />} />
+                <Route path="controls/:controlCode" element={<ControlDetailsPage />} />
+                <Route path="custom" element={<CustomCategoryPage />} />
+                <Route path="custom/runners/:runnerId" element={<CustomCategoryRunnerDetailsPage />} />
+                <Route path="starttime" element={<StartTimeAnalysisPage />} />
+              </Route>
             </Routes>
           </div>
         </main>
