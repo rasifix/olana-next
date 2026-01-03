@@ -4,9 +4,11 @@ import { Competition } from '../types';
 interface CustomCategoryBuilderProps {
   competition: Competition;
   onComplete: (categories: string[], legs: string[]) => void;
+  onCancel: () => void;
 }
 
-function CustomCategoryBuilder({ competition, onComplete }: CustomCategoryBuilderProps) {
+function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCategoryBuilderProps) {
+  const [currentStep, setCurrentStep] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
   const [availableLegs, setAvailableLegs] = useState<string[]>([]);
   const [selectedLegs, setSelectedLegs] = useState<Set<string>>(new Set());
@@ -139,90 +141,181 @@ function CustomCategoryBuilder({ competition, onComplete }: CustomCategoryBuilde
     onComplete(Array.from(selectedCategories), Array.from(selectedLegs));
   };
 
+  const handleNext = () => {
+    if (currentStep === 1 && selectedCategories.size > 0) {
+      setCurrentStep(2);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep === 2) {
+      setCurrentStep(1);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">
-        Custom Category Builder
-      </h2>
-
-      {/* Step 1: Select Categories */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          1. Select Categories to Combine
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {competition.categories?.map(category => {
-            const commonLegsCount = categoryCommonLegsCount.get(category.name) || 0;
-            const isDisabled = selectedCategories.size > 0 && !selectedCategories.has(category.name) && commonLegsCount < 2;
-            
-            return (
-              <label
-                key={category.name}
-                className={`flex items-center gap-2 p-3 border border-gray-200 rounded-lg ${
-                  isDisabled 
-                    ? 'bg-gray-100 cursor-not-allowed opacity-50' 
-                    : 'hover:bg-gray-50 cursor-pointer'
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.has(category.name)}
-                  onChange={() => handleCategoryToggle(category.name)}
-                  disabled={isDisabled}
-                  className="h-4 w-4 text-rust-600 focus:ring-rust-500 border-gray-300 rounded disabled:cursor-not-allowed"
-                />
-                <span className="text-sm font-medium text-gray-900 flex-1">
-                  {category.name}
-                </span>
-                {selectedCategories.size > 0 && !selectedCategories.has(category.name) && (
-                  <span className="text-xs text-gray-500">
-                    ({commonLegsCount} legs)
-                  </span>
-                )}
-              </label>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Step 2: Select Legs */}
-      {selectedCategories.size > 0 && availableLegs.length > 0 && (
-        <div className="mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            2. Select Legs ({availableLegs.length} common legs found)
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-            {availableLegs.map(leg => (
-              <label
-                key={leg}
-                className="flex items-center gap-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedLegs.has(leg)}
-                  onChange={() => handleLegToggle(leg)}
-                  className="h-4 w-4 text-rust-600 focus:ring-rust-500 border-gray-300 rounded"
-                />
-                <span className="text-sm font-medium text-gray-900">
-                  {leg}
-                </span>
-              </label>
-            ))}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Custom Category Builder
+            </h2>
+            <button
+              onClick={onCancel}
+              className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+            >
+              ×
+            </button>
+          </div>
+          
+          {/* Step indicator */}
+          <div className="mt-4 flex items-center">
+            <div className="flex items-center">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold ${
+                currentStep === 1 ? 'bg-rust-600 text-white' : 'bg-green-600 text-white'
+              }`}>
+                {currentStep > 1 ? '✓' : '1'}
+              </div>
+              <span className={`ml-2 text-sm font-medium ${
+                currentStep === 1 ? 'text-gray-900' : 'text-gray-500'
+              }`}>
+                Select Categories
+              </span>
+            </div>
+            <div className="flex-1 h-0.5 bg-gray-300 mx-4"></div>
+            <div className="flex items-center">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold ${
+                currentStep === 2 ? 'bg-rust-600 text-white' : 'bg-gray-300 text-gray-600'
+              }`}>
+                2
+              </div>
+              <span className={`ml-2 text-sm font-medium ${
+                currentStep === 2 ? 'text-gray-900' : 'text-gray-500'
+              }`}>
+                Select Legs
+              </span>
+            </div>
           </div>
         </div>
-      )}
 
-      {/* Step 3: Create Button */}
-      {selectedCategories.size > 0 && selectedLegs.size > 0 && (
-        <div className="mb-8">
-          <button
-            onClick={handleCreate}
-            className="bg-rust-600 text-white px-6 py-3 rounded-lg hover:bg-rust-700 transition-colors font-semibold"
-          >
-            Create Custom Category
-          </button>
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          {currentStep === 1 && (
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Select Categories to Combine
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Choose the categories you want to combine. Categories with no common legs will be disabled.
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {competition.categories?.map(category => {
+                  const commonLegsCount = categoryCommonLegsCount.get(category.name) || 0;
+                  const isDisabled = selectedCategories.size > 0 && !selectedCategories.has(category.name) && commonLegsCount < 2;
+                  
+                  return (
+                    <label
+                      key={category.name}
+                      className={`flex items-center gap-2 p-3 border border-gray-200 rounded-lg ${
+                        isDisabled 
+                          ? 'bg-gray-100 cursor-not-allowed opacity-50' 
+                          : 'hover:bg-gray-50 cursor-pointer'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.has(category.name)}
+                        onChange={() => handleCategoryToggle(category.name)}
+                        disabled={isDisabled}
+                        className="h-4 w-4 text-rust-600 focus:ring-rust-500 border-gray-300 rounded disabled:cursor-not-allowed"
+                      />
+                      <span className="text-sm font-medium text-gray-900 flex-1">
+                        {category.name}
+                      </span>
+                      {selectedCategories.size > 0 && !selectedCategories.has(category.name) && (
+                        <span className="text-xs text-gray-500">
+                          ({commonLegsCount} legs)
+                        </span>
+                      )}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {currentStep === 2 && (
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Select Legs ({availableLegs.length} common legs found)
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Choose which legs to include in your custom category. All legs are selected by default.
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {availableLegs.map(leg => (
+                  <label
+                    key={leg}
+                    className="flex items-center gap-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedLegs.has(leg)}
+                      onChange={() => handleLegToggle(leg)}
+                      className="h-4 w-4 text-rust-600 focus:ring-rust-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm font-medium text-gray-900">
+                      {leg}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Footer */}
+        <div className="px-6 py-4 border-t border-gray-200 flex justify-between">
+          <div>
+            {currentStep === 2 && (
+              <button
+                onClick={handleBack}
+                className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium"
+              >
+                ← Back
+              </button>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={onCancel}
+              className="px-4 py-2 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg font-medium"
+            >
+              Cancel
+            </button>
+            {currentStep === 1 && (
+              <button
+                onClick={handleNext}
+                disabled={selectedCategories.size === 0}
+                className="px-6 py-2 bg-rust-600 text-white rounded-lg hover:bg-rust-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold"
+              >
+                Next →
+              </button>
+            )}
+            {currentStep === 2 && (
+              <button
+                onClick={handleCreate}
+                disabled={selectedLegs.size === 0}
+                className="px-6 py-2 bg-rust-600 text-white rounded-lg hover:bg-rust-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold"
+              >
+                Create Custom Category
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -17,20 +17,24 @@ function CustomCategoryPage() {
   const [rankedRunners, setRankedRunners] = useState<ranking.RankingRunner[] | null>(null);
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
+  const [showBuilder, setShowBuilder] = useState(false);
 
   const hasCustomCategory = selectedCategories.length > 0 && selectedLegs.length > 0;
 
   const handleBuilderComplete = (categories: string[], legs: string[]) => {
     setSelectedCategories(categories);
     setSelectedLegs(legs);
+    setShowBuilder(false);
     // Automatically calculate ranking
     calculateRanking(categories, legs);
   };
 
   const handleEdit = () => {
-    setSelectedCategories([]);
-    setSelectedLegs([]);
-    setRankedRunners(null);
+    setShowBuilder(true);
+  };
+
+  const handleBuilderCancel = () => {
+    setShowBuilder(false);
   };
 
   const calculateRanking = (categories: string[], legs: string[]) => {
@@ -160,10 +164,20 @@ function CustomCategoryPage() {
         ]} />
 
         {!hasCustomCategory ? (
-          <CustomCategoryBuilder 
-            competition={competition!} 
-            onComplete={handleBuilderComplete}
-          />
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Custom Category
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Create a custom category by combining legs from multiple categories.
+            </p>
+            <button
+              onClick={() => setShowBuilder(true)}
+              className="bg-rust-600 text-white px-6 py-3 rounded-lg hover:bg-rust-700 transition-colors font-semibold"
+            >
+              Create Custom Category
+            </button>
+          </div>
         ) : (
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex justify-between items-center mb-6">
@@ -209,6 +223,14 @@ function CustomCategoryPage() {
           <SplitGraph
             runners={getSelectedRunners()}
             onClose={() => setShowGraph(false)}
+          />
+        )}
+
+        {showBuilder && (
+          <CustomCategoryBuilder 
+            competition={competition!} 
+            onComplete={handleBuilderComplete}
+            onCancel={handleBuilderCancel}
           />
         )}
       </div>
