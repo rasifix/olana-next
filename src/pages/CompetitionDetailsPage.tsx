@@ -4,7 +4,6 @@ import { competitionService } from '../services/competitionService';
 import LegsList from '../components/LegsList';
 import ControlsList from '../components/ControlsList';
 import Breadcrumbs from '../components/Breadcrumbs';
-import RunnersBadge from '../components/RunnersBadge';
 import CategoryCard from '../components/CategoryCard';
 import { useCompetition } from '../contexts/CompetitionContext';
 
