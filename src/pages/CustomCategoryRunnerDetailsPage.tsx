@@ -247,6 +247,9 @@ function CustomCategoryRunnerDetailsPage() {
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {runner.fullName}
         </h2>
+        <p className="text-gray-900 font-semibold mb-2">
+          Final Time: {runner.time}
+        </p>
         <p className="text-red-800 font-semibold mb-2">
           Error: {runner.errorTime ? runner.errorTime : '00:00'}
         </p>
