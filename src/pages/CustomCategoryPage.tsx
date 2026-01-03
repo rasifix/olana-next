@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, Outlet } from 'react-router-dom';
 import { Runner } from '../types';
 import { ranking, parseTime, formatTime } from '@rasifix/orienteering-utils';
@@ -17,6 +17,59 @@ function CustomCategoryPage() {
   const [rankedRunners, setRankedRunners] = useState<ranking.RankingRunner[] | null>(null);
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
+
+  // Calculate legs for each category
+  const categoryLegsMap = useMemo(() => {
+    if (!competition) return new Map<string, Set<string>>();
+    
+    const map = new Map<string, Set<string>>();
+    competition.categories?.forEach(cat => {
+      const legs = new Set<string>();
+      cat.runners?.forEach(runner => {
+        const splits = runner.splits || [];
+        if (splits.length > 0) {
+          legs.add(`St-${splits[0].code}`);
+          for (let i = 1; i < splits.length; i++) {
+            legs.add(`${splits[i-1].code}-${splits[i].code}`);
+          }
+        }
+      });
+      map.set(cat.name, legs);
+    });
+    return map;
+  }, [competition]);
+
+  // Calculate common legs count for each category given current selection
+  const categoryCommonLegsCount = useMemo(() => {
+    if (selectedCategories.size === 0) {
+      return new Map<string, number>();
+    }
+
+    const map = new Map<string, number>();
+    const selectedLegsArray = Array.from(selectedCategories).map(name => categoryLegsMap.get(name)!);
+    
+    competition?.categories?.forEach(cat => {
+      const catLegs = categoryLegsMap.get(cat.name);
+      if (!catLegs) {
+        map.set(cat.name, 0);
+        return;
+      }
+
+      // If this category is already selected, show its own leg count
+      if (selectedCategories.has(cat.name)) {
+        map.set(cat.name, catLegs.size);
+        return;
+      }
+
+      // Calculate common legs between selected categories and this category
+      const commonLegs = Array.from(catLegs).filter(leg =>
+        selectedLegsArray.every(selectedLegSet => selectedLegSet.has(leg))
+      );
+      map.set(cat.name, commonLegs.length);
+    });
+
+    return map;
+  }, [competition, selectedCategories, categoryLegsMap]);
 
   // When categories are selected, find common legs
   useEffect(() => {
@@ -132,11 +185,13 @@ function CustomCategoryPage() {
       const adjustedSplits: { code: string; time: string }[] = [];
       let cumulativeTime = 0;
       
-      for (let i = 0; i < runnerLegs.length; i++) {
-        const leg = runnerLegs[i];
+      for (let i = 0; i < originalSplits.length; i++) {
         const split = originalSplits[i];
         const splitTime = parseTime(split.time)!;
         const legTime = i === 0 ? splitTime : (splitTime - parseTime(originalSplits[i-1].time)!);
+        
+        // Determine the leg for this split
+        const leg = i === 0 ? `St-${split.code}` : `${originalSplits[i-1].code}-${split.code}`;
         
         if (selectedLegs.has(leg)) {
           // This leg is selected, include its endpoint split
@@ -145,8 +200,6 @@ function CustomCategoryPage() {
             code: split.code,
             time: formatTime(cumulativeTime)
           });
-        } else {
-          // This leg is not selected, skip it (don't add time or split)
         }
       }
 
@@ -232,22 +285,37 @@ function CustomCategoryPage() {
               1. Select Categories to Combine
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {competition!.categories?.map(category => (
-                <label
-                  key={category.name}
-                  className="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.has(category.name)}
-                    onChange={() => handleCategoryToggle(category.name)}
-                    className="h-4 w-4 text-rust-600 focus:ring-rust-500 border-gray-300 rounded"
-                  />
-                  <span className="text-sm font-medium text-gray-900">
-                    {category.name}
-                  </span>
-                </label>
-              ))}
+              {competition!.categories?.map(category => {
+                const commonLegsCount = categoryCommonLegsCount.get(category.name) || 0;
+                const isDisabled = selectedCategories.size > 0 && !selectedCategories.has(category.name) && commonLegsCount === 0;
+                
+                return (
+                  <label
+                    key={category.name}
+                    className={`flex items-center gap-2 p-3 border border-gray-200 rounded-lg ${
+                      isDisabled 
+                        ? 'bg-gray-100 cursor-not-allowed opacity-50' 
+                        : 'hover:bg-gray-50 cursor-pointer'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedCategories.has(category.name)}
+                      onChange={() => handleCategoryToggle(category.name)}
+                      disabled={isDisabled}
+                      className="h-4 w-4 text-rust-600 focus:ring-rust-500 border-gray-300 rounded disabled:cursor-not-allowed"
+                    />
+                    <span className="text-sm font-medium text-gray-900 flex-1">
+                      {category.name}
+                    </span>
+                    {selectedCategories.size > 0 && !selectedCategories.has(category.name) && (
+                      <span className="text-xs text-gray-500">
+                        ({commonLegsCount} legs)
+                      </span>
+                    )}
+                  </label>
+                );
+              })}
             </div>
           </div>
 

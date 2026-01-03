@@ -190,37 +190,6 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
               </g>
             ))}
 
-            {/* Bars for each leg */}
-            {comparisonData.map((d, i) => {
-              const x = padding.left + (i + 0.5) * (chartWidth / comparisonData.length) - barWidth / 2;
-              const barY = d.timeDifference >= 0 ? getBarY(d.timeDifference) : zeroY;
-              const height = getBarHeight(d.timeDifference);
-              const color = d.timeDifference >= 0 ? '#10B981' : '#EF4444';
-
-              return (
-                <g key={i}>
-                  <rect
-                    x={x}
-                    y={barY}
-                    width={barWidth}
-                    height={height}
-                    fill={color}
-                    opacity="0.7"
-                  />
-                  <text
-                    x={x + barWidth / 2}
-                    y={barY + (d.timeDifference >= 0 ? -5 : height + 15)}
-                    textAnchor="middle"
-                    fontSize="11"
-                    fill={color}
-                    fontWeight="600"
-                  >
-                    {d.timeDifference > 0 ? '+' : ''}{formatTime(Math.abs(d.timeDifference))}
-                  </text>
-                </g>
-              );
-            })}
-
             {/* Cumulative line */}
             <polyline
               points={getCumulativeLinePoints()}
@@ -245,6 +214,37 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
                   stroke="white"
                   strokeWidth="2"
                 />
+              );
+            })}
+
+            {/* Bars for each leg */}
+            {comparisonData.map((d, i) => {
+              const x = padding.left + (i + 0.5) * (chartWidth / comparisonData.length) - barWidth / 2;
+              const barY = d.timeDifference >= 0 ? getBarY(d.timeDifference) : zeroY;
+              const height = getBarHeight(d.timeDifference);
+              const color = d.timeDifference >= 0 ? '#10B981' : '#EF4444';
+
+              return (
+                <g key={i}>
+                  <rect
+                    x={x}
+                    y={barY}
+                    width={barWidth}
+                    height={height}
+                    fill={color}
+                    opacity="0.5"
+                  />
+                  <text
+                    x={x + barWidth / 2}
+                    y={barY + (d.timeDifference >= 0 ? -5 : height + 15)}
+                    textAnchor="middle"
+                    fontSize="11"
+                    fill={color}
+                    fontWeight="600"
+                  >
+                    {d.timeDifference > 0 ? '+' : ''}{formatTime(Math.abs(d.timeDifference))}
+                  </text>
+                </g>
               );
             })}
 
