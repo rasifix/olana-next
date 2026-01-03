@@ -48,9 +48,9 @@ export interface ControlCategory {
 export interface ControlLeg {
   code: string;
   leg: string;
-  categories: string;
+  categories: string[];
   runners: number;
-  errors: number;
+  errors?: number;
   errorFrequency: number;
 }
 

@@ -1,33 +1,57 @@
-import api from './api';
-import { Competition, Course, Category, Leg, LegDetails, Control, ControlDetails, StartTimeRunner, StartTimeResponse } from '../types';
-import { buildCourseSummaries, buildCourseDetails } from './course-builder';
-import { buildLegs, buildDetailedLegs } from './leg-builder';
-import { parseTime } from '@rasifix/orienteering-utils';
+import api from "./api";
+import {
+  Competition,
+  Course,
+  Category,
+  Leg,
+  LegDetails,
+  Control,
+  ControlDetails,
+  StartTimeRunner,
+  StartTimeResponse,
+} from "../types";
+import { buildCourseSummaries, buildCourseDetails } from "./course-builder";
+import { buildLegs, buildDetailedLegs } from "./leg-builder";
+import defineControl, { defineControls } from "./control-builder";
+import { parseTime } from "@rasifix/orienteering-utils";
 
 interface ResponseWrapper {
-    events: Competition[];
+  events: Competition[];
 }
 
 export const competitionService = {
   async getCompetitions(): Promise<Competition[]> {
-    const response = await api.get<ResponseWrapper>('/events?year=2025');
-    const competitions = response.data.events.filter(competition => competition !== null && competition.date && competition.name && competition.name !== 'TEST OL' && competition.name !== 'tom test' && competition.name !== 'test OL');
-    
+    const response = await api.get<ResponseWrapper>("/events?year=2025");
+    const competitions = response.data.events.filter(
+      (competition) =>
+        competition !== null &&
+        competition.date &&
+        competition.name &&
+        competition.name !== "TEST OL" &&
+        competition.name !== "tom test" &&
+        competition.name !== "test OL"
+    );
+
     // Deduplicate by name and date, preferring picoevents source
     const deduplicated = new Map<string, Competition>();
-    
+
     for (const competition of competitions) {
-      const key = `${competition.name}_${new Date(competition.date).toISOString()}`;
+      const key = `${competition.name}_${new Date(
+        competition.date
+      ).toISOString()}`;
       const existing = deduplicated.get(key);
-      
+
       if (!existing) {
         deduplicated.set(key, competition);
-      } else if (competition.source === 'picoevents' && existing.source !== 'picoevents') {
+      } else if (
+        competition.source === "picoevents" &&
+        existing.source !== "picoevents"
+      ) {
         // Prefer picoevents source over others
         deduplicated.set(key, competition);
       }
     }
-    
+
     return Array.from(deduplicated.values());
   },
 
@@ -42,11 +66,15 @@ export const competitionService = {
     return courseSummaries;
   },
 
-  async getCourseRankings(source: string, id: string, courseCode: string): Promise<Category> {
+  async getCourseRankings(
+    source: string,
+    id: string,
+    courseCode: string
+  ): Promise<Category> {
     const competition = await this.getCompetitionById(source, id);
     const courseDetails = buildCourseDetails(competition.categories || []);
-    const course = courseDetails.find(c => c.id === courseCode);
-    
+    const course = courseDetails.find((c) => c.id === courseCode);
+
     if (!course) {
       throw new Error(`Course ${courseCode} not found`);
     }
@@ -56,67 +84,96 @@ export const competitionService = {
       const timeB = parseTime(b.time) || Number.MAX_VALUE;
       return timeA - timeB;
     });
-    
+
     // Return course data in Category format for compatibility
     return {
       name: course.name,
       controls: course.controls,
       distance: course.distance,
       ascent: course.ascent,
-      runners: course.runners
+      runners: course.runners,
     };
   },
 
   async getLegs(source: string, id: string): Promise<Leg[]> {
     const competition = await this.getCompetitionById(source, id);
-    const legs = buildLegs(competition.categories || []);
-    return legs;
+    return buildLegs(competition.categories || []);
   },
 
-  async getLegDetails(source: string, id: string, legId: string): Promise<LegDetails> {
+  async getLegDetails(
+    source: string,
+    id: string,
+    legId: string
+  ): Promise<LegDetails> {
     const competition = await this.getCompetitionById(source, id);
     const legs = buildDetailedLegs(competition.categories || []);
-    const leg = legs.find(l => l.id === legId);
-    
+    const leg = legs.find((l) => l.id === legId);
+
     if (!leg) {
       throw new Error(`Leg ${legId} not found`);
     }
-    
+
     return {
       id: leg.id,
       from: leg.from,
       to: leg.to,
       categories: leg.categories,
-      runners: leg.runners.map(r => ({
+      runners: leg.runners.map((r) => ({
         ...r,
         id: Number(r.id) || 0,
-        yearOfBirth: r.yearOfBirth?.toString() || '',
-        city: r.city || '',
-        club: r.club || '',
-        splitRank: r.splitRank || 0
-      }))
+        yearOfBirth: r.yearOfBirth?.toString() || "",
+        city: r.city || "",
+        club: r.club || "",
+        splitRank: r.splitRank || 0,
+      })),
     };
   },
 
   async getControls(source: string, id: string): Promise<Control[]> {
-    const response = await api.get<Control[]>(`/events/${source}/${id}/controls`);
-    return response.data;
+    const competition = await this.getCompetitionById(source, id);
+    return defineControls(competition.categories || []);
   },
 
-  async getControlDetails(source: string, id: string, controlCode: string): Promise<ControlDetails> {
-    const response = await api.get<ControlDetails>(`/events/${source}/${id}/controls/${controlCode}`);
-    return response.data;
+  async getControlDetails(
+    source: string,
+    id: string,
+    controlCode: string
+  ): Promise<ControlDetails> {
+    const competition = await this.getCompetitionById(source, id);
+    return defineControl(competition.categories || [], controlCode);
   },
 
   async getStartTimes(source: string, id: string): Promise<StartTimeRunner[]> {
-    const response = await api.get<StartTimeResponse>(`/events/${source}/${id}/starttime`);
-    // Flatten the categories array into a single array of runners
-    const allRunners = response.data.categories.flatMap(category => 
-      category.runners.map(runner => ({
-        ...runner,
-        category: category.name // Ensure category name is set from the parent
-      }))
-    );
-    return allRunners;
+    const competition = await this.getCompetitionById(source, id);
+
+    const result: StartTimeRunner[] = [];
+
+    competition.categories.forEach((category) => {
+      let last: number | null = null;
+      let pos = 1;
+      const filtered = category.runners.filter(
+        (runner) => parseTime(runner.time) !== null
+      );
+      filtered.forEach((runner, idx) => {
+        if (last != null) {
+          if ((parseTime(runner.time) ?? 0) > last) {
+            pos = idx + 1;
+          }
+        }
+        const point = {
+          id: runner.id,
+          startTime: runner.startTime!,
+          time: runner.time!,
+          rank: pos,
+          fullName: runner.fullName,
+          sex: runner.sex,
+          category: category.name,
+        };
+        last = parseTime(runner.time)!;
+        result.push(point);
+      });
+    });
+
+    return result;
   },
 };

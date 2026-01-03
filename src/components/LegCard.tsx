@@ -3,7 +3,7 @@ import ErrorFrequencyBar from './ErrorFrequencyBar';
 
 interface LegCardProps {
   title: string;
-  categories: string;
+  categories: string[];
   runners: number;
   errorFrequency: number;
 }
@@ -17,7 +17,7 @@ function LegCard({ title, categories, runners, errorFrequency }: LegCardProps) {
             {title}
           </h4>
           <div className="text-sm text-gray-600 mt-1">
-            <span><span className="font-medium">Categories:</span> {categories}</span>
+            <span><span className="font-medium">Categories:</span> {categories.join(', ')}</span>
           </div>
         </div>
         <div className="text-right">
