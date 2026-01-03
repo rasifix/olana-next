@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ranking, parseTime, formatTime } from '@rasifix/orienteering-utils';
+import { ranking, formatTime } from '@rasifix/orienteering-utils';
 
 interface RunnerComparisonGraphProps {
   currentRunner: ranking.RankingRunner;
@@ -11,6 +11,7 @@ interface LegComparison {
   legName: string;
   timeDifference: number; // positive if current runner is faster, negative if slower
   cumulativeTimeDifference: number;
+  performanceIndexDiff: number; // difference in performance index
 }
 
 function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: RunnerComparisonGraphProps) {
@@ -37,12 +38,18 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
       const timeDiff = comparisonLegTime - currentLegTime;
       cumulativeTimeDiff += timeDiff;
 
+      // Performance index difference
+      const currentPI = currentSplit.performanceIndex || 100;
+      const comparisonPI = comparisonSplit.performanceIndex || 100;
+      const performanceIndexDiff = Math.abs(currentPI - comparisonPI);
+
       const legName = `${currentSplit.code}`;
 
       data.push({
         legName,
         timeDifference: timeDiff,
-        cumulativeTimeDifference: cumulativeTimeDiff
+        cumulativeTimeDifference: cumulativeTimeDiff,
+        performanceIndexDiff
       });
     }
 
@@ -222,7 +229,22 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
               const x = padding.left + (i + 0.5) * (chartWidth / comparisonData.length) - barWidth / 2;
               const barY = d.timeDifference >= 0 ? getBarY(d.timeDifference) : zeroY;
               const height = getBarHeight(d.timeDifference);
-              const color = d.timeDifference >= 0 ? '#10B981' : '#EF4444';
+              
+              // Calculate lightness based on performance index difference
+              // Performance index difference ranges from 0 to 100+
+              // We'll map 0-50% difference to varying lightness levels
+              // Higher difference = darker color, lower difference = lighter color
+              const maxPIDiff = 50; // Cap at 50% difference for lightness scaling
+              const normalizedDiff = Math.min(d.performanceIndexDiff, maxPIDiff) / maxPIDiff;
+              
+              // Lightness ranges from 70% (low difference, lighter) to 40% (high difference, darker)
+              const maxLightness = 70;
+              const minLightness = 40;
+              const lightness = maxLightness - (normalizedDiff * (maxLightness - minLightness));
+              
+              // Use HSL color format with constant saturation
+              const baseColor = d.timeDifference >= 0 ? 'hsl(142, 70%, ' : 'hsl(0, 70%, '; // green or red
+              const color = `${baseColor}${lightness}%)`;
 
               return (
                 <g key={i}>
@@ -232,7 +254,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
                     width={barWidth}
                     height={height}
                     fill={color}
-                    opacity="0.5"
+                    opacity="0.85"
                   />
                   <text
                     x={x + barWidth / 2}
