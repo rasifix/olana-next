@@ -153,7 +153,7 @@ function CustomCategoryBuilder({ competition, onComplete }: CustomCategoryBuilde
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {competition.categories?.map(category => {
             const commonLegsCount = categoryCommonLegsCount.get(category.name) || 0;
-            const isDisabled = selectedCategories.size > 0 && !selectedCategories.has(category.name) && commonLegsCount === 0;
+            const isDisabled = selectedCategories.size > 0 && !selectedCategories.has(category.name) && commonLegsCount < 2;
             
             return (
               <label
