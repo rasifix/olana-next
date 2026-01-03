@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logo-outer-circle {
+  stroke: #777;
+  stroke-width: 2px;
+  fill: none;
+}
+
+.logo-inner-circle {
+  fill: #777;
+  stroke: none;
+}
+
+.logo-needle {
+  fill: #777;
+  stroke: none;
+}
+
+.north {
+  fill: #f55;
+}
