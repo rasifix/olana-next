@@ -38,9 +38,6 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                 <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Time Loss
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Perf. Index
-                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -77,9 +74,6 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-red-700 text-right">
                       {split.timeLoss ? formatTime(split.timeLoss) : ''}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right">
-                      {split.performanceIndex !== undefined ? `${Math.round(split.performanceIndex)}%` : '-'}
                     </td>
                   </tr>
                 );
