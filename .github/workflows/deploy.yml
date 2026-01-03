@@ -36,12 +36,12 @@ jobs:
     if: github.ref == 'refs/heads/master'
     
     steps:
-    - name: Checkout olana-next-site repository
+    - name: Checkout olana-site repository
       uses: actions/checkout@v4
       with:
-        repository: rasifix/olana-next-site
+        repository: rasifix/olana-site
         ssh-key: ${{ secrets.DEPLOY_TOKEN }}
-        path: olana-next-site
+        path: olana-site
         
     - name: Download build artifacts
       uses: actions/download-artifact@v4
@@ -49,8 +49,8 @@ jobs:
         name: build-artifacts
         path: build-artifacts
         
-    - name: Deploy to olana-next-site
-      working-directory: olana-next-site
+    - name: Deploy to olana-site
+      working-directory: olana-site
       run: |
         # Remove existing assets (keep .git and other hidden files)
         find . -maxdepth 1 -not -name '.*' -not -name 'README.md' -exec rm -rf {} +
