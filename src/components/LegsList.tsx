@@ -40,7 +40,7 @@ function LegsList({ legs }: LegsListProps) {
           >
             <LegCard
               title={`${leg.from} → ${leg.to}`}
-              categories={leg.categories.join(', ')}
+              categories={leg.categories}
               runners={leg.runners}
               errorFrequency={leg.errorFrequency}
             />

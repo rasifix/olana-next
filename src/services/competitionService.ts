@@ -97,7 +97,9 @@ export const competitionService = {
 
   async getLegs(source: string, id: string): Promise<Leg[]> {
     const competition = await this.getCompetitionById(source, id);
-    return buildLegs(competition.categories || []);
+    const legs = buildLegs(competition.categories || []);
+    console.log('getLegs result:', legs.slice(0, 2)); // Debug: check first 2 legs
+    return legs;
   },
 
   async getLegDetails(

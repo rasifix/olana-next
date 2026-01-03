@@ -55,7 +55,7 @@ export function buildLegs(categories: Category[]): LegSummary[] {
     id: leg.id,
     from: leg.from,
     to: leg.to,
-    categories: Object.keys(leg.categories),
+    categories: leg.categories,
     runners: leg.runners.length,
     errorFrequency: leg.errorFrequency
   }));

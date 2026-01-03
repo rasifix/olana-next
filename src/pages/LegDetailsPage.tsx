@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { LegDetails } from '../types';
 import { competitionService } from '../services/competitionService';
@@ -11,6 +11,7 @@ function LegDetailsPage() {
   const [leg, setLeg] = useState<LegDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const loadLeg = async () => {
@@ -21,6 +22,8 @@ function LegDetailsPage() {
         setError(null);
         const data = await competitionService.getLegDetails(source, id, legId);
         setLeg(data);
+        // Initialize with all categories selected
+        setSelectedCategories(new Set(data.categories));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load leg');
         console.error('Error loading leg:', err);
@@ -31,6 +34,72 @@ function LegDetailsPage() {
 
     loadLeg();
   }, [source, id, legId]);
+
+  // Filter and recalculate rankings based on selected categories
+  const filteredRunners = useMemo(() => {
+    if (!leg) return [];
+    
+    const filtered = leg.runners.filter(runner => 
+      selectedCategories.has(runner.category)
+    );
+    
+    // Sort by split time
+    filtered.sort((a, b) => {
+      const timeA = parseTime(a.split) || Number.MAX_VALUE;
+      const timeB = parseTime(b.split) || Number.MAX_VALUE;
+      return timeA - timeB;
+    });
+    
+    // Recalculate ranks
+    filtered.forEach((runner, idx) => {
+      if (idx === 0) {
+        runner.splitRank = 1;
+      } else {
+        const prev = filtered[idx - 1];
+        if (prev.split === runner.split) {
+          runner.splitRank = prev.splitRank;
+        } else {
+          runner.splitRank = idx + 1;
+        }
+      }
+    });
+    
+    return filtered;
+  }, [leg, selectedCategories]);
+
+  const categoryColors = useMemo(() => {
+    if (!leg) return {};
+    const colors: Record<string, string> = {};
+    const COLORS = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'];
+    const COLORS_DARK = ['#1a2f3a', '#1d6d63', '#a68a48', '#ab7143', '#a34e38'];
+    const colorPalette = [...COLORS, ...COLORS_DARK];
+    
+    leg.categories.forEach((cat, idx) => {
+      colors[cat] = colorPalette[idx % colorPalette.length];
+    });
+    return colors;
+  }, [leg]);
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleAll = () => {
+    if (!leg) return;
+    if (selectedCategories.size === leg.categories.length) {
+      setSelectedCategories(new Set());
+    } else {
+      setSelectedCategories(new Set(leg.categories));
+    }
+  };
 
   const getTimeBehind = (split: string, fastestSplit: string): string => {
     if (split === fastestSplit) {
@@ -86,7 +155,7 @@ function LegDetailsPage() {
     );
   }
 
-  const fastestSplit = leg.runners.length > 0 ? leg.runners[0].split : '';
+  const fastestSplit = filteredRunners.length > 0 ? filteredRunners[0].split : '';
 
   return (
     <div className="px-4 py-6">
@@ -114,6 +183,41 @@ function LegDetailsPage() {
           <p className="text-gray-600 mt-1">
             Categories: {leg.categories.join(', ')}
           </p>
+        </div>
+
+        {/* Category Filter */}
+        <div className="mb-6">
+          <div className="flex flex-wrap gap-3">
+            <div
+              className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 cursor-pointer"
+              onClick={toggleAll}
+              style={{
+                backgroundColor: selectedCategories.size === leg.categories.length ? '#e5e7eb' : undefined,
+                fontWeight: selectedCategories.size === leg.categories.length ? '600' : '400',
+              }}
+            >
+              <span className="text-sm text-gray-700">All</span>
+            </div>
+            {leg.categories.map(category => {
+              const isSelected = selectedCategories.has(category);
+              return (
+                <div
+                  key={category}
+                  className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 cursor-pointer"
+                  onClick={() => toggleCategory(category)}
+                  style={{
+                    backgroundColor: isSelected ? `${categoryColors[category]}20` : undefined,
+                  }}
+                >
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: categoryColors[category] }}
+                  />
+                  <span className="text-sm font-medium text-gray-700">{category}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -150,7 +254,7 @@ function LegDetailsPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {leg.runners.map((runner, index) => (
+              {filteredRunners.map((runner, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {runner.splitRank}
