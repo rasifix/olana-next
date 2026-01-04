@@ -12,14 +12,14 @@ interface BreadcrumbsProps {
 
 function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav className="flex items-center space-x-2 text-sm mb-6">
+    <nav className="flex items-center space-x-2 text-sm mb-6 overflow-x-auto">
       {items.map((item, index) => (
-        <div key={index} className="flex items-center">
+        <div key={index} className="flex items-center flex-shrink-0">
           {index > 0 && (
             <span className="mx-2 text-gray-400">/</span>
           )}
           {index === items.length - 1 ? (
-            <span className="text-gray-700 font-medium">
+            <span className="text-gray-700 font-medium truncate max-w-[200px] sm:max-w-none">
               {item.isHome ? (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -34,11 +34,11 @@ function Breadcrumbs({ items }: BreadcrumbsProps) {
               className="text-rust-600 hover:text-rust-800 transition-colors flex items-center"
             >
               {item.isHome ? (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
               ) : (
-                item.label
+                <span className="truncate max-w-[120px] sm:max-w-none">{item.label}</span>
               )}
             </Link>
           )}
