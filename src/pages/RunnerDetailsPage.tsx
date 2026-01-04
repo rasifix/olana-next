@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ranking } from '@rasifix/orienteering-utils';
 import RunnerSplitsTable from '../components/RunnerSplitsTable';
 import RunnerComparisonGraph from '../components/RunnerComparisonGraph';
+import RunnerSelector from '../components/RunnerSelector';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
 
@@ -70,35 +71,13 @@ function RunnerDetailsPage() {
           {runner.club} • {runner.yearOfBirth}
         </p>
 
-        {/* Comparison selector */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Compare with another runner:
-          </label>
-          <div className="flex gap-2">
-            <select
-              value={comparisonRunnerId || ''}
-              onChange={(e) => setComparisonRunnerId(e.target.value || null)}
-              className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-rust-500 focus:ring-rust-500"
-            >
-              <option value="">Select a runner...</option>
-              {rankedRunners
-                .filter(r => r.id !== runnerId)
-                .map(r => (
-                  <option key={r.id} value={r.id}>
-                    {r.rank}. {r.fullName} ({r.time})
-                  </option>
-                ))}
-            </select>
-            <button
-              onClick={() => setShowComparison(true)}
-              disabled={!comparisonRunnerId}
-              className="px-4 py-2 bg-rust-600 text-white rounded-md hover:bg-rust-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-            >
-              Compare
-            </button>
-          </div>
-        </div>
+        <RunnerSelector
+          rankedRunners={rankedRunners}
+          currentRunnerId={runnerId!}
+          comparisonRunnerId={comparisonRunnerId}
+          onSelectionChange={setComparisonRunnerId}
+          onCompare={() => setShowComparison(true)}
+        />
 
         <RunnerSplitsTable runner={runner} source={source!} id={id!} />
       </div>

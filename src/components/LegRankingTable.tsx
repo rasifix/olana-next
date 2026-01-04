@@ -40,7 +40,7 @@ function LegRankingTable({ runners, source, competitionId }: LegRankingTableProp
         <thead className="bg-gray-50">
           <tr>
             <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Rank
+              #
             </th>
             <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Name
@@ -48,13 +48,13 @@ function LegRankingTable({ runners, source, competitionId }: LegRankingTableProp
             <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Cat
             </th>
-            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Club
             </th>
             <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Year
             </th>
-            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               City
             </th>
             <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -90,22 +90,22 @@ function LegRankingTable({ runners, source, competitionId }: LegRankingTableProp
                   {runner.category}
                 </Link>
               </td>
-              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+              <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                 {runner.club}
               </td>
               <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                 {runner.yearOfBirth}
               </td>
-              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+              <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                 {runner.city}
               </td>
-              <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm text-sm text-gray-900 font-mono">
                 {runner.split}
               </td>
-              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
                 {getTimeBehind(runner.split, fastestSplit)}
               </td>
-              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
                 {runner.timeLoss || '-'}
               </td>
             </tr>
