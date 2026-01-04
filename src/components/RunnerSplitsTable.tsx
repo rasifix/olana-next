@@ -22,13 +22,13 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     #
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-l-2 border-gray-300">
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-l border-gray-300">
                     Split Rank
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Split Time
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-r-2 border-gray-300">
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-300">
                     Split Behind
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -58,13 +58,13 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                           {split.code}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right border-l-2 border-gray-300">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right border-l border-gray-300">
                         {split.leg.rank}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right font-mono">
                         {formatTime(split.splitTime)}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right border-r-2 border-gray-300 font-mono">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right border-r border-gray-300 font-mono">
                         {split.timeLoss && 
                           <span 
                             className="text-red-700 font-medium cursor-pointer" 
