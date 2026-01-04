@@ -61,7 +61,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Categories ({competition?.categories?.length || 0})
+              Categories<span className="hidden md:inline"> ({competition?.categories?.length || 0})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/courses`}
@@ -71,7 +71,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Courses ({courses.length})
+              Courses<span className="hidden md:inline"> ({courses.length})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/legs`}
@@ -81,7 +81,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Legs ({legs.length})
+              Legs<span className="hidden md:inline"> ({legs.length})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/controls`}
@@ -91,7 +91,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Controls ({controls.length})
+              Controls<span className="hidden md:inline"> ({controls.length})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/custom`}
@@ -109,7 +109,7 @@ function CompetitionDetailsPage() {
                 activeTab === 'starttime'
                   ? 'border-rust-500 text-rust-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
+              } hidden md:inline-flex whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
               Start Times
             </Link>

@@ -67,7 +67,7 @@ function RankingTable({
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Select
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -77,22 +77,22 @@ function RankingTable({
                   Name
                 </th>
                 {showCategoryColumn && (
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Category
                   </th>
                 )}
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Club
                 </th>
                 {showYearColumn && (
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Year
                   </th>
                 )}
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Time
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Behind
                 </th>
               </tr>
@@ -103,7 +103,7 @@ function RankingTable({
                   key={runner.id || index} 
                   className={`hover:bg-gray-100 ${selectedRunners.has(index) ? 'bg-rust-50' : ''}`}
                 >
-                  <td className="px-4 py-3 whitespace-nowrap text-sm">
+                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm">
                     <input
                       type="checkbox"
                       className="rounded"
@@ -119,22 +119,22 @@ function RankingTable({
                     {renderName ? renderName(runner, index) : runner.fullName}
                   </td>
                   {showCategoryColumn && (
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                    <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       {renderCategory ? renderCategory(runner, index) : (runner.category || '-')}
                     </td>
                   )}
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                     {runner.club}
                   </td>
                   {showYearColumn && (
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                    <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                       {runner.yearOfBirth}
                     </td>
                   )}
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                     {runner.time}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                     {index === 0 ? '' : `+${timeBehind(runner.time, runners[0].time)}`}
                   </td>
                 </tr>
