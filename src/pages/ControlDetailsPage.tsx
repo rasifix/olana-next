@@ -73,7 +73,7 @@ function ControlDetailsPage() {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Incoming Legs ({control.from.length})
             </h3>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               {control.from.map((leg) => (
                 <Link
                   key={leg.leg}
@@ -97,7 +97,7 @@ function ControlDetailsPage() {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Outgoing Legs ({control.to.length})
             </h3>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               {control.to.map((leg) => (
                 <Link
                   key={leg.leg}
