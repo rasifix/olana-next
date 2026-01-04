@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { competitionService } from '../services/competitionService';
-import { parseTime, formatTime } from '@rasifix/orienteering-utils';
+import { parseTime } from '@rasifix/orienteering-utils';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
+import LegRankingTable from '../components/LegRankingTable';
 
 function LegDetailsPage() {
   const { source, id, legId } = useParams<{ source: string; id: string; legId: string }>();
@@ -93,18 +94,6 @@ function LegDetailsPage() {
     }
   };
 
-  const getTimeBehind = (split: string, fastestSplit: string): string => {
-    if (split === fastestSplit) {
-      return '';
-    }
-    const currentTime = parseTime(split);
-    const fastestTime = parseTime(fastestSplit);
-    if (currentTime && fastestTime) {
-      return '+' + formatTime(currentTime - fastestTime);
-    }
-    return '-';
-  };
-
   if (!leg) {
     return (
       <div className="px-4 py-6">
@@ -120,8 +109,6 @@ function LegDetailsPage() {
       </div>
     );
   }
-
-  const fastestSplit = filteredRunners.length > 0 ? filteredRunners[0].split : '';
 
   return (
     <div className="md:px-4 py-6">
@@ -155,117 +142,47 @@ function LegDetailsPage() {
         </div>
 
         {/* Category Filter */}
-        <div className="mb-6">
-          <div className="flex flex-wrap gap-3">
-            <div
-              className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 cursor-pointer"
-              onClick={toggleAll}
-              style={{
-                backgroundColor: selectedCategories.size === leg.categories.length ? '#e5e7eb' : undefined,
-                fontWeight: selectedCategories.size === leg.categories.length ? '600' : '400',
-              }}
-            >
-              <span className="text-sm text-gray-700">All</span>
-            </div>
-            {leg.categories.map(category => {
-              const isSelected = selectedCategories.has(category);
-              return (
-                <div
-                  key={category}
-                  className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 cursor-pointer"
-                  onClick={() => toggleCategory(category)}
-                  style={{
-                    backgroundColor: isSelected ? `${categoryColors[category]}20` : undefined,
-                  }}
-                >
+        {leg.categories.length > 1 && (
+          <div className="mb-6">
+            <div className="flex flex-wrap gap-3">
+              <div
+                className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 cursor-pointer"
+                onClick={toggleAll}
+                style={{
+                  backgroundColor: selectedCategories.size === leg.categories.length ? '#e5e7eb' : undefined,
+                  fontWeight: selectedCategories.size === leg.categories.length ? '600' : '400',
+                }}
+              >
+                <span className="text-sm text-gray-700">All</span>
+              </div>
+              {leg.categories.map(category => {
+                const isSelected = selectedCategories.has(category);
+                return (
                   <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: categoryColors[category] }}
-                  />
-                  <span className="text-sm font-medium text-gray-700">{category}</span>
-                </div>
-              );
-            })}
+                    key={category}
+                    className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 cursor-pointer"
+                    onClick={() => toggleCategory(category)}
+                    style={{
+                      backgroundColor: isSelected ? `${categoryColors[category]}20` : undefined,
+                    }}
+                  >
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: categoryColors[category] }}
+                    />
+                    <span className="text-sm font-medium text-gray-700">{category}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
-                </th>
-                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Club
-                </th>
-                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Year
-                </th>
-                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  City
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Split Time
-                </th>
-                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Behind
-                </th>
-                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Time Loss
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredRunners.map((runner, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {runner.splitRank}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <Link
-                      to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}/runners/${runner.id}`}
-                      className="text-rust-600 hover:text-rust-800 hover:underline"
-                    >
-                      {runner.fullName}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    <Link
-                      to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
-                      className="text-rust-600 hover:text-rust-800 hover:underline"
-                    >
-                      {runner.category}
-                    </Link>
-                  </td>
-                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {runner.club}
-                  </td>
-                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {runner.yearOfBirth}
-                  </td>
-                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {runner.city}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {runner.split}
-                  </td>
-                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {getTimeBehind(runner.split, fastestSplit)}
-                  </td>
-                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {runner.timeLoss || '-'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <LegRankingTable 
+          runners={filteredRunners}
+          source={source!}
+          competitionId={id!}
+        />
       </div>
     </div>
   );
