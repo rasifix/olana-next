@@ -33,7 +33,7 @@ interface Control {
   code: string;
   runners: number;
   errors: number;
-  categories: {[name: string]: { name: string; runners: number }};
+  categories: {[name: string]: { name: string; runners: number, distance: number; elevation: number; controls: number }};
   from: { [code: string]: RelatedControl };
   to: { [code: string]: RelatedControl };
 }
@@ -57,6 +57,9 @@ interface ControlList {
 interface ControlCategory {
   name: string;
   runners: ControlRunner[];
+  distance: number;
+  elevation: number;
+  controls: number;
   from: string;
   to: string;
 }
@@ -86,6 +89,9 @@ export default function defineControl(categories: Category[], id: string) {
     
     control.categories[cat.name] = { 
       name: cat.name,
+      distance: cat.distance || 0,
+      elevation: cat.ascent || 0,
+      controls: cat.controls || 0,
       runners: categoryParsed.runners.length
     };
     
@@ -190,6 +196,9 @@ export function defineControls(categories: Category[]) {
         if (!control.categories[cat.name]) {
           control.categories[cat.name] = {
             name: cat.name,
+            distance: cat.distance || 0,
+            elevation: cat.ascent || 0,
+            controls: cat.controls || 0,
             from: idx === 0 ? 'St' : runner.splits[idx - 1].code,
             to: runner.splits[idx].code,
             runners: []

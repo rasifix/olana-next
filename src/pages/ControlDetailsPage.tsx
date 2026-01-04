@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { competitionService } from '../services/competitionService';
-import RunnersBadge from '../components/RunnersBadge';
 import LegCard from '../components/LegCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
+import CategoryCard from '@/components/CategoryCard';
 
 function ControlDetailsPage() {
   const { source, id, controlCode } = useParams<{ source: string; id: string; controlCode: string }>();
@@ -58,10 +58,9 @@ function ControlDetailsPage() {
               <Link
                 key={category.name}
                 to={`/competitions/${source}/${id}/categories/${encodeURIComponent(category.name)}`}
-                className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-colors flex items-center justify-between"
+                className="mb-1 bg-gray-50 rounded-lg border border-gray-200"
               >
-                <span className="font-medium text-gray-900">{category.name}</span>
-                <RunnersBadge count={category.runners} />
+                <CategoryCard name={category.name} distance={category.distance} elevation={category.elevation} controls={category.controls} runnerCount={category.runners} />
               </Link>
             ))}
           </div>

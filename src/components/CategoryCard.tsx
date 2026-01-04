@@ -4,11 +4,11 @@ interface CategoryCardProps {
   name: string;
   controls: number;
   distance: number;
-  ascent: number;
+  elevation: number;
   runnerCount: number;
 }
 
-function CategoryCard({ name, controls, distance, ascent, runnerCount }: CategoryCardProps) {
+function CategoryCard({ name, controls, distance, elevation, runnerCount }: CategoryCardProps) {
   return (
     <div className="flex items-center justify-between p-4">
       <div className="flex items-center gap-4">
@@ -16,7 +16,7 @@ function CategoryCard({ name, controls, distance, ascent, runnerCount }: Categor
           {name}
         </h4>
         <span className="text-sm text-gray-600">
-          🎯 {controls} • 📏 {distance}m • ⛰️ {ascent}m
+          🎯 {controls} • 📏 {distance}m • ⛰️ {elevation}m
         </span>
       </div>
       <RunnersBadge count={runnerCount} />

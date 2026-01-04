@@ -5,6 +5,7 @@ import { ranking } from '@rasifix/orienteering-utils';
 import SplitGraph from '../components/SplitGraph';
 import RankingTable from '../components/RankingTable';
 import Breadcrumbs from '../components/Breadcrumbs';
+import CategoryCard from '../components/CategoryCard';
 import { useCompetition } from '../contexts/CompetitionContext';
 
 function CourseDetailsPage() {
@@ -66,15 +67,14 @@ function CourseDetailsPage() {
       </div>
 
       <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              {category.name}
-            </h2>
-            <p className="text-gray-600 mt-1">
-              {category.controls} controls • {category.distance}m • {category.ascent}m elevation
-            </p>
-          </div>
+        <div className="mb-6 bg-gray-50 rounded-lg border border-gray-200">
+          <CategoryCard
+            name={category.name}
+            controls={category.controls}
+            distance={category.distance}
+            elevation={category.ascent}
+            runnerCount={category.runners.length}
+          />
         </div>
 
         <RankingTable

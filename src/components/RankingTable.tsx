@@ -34,9 +34,6 @@ function RankingTable({
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold text-gray-900">
-          Results
-        </h3>
         {selectedRunners.size > 0 && (
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-600">

@@ -4,6 +4,7 @@ import { ranking } from '@rasifix/orienteering-utils';
 import SplitGraph from '../components/SplitGraph';
 import RankingTable from '../components/RankingTable';
 import Breadcrumbs from '../components/Breadcrumbs';
+import CategoryCard from '../components/CategoryCard';
 import { useCompetition } from '../contexts/CompetitionContext';
 
 
@@ -71,27 +72,14 @@ function CategoryDetailsPage() {
       </div>
 
       <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          {category.name}
-        </h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-          <div>
-            <span className="font-medium text-gray-700">Controls:</span>{' '}
-            <span className="text-gray-900">{category.controls}</span>
-          </div>
-          <div>
-            <span className="font-medium text-gray-700">Distance:</span>{' '}
-            <span className="text-gray-900">{category.distance}m</span>
-          </div>
-          <div>
-            <span className="font-medium text-gray-700">Elevation:</span>{' '}
-            <span className="text-gray-900">{category.ascent}m</span>
-          </div>
-          <div>
-            <span className="font-medium text-gray-700">Runners:</span>{' '}
-            <span className="text-gray-900">{rankedRunners.length}</span>
-          </div>
+        <div className="mb-6 bg-gray-50 rounded-lg border border-gray-200">
+          <CategoryCard
+            name={category.name}
+            controls={category.controls}
+            distance={category.distance}
+            elevation={category.ascent}
+            runnerCount={rankedRunners.length}
+          />
         </div>
 
         <div className="mt-6">

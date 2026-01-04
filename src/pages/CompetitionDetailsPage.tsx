@@ -133,7 +133,7 @@ function CompetitionDetailsPage() {
                       name={category.name}
                       controls={category.controls}
                       distance={category.distance}
-                      ascent={category.ascent}
+                      elevation={category.ascent}
                       runnerCount={category.runners?.length || 0}
                     />
                   </Link>
@@ -160,7 +160,7 @@ function CompetitionDetailsPage() {
                       name={course.name}
                       controls={course.controls}
                       distance={course.distance}
-                      ascent={course.ascent}
+                      elevation={course.ascent}
                       runnerCount={course.runners || 0}
                     />
                   </Link>

@@ -42,6 +42,9 @@ export interface Control {
 
 export interface ControlCategory {
   name: string;
+  distance: number;
+  elevation: number;
+  controls: number;
   runners: number;
 }
 
