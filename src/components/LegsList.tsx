@@ -13,7 +13,7 @@ function LegsList({ legs }: LegsListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   if (legs.length === 0) {
-    return <p className="text-gray-500">No legs available</p>;
+    return <p className="text-text-muted">No legs available</p>;
   }
 
   const filteredLegs = legs.filter(

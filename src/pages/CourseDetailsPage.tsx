@@ -44,7 +44,7 @@ function CourseDetailsPage() {
   if (!category || !rankingData) {
     return (
       <div className="px-4 py-6">
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-text-muted">
           Course not found
         </div>
       </div>
@@ -66,7 +66,7 @@ function CourseDetailsPage() {
       ]} />
       </div>
 
-      <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+      <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
         <div className="mb-6">
           <CategoryCard
             name={category.name}
@@ -86,7 +86,7 @@ function CourseDetailsPage() {
           renderName={(runner) => (
             <a
               href={`/competitions/${source}/${id}/courses/${courseCode}/runners/${runner.id}`}
-              className="text-rust-600 hover:text-rust-800 hover:underline"
+              className="text-link hover:text-link-hover hover:underline"
             >
               {runner.fullName}
             </a>
@@ -95,7 +95,7 @@ function CourseDetailsPage() {
             runner.category ? (
               <a
                 href={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
-                className="text-rust-600 hover:text-rust-800 hover:underline"
+                className="text-link hover:text-link-hover hover:underline"
               >
                 {runner.category}
               </a>
@@ -104,7 +104,7 @@ function CourseDetailsPage() {
         />
 
         {selectedRunners.size > 0 && (
-          <div className="mt-4 text-sm text-gray-600">
+          <div className="mt-4 text-sm text-text-tertiary">
             Selected {selectedRunners.size} of 5 runners maximum for split graph
           </div>
         )}

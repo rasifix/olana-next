@@ -36,13 +36,13 @@ function RankingTable({
       <div className="flex justify-between items-center mb-4">
         {selectedRunners.size > 0 && (
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-text-tertiary">
               {selectedRunners.size} runner{selectedRunners.size !== 1 ? 's' : ''} selected
             </span>
             <button
               onClick={onShowGraph}
               disabled={selectedRunners.size < 2}
-              className="px-4 py-2 bg-rust-600 text-white rounded-md hover:bg-rust-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover transition-colors disabled:bg-disabled disabled:cursor-not-allowed"
             >
               Show Split Graph
             </button>
@@ -51,7 +51,7 @@ function RankingTable({
                 selectedRunners.clear();
                 onToggleRunner(-1); // Trigger a re-render
               }}
-              className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+              className="px-3 py-2 text-sm text-text-tertiary hover:text-text-primary transition-colors"
             >
               Clear
             </button>
@@ -61,44 +61,44 @@ function RankingTable({
 
       {runners.length > 0 ? (
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-border-default">
+            <thead className="bg-surface-secondary">
               <tr>
-                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   Select
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   Rank
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   Name
                 </th>
                 {showCategoryColumn && (
-                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Category
                   </th>
                 )}
-                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   Club
                 </th>
                 {showYearColumn && (
-                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                     Year
                   </th>
                 )}
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   Time
                 </th>
-                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   Behind
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-surface-primary divide-y divide-border-default">
               {runners.map((runner, index) => (
                 <tr 
                   key={runner.id || index} 
-                  className={`hover:bg-gray-100 ${selectedRunners.has(index) ? 'bg-rust-50' : ''}`}
+                  className={`hover:bg-surface-hover ${selectedRunners.has(index) ? 'bg-primary-light' : ''}`}
                 >
                   <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm">
                     <input
@@ -109,29 +109,29 @@ function RankingTable({
                       disabled={!selectedRunners.has(index) && selectedRunners.size >= 5}
                     />
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-text-primary">
                     {runner.rank}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-text-primary">
                     {renderName ? renderName(runner, index) : runner.fullName}
                   </td>
                   {showCategoryColumn && (
-                    <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                    <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-tertiary">
                       {renderCategory ? renderCategory(runner, index) : (runner.category || '-')}
                     </td>
                   )}
-                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-muted">
                     {runner.club}
                   </td>
                   {showYearColumn && (
-                    <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                    <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-muted">
                       {runner.yearOfBirth}
                     </td>
                   )}
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-text-primary">
                     {runner.time}
                   </td>
-                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-primary">
                     {index === 0 ? '' : `+${timeBehind(runner.time, runners[0].time)}`}
                   </td>
                 </tr>
@@ -140,7 +140,7 @@ function RankingTable({
           </table>
         </div>
       ) : (
-        <p className="text-gray-500">No runners in this ranking</p>
+        <p className="text-text-muted">No runners in this ranking</p>
       )}
     </div>
   );

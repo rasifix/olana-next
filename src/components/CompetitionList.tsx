@@ -12,14 +12,14 @@ function CompetitionList({ competitions, loading, error }: CompetitionListProps)
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="text-gray-600">Loading competitions...</div>
+        <div className="text-text-tertiary">Loading competitions...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+      <div className="bg-error-bg border border-error-border rounded-lg p-4 text-error">
         Error loading competitions: {error}
       </div>
     );
@@ -27,7 +27,7 @@ function CompetitionList({ competitions, loading, error }: CompetitionListProps)
 
   if (!competitions || competitions.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-text-muted">
         No competitions found
       </div>
     );
@@ -57,7 +57,7 @@ function CompetitionList({ competitions, loading, error }: CompetitionListProps)
     <>
       {sortedMonthKeys.map((monthKey) => (
         <div key={monthKey} className="mb-8">
-          <h2 className="text-md font-bold text-gray-400 mb-4">
+          <h2 className="text-md font-bold text-text-muted mb-4">
             {monthKey} ({groupedByMonth[monthKey].length})
           </h2>
           <div className="grid gap-4 md:grid-cols-2 sm:grid-cols-1">

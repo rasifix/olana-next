@@ -16,15 +16,15 @@ function RunnerSelector({
   onCompare 
 }: RunnerSelectorProps) {
   return (
-    <div className="hidden md:block mb-6 p-4 bg-gray-50 rounded-lg">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+    <div className="hidden md:block mb-6 p-4 bg-surface-secondary rounded-lg">
+      <label className="block text-sm font-medium text-text-secondary mb-2">
         Compare with another runner:
       </label>
       <div className="flex gap-2">
         <select
           value={comparisonRunnerId || ''}
           onChange={(e) => onSelectionChange(e.target.value || null)}
-          className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-rust-500 focus:ring-rust-500"
+          className="flex-1 rounded-md border-border-strong shadow-sm focus:border-primary-border focus:ring-primary-border bg-surface-primary text-text-primary"
         >
           <option value="">Select a runner...</option>
           {rankedRunners
@@ -38,7 +38,7 @@ function RunnerSelector({
         <button
           onClick={onCompare}
           disabled={!comparisonRunnerId}
-          className="px-4 py-2 bg-rust-600 text-white rounded-md hover:bg-rust-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover disabled:bg-disabled disabled:cursor-not-allowed transition-colors"
         >
           Compare
         </button>

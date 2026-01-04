@@ -199,7 +199,7 @@ function CustomCategoryRunnerDetailsPage() {
     return (
       <div className="px-4 py-6">
         <div className="flex justify-center items-center py-8">
-          <div className="text-gray-600">Loading runner details...</div>
+          <div className="text-text-tertiary">Loading runner details...</div>
         </div>
       </div>
     );
@@ -208,12 +208,12 @@ function CustomCategoryRunnerDetailsPage() {
   if (error) {
     return (
       <div className="px-4 py-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+        <div className="bg-error-bg border border-error-border rounded-lg p-4 text-error">
           Error: {error}
         </div>
         <button
           onClick={() => navigate(`/competitions/${source}/${id}/custom`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
+          className="mt-4 text-link hover:text-link-hover"
         >
           ← Back to custom category
         </button>
@@ -224,10 +224,10 @@ function CustomCategoryRunnerDetailsPage() {
   if (!runner) {
     return (
       <div className="px-4 py-6">
-        <div className="text-center py-8 text-gray-500">Runner not found</div>
+        <div className="text-center py-8 text-text-muted">Runner not found</div>
         <button
           onClick={() => navigate(`/competitions/${source}/${id}/custom`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
+          className="mt-4 text-link hover:text-link-hover"
         >
           ← Back to custom category
         </button>
@@ -246,17 +246,17 @@ function CustomCategoryRunnerDetailsPage() {
       ]} />
       </div>
 
-      <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+        <h2 className="text-2xl font-bold text-text-primary mb-2">
           {runner.fullName}
         </h2>
-        <p className="text-gray-900 font-semibold mb-2">
+        <p className="text-text-primary font-semibold mb-2">
           Final Time: {runner.time}
         </p>
         <p className="text-red-800 font-semibold mb-2">
           Error: {runner.errorTime ? runner.errorTime : '00:00'}
         </p>
-        <p className="text-gray-600 mb-6">
+        <p className="text-text-tertiary mb-6">
           {runner.club} • {runner.yearOfBirth}
         </p>
 

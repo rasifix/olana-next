@@ -47,20 +47,20 @@ function CompetitionDetailsPage() {
       ]} />
       </div>
 
-      <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+      <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+        <h2 className="text-2xl font-bold text-text-primary mb-4">
           {competition?.name}
         </h2>
 
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200 mb-6">
+        <div className="border-b border-border-default mb-6">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             <Link
               to={`/competitions/${source}/${id}/categories`}
               className={`${
                 activeTab === 'categories'
-                  ? 'border-rust-500 text-rust-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-border text-link'
+                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
               Categories<span className="hidden md:inline"> ({competition?.categories?.length || 0})</span>
@@ -69,8 +69,8 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/courses`}
               className={`${
                 activeTab === 'courses'
-                  ? 'border-rust-500 text-rust-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-border text-link'
+                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
               Courses<span className="hidden md:inline"> ({courses.length})</span>
@@ -79,8 +79,8 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/legs`}
               className={`${
                 activeTab === 'legs'
-                  ? 'border-rust-500 text-rust-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-border text-link'
+                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
               Legs<span className="hidden md:inline"> ({legs.length})</span>
@@ -89,8 +89,8 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/controls`}
               className={`${
                 activeTab === 'controls'
-                  ? 'border-rust-500 text-rust-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-border text-link'
+                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
               Controls<span className="hidden md:inline"> ({controls.length})</span>
@@ -99,8 +99,8 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/custom`}
               className={`${
                 activeTab === 'custom'
-                  ? 'border-rust-500 text-rust-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-border text-link'
+                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
               Custom Category
@@ -109,8 +109,8 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/starttime`}
               className={`${
                 activeTab === 'starttime'
-                  ? 'border-rust-500 text-rust-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-border text-link'
+                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } hidden md:inline-flex whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
               Start Times
@@ -140,7 +140,7 @@ function CompetitionDetailsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No categories available</p>
+              <p className="text-text-muted">No categories available</p>
             )}
           </div>
         )}
@@ -167,7 +167,7 @@ function CompetitionDetailsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No courses available</p>
+              <p className="text-text-muted">No courses available</p>
             )}
           </div>
         )}

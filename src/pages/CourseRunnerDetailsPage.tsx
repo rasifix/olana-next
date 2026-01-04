@@ -42,7 +42,7 @@ function CourseRunnerDetailsPage() {
     if (!runner) {
         return (
             <div className="px-4 py-6">
-                <div className="text-center py-8 text-gray-500">Runner not found</div>
+                <div className="text-center py-8 text-text-muted">Runner not found</div>
             </div>
         );
     }
@@ -58,17 +58,17 @@ function CourseRunnerDetailsPage() {
                 ]} />
             </div>
 
-            <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+                <h2 className="text-2xl font-bold text-text-primary mb-2">
                     {runner.fullName}
                 </h2>
-                <p className="text-gray-900 font-semibold mb-2">
+                <p className="text-text-primary font-semibold mb-2">
                     Final Time: {runner.time}
                 </p>
-                <p className="text-red-800 font-semibold mb-2">
+                <p className="text-error font-semibold mb-2">
                     Error: {runner.errorTime ? runner.errorTime : '00:00'}
                 </p>
-                <p className="text-gray-600 mb-6">
+                <p className="text-text-tertiary mb-6">
                     {runner.club} • {runner.yearOfBirth}
                 </p>
 

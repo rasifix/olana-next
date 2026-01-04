@@ -10,12 +10,12 @@ interface CategoryCardProps {
 
 function CategoryCard({ name, controls, distance, elevation, runnerCount }: CategoryCardProps) {
   return (
-    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+    <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-lg border border-border-default">
       <div className="flex items-center gap-4">
-        <h4 className="font-semibold text-gray-900">
+        <h4 className="font-semibold text-text-primary">
           {name}
         </h4>
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-text-tertiary">
           <svg className="inline-block w-4 h-4 -mt-0.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <polygon points="3,3 21,3 3,21" fill="white"/>
             <polygon points="21,3 21,21 3,21" fill="#FF6B35"/>

@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { ranking, formatTime } from '@rasifix/orienteering-utils';
+import { useTheme } from '../contexts/ThemeContext';
+import { getChartColors } from '../utils/chartColors';
 
 interface RunnerComparisonGraphProps {
   currentRunner: ranking.RankingRunner;
@@ -15,6 +17,9 @@ interface LegComparison {
 }
 
 function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: RunnerComparisonGraphProps) {
+  const { isDarkMode } = useTheme();
+  const chartColors = getChartColors(isDarkMode);
+  
   const comparisonData = useMemo(() => {
     const currentSplits = currentRunner.splits || [];
     const comparisonSplits = comparisonRunner.splits || [];
@@ -59,11 +64,11 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
   if (comparisonData.length === 0) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg shadow-xl p-6 max-w-6xl w-full">
-          <p className="text-gray-500">No comparison data available</p>
+        <div className="bg-surface-primary rounded-lg shadow-xl p-6 max-w-6xl w-full">
+          <p className="text-text-muted">No comparison data available</p>
           <button
             onClick={onClose}
-            className="mt-4 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+            className="mt-4 px-4 py-2 bg-disabled text-text-primary rounded hover:bg-surface-hover"
           >
             Close
           </button>
@@ -140,18 +145,18 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl p-6 max-w-6xl w-full max-h-[90vh] overflow-auto">
+      <div className="bg-surface-primary rounded-lg shadow-xl p-6 max-w-6xl w-full max-h-[90vh] overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h3 className="text-xl font-bold text-gray-900">Runner Comparison</h3>
-            <p className="text-sm text-gray-600 mt-1">
-              <span className="font-semibold text-green-600">{currentRunner.fullName}</span> vs{' '}
-              <span className="font-semibold text-blue-600">{comparisonRunner.fullName}</span>
+            <h3 className="text-xl font-bold text-text-primary">Runner Comparison</h3>
+            <p className="text-sm text-text-tertiary mt-1">
+              <span className="font-semibold text-success">{currentRunner.fullName}</span> vs{' '}
+              <span className="font-semibold text-info">{comparisonRunner.fullName}</span>
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+            className="text-text-muted hover:text-text-tertiary text-2xl font-bold"
           >
             ×
           </button>
@@ -201,7 +206,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
             <polyline
               points={getCumulativeLinePoints()}
               fill="none"
-              stroke="#2563EB"
+              stroke={chartColors.infrastructure.accent}
               strokeWidth="3"
               strokeLinejoin="round"
             />
@@ -237,9 +242,11 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
               const maxPIDiff = 50; // Cap at 50% difference for lightness scaling
               const normalizedDiff = Math.min(d.performanceIndexDiff, maxPIDiff) / maxPIDiff;
               
-              // Lightness ranges from 70% (low difference, lighter) to 40% (high difference, darker)
-              const maxLightness = 70;
-              const minLightness = 40;
+              // Lightness ranges based on theme
+              // Light mode: 40-70% (darker colors)
+              // Dark mode: 55-85% (lighter colors for visibility)
+              const maxLightness = isDarkMode ? 85 : 70;
+              const minLightness = isDarkMode ? 55 : 40;
               const lightness = maxLightness - (normalizedDiff * (maxLightness - minLightness));
               
               // Use HSL color format with constant saturation
@@ -281,7 +288,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
                   y={graphHeight - padding.bottom + 20}
                   textAnchor="middle"
                   fontSize="11"
-                  fill="#374151"
+                  fill={chartColors.infrastructure.text}
                 >
                   {d.legName}
                 </text>
@@ -296,7 +303,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
             <span>{currentRunner.fullName} faster on this leg</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-red-500 opacity-70"></div>
+            <div className="w-4 h-4 bg-error-bg0 opacity-70"></div>
             <span>{currentRunner.fullName} slower on this leg</span>
           </div>
           <div className="flex items-center gap-2">
@@ -307,7 +314,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
 
         <button
           onClick={onClose}
-          className="mt-6 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
+          className="mt-6 px-4 py-2 bg-disabled text-text-primary rounded hover:bg-surface-hover transition-colors"
         >
           Close
         </button>

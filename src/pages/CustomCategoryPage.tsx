@@ -166,34 +166,34 @@ function CustomCategoryPage() {
         </div>
 
         {!hasCustomCategory ? (
-          <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+            <h2 className="text-2xl font-bold text-text-primary mb-4">
               Custom Category
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-text-tertiary mb-6">
               Create a custom category by combining legs from multiple categories.
             </p>
             <button
               onClick={() => setShowBuilder(true)}
-              className="bg-rust-600 text-white px-6 py-3 rounded-lg hover:bg-rust-700 transition-colors font-semibold"
+              className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-hover transition-colors font-semibold"
             >
               Create Custom Category
             </button>
           </div>
         ) : (
-          <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+          <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-text-primary">
                   Custom Category
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-text-tertiary mt-1">
                   {selectedCategories.join(', ')} • {selectedLegs.length} legs
                 </p>
               </div>
               <button
                 onClick={handleEdit}
-                className="px-4 py-2 text-rust-600 hover:text-rust-800 border border-rust-600 hover:border-rust-800 rounded-lg transition-colors font-semibold"
+                className="px-4 py-2 text-link hover:text-link-hover border border-primary hover:border-rust-800 rounded-lg transition-colors font-semibold"
               >
                 Edit Selection
               </button>
@@ -210,7 +210,7 @@ function CustomCategoryPage() {
                   renderName={(runner) => (
                     <a
                       href={`/competitions/${source}/${id}/custom/runners/${runner.id}?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`}
-                      className="text-rust-600 hover:text-rust-800 hover:underline"
+                      className="text-link hover:text-link-hover hover:underline"
                     >
                       {runner.fullName}
                     </a>

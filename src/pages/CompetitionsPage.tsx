@@ -53,14 +53,14 @@ function CompetitionsPage() {
       {/* Year and Source Filters */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-end">
         <div className="flex-1 sm:flex-initial">
-          <label htmlFor="year-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="year-filter" className="block text-sm font-medium text-text-secondary mb-1">
             Year
           </label>
           <select
             id="year-filter"
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="block w-full md:w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rust-500 focus:border-rust-500 sm:text-sm"
+            className="block w-full md:w-40 px-3 py-2 border border-border-default rounded-md shadow-sm focus:outline-none focus:ring-primary-border focus:border-primary-border sm:text-sm bg-surface-primary text-text-primary"
           >
             {yearOptions.map(year => (
               <option key={year} value={year}>
@@ -71,14 +71,14 @@ function CompetitionsPage() {
         </div>
         {!loading && !error && competitions.length > 0 && (
           <div className="flex-1 sm:flex-initial">
-            <label htmlFor="source-filter" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="source-filter" className="block text-sm font-medium text-text-secondary mb-1">
               Source
             </label>
             <select
               id="source-filter"
               value={selectedSource}
               onChange={(e) => setSelectedSource(e.target.value)}
-              className="block w-full md:w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-rust-500 focus:border-rust-500 sm:text-sm"
+              className="block w-full md:w-64 px-3 py-2 border border-border-default rounded-md shadow-sm focus:outline-none focus:ring-primary-border focus:border-primary-border sm:text-sm bg-surface-primary text-text-primary"
             >
               <option value="all">All Sources</option>
               {allSources.map(source => (

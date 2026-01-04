@@ -23,7 +23,7 @@ function ControlDetailsPage() {
   if (!control) {
     return (
       <div className="px-4 py-6">
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-text-muted">
           Control not found
         </div>
       </div>
@@ -41,16 +41,16 @@ function ControlDetailsPage() {
       ]} />
       </div>
 
-      <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+      <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-text-primary">
             Control {control.code}
           </h2>
         </div>
 
         {/* Categories Section */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <h3 className="text-lg font-semibold text-text-primary mb-4">
             Categories
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -69,7 +69,7 @@ function ControlDetailsPage() {
         {/* Incoming Legs Section */}
         {control.from.length > 0 && (
           <div className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">
               Incoming Legs ({control.from.length})
             </h3>
             <div className="flex flex-col gap-3">
@@ -93,7 +93,7 @@ function ControlDetailsPage() {
         {/* Outgoing Legs Section */}
         {control.to.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">
               Outgoing Legs ({control.to.length})
             </h3>
             <div className="flex flex-col gap-3">

@@ -30,7 +30,7 @@ function CategoryDetailsPage() {
   if (!category) {
     return (
       <div className="px-4 py-6">
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-text-muted">
           Category not found
         </div>
       </div>
@@ -71,7 +71,7 @@ function CategoryDetailsPage() {
       ]} />
       </div>
 
-      <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+      <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
         <div className="mb-6">
           <CategoryCard
             name={category.name}
@@ -92,7 +92,7 @@ function CategoryDetailsPage() {
             renderName={(runner) => (
               <Link 
                 to={`/competitions/${source}/${id}/categories/${encodeURIComponent(categoryName!)}/runners/${runner.id}`}
-                className="text-rust-600 hover:text-rust-800 hover:underline"
+                className="text-link hover:text-link-hover hover:underline"
               >
                 {runner.fullName}
               </Link>

@@ -1,12 +1,12 @@
 import { ranking, formatTime } from '@rasifix/orienteering-utils';
 import { useState, useEffect, useMemo } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
+import { getChartColorByIndex, getChartColors } from '../utils/chartColors';
 
 interface SplitGraphProps {
   runners: ranking.RankingRunner[];
   onClose: () => void;
 }
-
-const COLORS = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'];
 
 interface HoverInfo {
   runnerIndex: number;
@@ -18,6 +18,8 @@ interface HoverInfo {
 }
 
 function SplitGraph({ runners, onClose }: SplitGraphProps) {
+  const { isDarkMode } = useTheme();
+  const chartColors = getChartColors(isDarkMode);
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
   const [selectedRunner, setSelectedRunner] = useState<number | null>(null);
@@ -104,13 +106,13 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-auto">
+      <div className="bg-surface-primary rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold text-gray-900">Split Analysis</h3>
+            <h3 className="text-xl font-semibold text-text-primary">Split Analysis</h3>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+              className="text-text-muted hover:text-text-secondary text-2xl leading-none"
             >
               ×
             </button>
@@ -121,7 +123,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
               <svg
                 width={dimensions.width}
                 height={dimensions.height}
-                className="border border-gray-200 rounded"
+                className="border border-border-default rounded"
               >
               {/* Horizontal grid lines */}
               {[...Array(6)].map((_, i) => {
@@ -133,7 +135,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     y1={y}
                     x2={padding.left + graphWidth}
                     y2={y}
-                    stroke="#e5e7eb"
+                    stroke={chartColors.infrastructure.gridLines}
                     strokeWidth="1"
                   />
                 );
@@ -150,7 +152,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     y1={padding.top}
                     x2={x}
                     y2={padding.top + graphHeight}
-                    stroke="#e5e7eb"
+                    stroke={chartColors.infrastructure.gridLines}
                     strokeWidth="1"
                   />
                 );
@@ -163,7 +165,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                 y1={zeroLineY}
                 x2={padding.left + graphWidth}
                 y2={zeroLineY}
-                stroke="#6b7280"
+                stroke={chartColors.infrastructure.zeroLine}
                 strokeWidth="2"
                 strokeDasharray="5,5"
               />
@@ -174,7 +176,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                 y1={padding.top}
                 x2={padding.left}
                 y2={padding.top + graphHeight}
-                stroke="#374151"
+                stroke={chartColors.infrastructure.axes}
                 strokeWidth="2"
               />
               <line
@@ -182,7 +184,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                 y1={padding.top + graphHeight}
                 x2={padding.left + graphWidth}
                 y2={padding.top + graphHeight}
-                stroke="#374151"
+                stroke={chartColors.infrastructure.axes}
                 strokeWidth="2"
               />
 
@@ -196,7 +198,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     x={x}
                     y={dimensions.height - padding.bottom + 20}
                     textAnchor="middle"
-                    fill="#374151"
+                    fill={chartColors.infrastructure.text}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -210,7 +212,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                 x={padding.left - 10}
                 y={padding.top + 5}
                 textAnchor="end"
-                fill="#374151"
+                fill={chartColors.infrastructure.text}
                 fontSize="12"
                 fontFamily="sans-serif"
               >
@@ -220,7 +222,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                 x={padding.left - 10}
                 y={zeroLineY + 5}
                 textAnchor="end"
-                fill="#374151"
+                fill={chartColors.infrastructure.text}
                 fontSize="12"
                 fontFamily="sans-serif"
               >
@@ -230,7 +232,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                 x={padding.left - 10}
                 y={padding.top + graphHeight + 5}
                 textAnchor="end"
-                fill="#374151"
+                fill={chartColors.infrastructure.text}
                 fontSize="12"
                 fontFamily="sans-serif"
               >
@@ -247,7 +249,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   return 0;
                 })
                 .map(({ runner, index: runnerIndex }) => {
-                const color = COLORS[runnerIndex % COLORS.length];
+                const color = getChartColorByIndex(runnerIndex, isDarkMode);
                 const isSelected = runnerIndex === selectedRunner;
                 if (!runner.splits || runner.splits.length === 0) return null;
 
@@ -353,7 +355,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
 
               {/* Legend */}
               {runners.map((runner, index) => {
-                const color = COLORS[index % COLORS.length];
+                const color = getChartColorByIndex(index, isDarkMode);
                 const isSelected = index === selectedRunner;
                 const row = Math.floor(index / 5);
                 const col = index % 5;
@@ -381,7 +383,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     <text
                       x={x + 25}
                       y={y + 3}
-                      fill="#374151"
+                      fill={chartColors.infrastructure.text}
                       fontSize="14"
                       fontFamily="sans-serif"
                       fontWeight={isSelected ? "600" : "400"}
@@ -403,7 +405,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     width="200"
                     height="84"
                     fill="white"
-                    stroke="#374151"
+                    stroke={chartColors.infrastructure.axes}
                     strokeWidth="1"
                     rx="4"
                     opacity="0.95"
@@ -412,7 +414,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y - 40}
-                    fill="#374151"
+                    fill={chartColors.infrastructure.text}
                     fontSize="13"
                     fontFamily="sans-serif"
                     fontWeight="600"
@@ -422,7 +424,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y - 24}
-                    fill="#374151"
+                    fill={chartColors.infrastructure.text}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -431,7 +433,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y - 10}
-                    fill="#374151"
+                    fill={chartColors.infrastructure.text}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -440,7 +442,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y + 4}
-                    fill="#374151"
+                    fill={chartColors.infrastructure.text}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -449,7 +451,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y + 18}
-                    fill="#374151"
+                    fill={chartColors.infrastructure.text}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -461,7 +463,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
             </div>
           </div>
 
-          <div className="mt-4 text-sm text-gray-600">
+          <div className="mt-4 text-sm text-text-tertiary">
             <p><strong>How to read:</strong></p>
             <ul className="list-disc list-inside mt-2 space-y-1">
               <li>The horizontal dashed line represents the ideal time (0 seconds)</li>

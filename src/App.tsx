@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Sun, Moon } from 'lucide-react';
 import CompetitionsPage from './pages/CompetitionsPage';
 import CompetitionDetailsPage from './pages/CompetitionDetailsPage';
 import CategoryDetailsPage from './pages/CategoryDetailsPage';
@@ -12,15 +13,37 @@ import CustomCategoryRunnerDetailsPage from './pages/CustomCategoryRunnerDetails
 import StartTimeAnalysisPage from './pages/StartTimeAnalysisPage';
 import CompassLogo from './components/CompassLogo';
 import { CompetitionProvider } from './contexts/CompetitionContext';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
-function App() {
+function ThemeToggle() {
+  const { isDarkMode, toggleTheme } = useTheme();
+  
+  return (
+    <button
+      onClick={toggleTheme}
+      className="p-2 rounded-md hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors"
+      aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {isDarkMode ? (
+        <Sun className="w-5 h-5" />
+      ) : (
+        <Moon className="w-5 h-5" />
+      )}
+    </button>
+  );
+}
+
+function AppContent() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
+      <div className="min-h-screen bg-surface-secondary">
+        <header className="bg-surface-primary shadow">
           <div className="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-4">
-              <CompassLogo />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <CompassLogo />
+              </div>
+              <ThemeToggle />
             </div>
           </div>
         </header>
@@ -47,6 +70,14 @@ function App() {
         </main>
       </div>
     </BrowserRouter>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 

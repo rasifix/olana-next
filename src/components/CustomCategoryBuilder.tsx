@@ -155,16 +155,16 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-surface-primary rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4 border-b border-border-default">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-text-primary">
               Custom Category Builder
             </h2>
             <button
               onClick={onCancel}
-              className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+              className="text-text-muted hover:text-text-tertiary text-2xl font-bold"
             >
               ×
             </button>
@@ -174,25 +174,25 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
           <div className="mt-4 flex items-center">
             <div className="flex items-center">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold ${
-                currentStep === 1 ? 'bg-rust-600 text-white' : 'bg-green-600 text-white'
+                currentStep === 1 ? 'bg-primary text-white' : 'bg-success text-white'
               }`}>
                 {currentStep > 1 ? '✓' : '1'}
               </div>
               <span className={`ml-2 text-sm font-medium ${
-                currentStep === 1 ? 'text-gray-900' : 'text-gray-500'
+                currentStep === 1 ? 'text-text-primary' : 'text-text-muted'
               }`}>
                 Select Categories
               </span>
             </div>
-            <div className="flex-1 h-0.5 bg-gray-300 mx-4"></div>
+            <div className="flex-1 h-0.5 bg-border-strong mx-4"></div>
             <div className="flex items-center">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold ${
-                currentStep === 2 ? 'bg-rust-600 text-white' : 'bg-gray-300 text-gray-600'
+                currentStep === 2 ? 'bg-primary text-white' : 'bg-border-strong text-text-tertiary'
               }`}>
                 2
               </div>
               <span className={`ml-2 text-sm font-medium ${
-                currentStep === 2 ? 'text-gray-900' : 'text-gray-500'
+                currentStep === 2 ? 'text-text-primary' : 'text-text-muted'
               }`}>
                 Select Legs
               </span>
@@ -204,10 +204,10 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
         <div className="flex-1 overflow-y-auto px-6 py-6">
           {currentStep === 1 && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-lg font-semibold text-text-primary mb-4">
                 Select Categories to Combine
               </h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-text-tertiary mb-4">
                 Choose the categories you want to combine. Categories with no common legs will be disabled.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -218,10 +218,10 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
                   return (
                     <label
                       key={category.name}
-                      className={`flex items-center gap-2 p-3 border border-gray-200 rounded-lg ${
+                      className={`flex items-center gap-2 p-3 border border-border-default rounded-lg ${
                         isDisabled 
-                          ? 'bg-gray-100 cursor-not-allowed opacity-50' 
-                          : 'hover:bg-gray-50 cursor-pointer'
+                          ? 'bg-surface-hover cursor-not-allowed opacity-50' 
+                          : 'hover:bg-surface-secondary cursor-pointer'
                       }`}
                     >
                       <input
@@ -229,13 +229,13 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
                         checked={selectedCategories.has(category.name)}
                         onChange={() => handleCategoryToggle(category.name)}
                         disabled={isDisabled}
-                        className="h-4 w-4 text-rust-600 focus:ring-rust-500 border-gray-300 rounded disabled:cursor-not-allowed"
+                        className="h-4 w-4 text-primary focus:ring-primary-border border-border-strong rounded disabled:cursor-not-allowed"
                       />
-                      <span className="text-sm font-medium text-gray-900 flex-1">
+                      <span className="text-sm font-medium text-text-primary flex-1">
                         {category.name}
                       </span>
                       {selectedCategories.size > 0 && !selectedCategories.has(category.name) && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-text-muted">
                           ({commonLegsCount} legs)
                         </span>
                       )}
@@ -248,25 +248,25 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
 
           {currentStep === 2 && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-lg font-semibold text-text-primary mb-4">
                 Select Legs ({availableLegs.length} common legs found)
               </h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-text-tertiary mb-4">
                 Choose which legs to include in your custom category. All legs are selected by default.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {availableLegs.map(leg => (
                   <label
                     key={leg}
-                    className="flex items-center gap-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer"
+                    className="flex items-center gap-2 p-2 border border-border-default rounded hover:bg-surface-secondary cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={selectedLegs.has(leg)}
                       onChange={() => handleLegToggle(leg)}
-                      className="h-4 w-4 text-rust-600 focus:ring-rust-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-primary focus:ring-primary-border border-border-strong rounded"
                     />
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm font-medium text-text-primary">
                       {leg}
                     </span>
                   </label>
@@ -277,12 +277,12 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 flex justify-between">
+        <div className="px-6 py-4 border-t border-border-default flex justify-between">
           <div>
             {currentStep === 2 && (
               <button
                 onClick={handleBack}
-                className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium"
+                className="px-4 py-2 text-text-secondary hover:text-text-primary font-medium"
               >
                 ← Back
               </button>
@@ -291,7 +291,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
           <div className="flex gap-2">
             <button
               onClick={onCancel}
-              className="px-4 py-2 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg font-medium"
+              className="px-4 py-2 text-text-secondary hover:text-text-primary border border-border-strong rounded-lg font-medium"
             >
               Cancel
             </button>
@@ -299,7 +299,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
               <button
                 onClick={handleNext}
                 disabled={selectedCategories.size === 0}
-                className="px-6 py-2 bg-rust-600 text-white rounded-lg hover:bg-rust-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold"
+                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover disabled:bg-disabled disabled:cursor-not-allowed transition-colors font-semibold"
               >
                 Next →
               </button>
@@ -308,7 +308,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
               <button
                 onClick={handleCreate}
                 disabled={selectedLegs.size === 0}
-                className="px-6 py-2 bg-rust-600 text-white rounded-lg hover:bg-rust-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold"
+                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover disabled:bg-disabled disabled:cursor-not-allowed transition-colors font-semibold"
               >
                 Create Custom Category
               </button>

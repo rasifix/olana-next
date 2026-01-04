@@ -2,6 +2,96 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light mode (default) */
+:root {
+  /* Primary brand colors */
+  --color-primary: #cc4402;
+  --color-primary-hover: #b33800;
+  --color-primary-light: #fff8ec;
+  --color-primary-border: #e66000;
+  
+  /* Text hierarchy */
+  --color-text-primary: #111827;
+  --color-text-secondary: #374151;
+  --color-text-tertiary: #4b5563;
+  --color-text-muted: #6b7280;
+  
+  /* Surfaces */
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #f9fafb;
+  --color-surface-hover: #f3f4f6;
+  
+  /* Borders */
+  --color-border-default: #e5e7eb;
+  --color-border-strong: #d1d5db;
+  --color-border-active: #e66000;
+  
+  /* Semantic states */
+  --color-error: #b91c1c;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fecaca;
+  --color-success: #16a34a;
+  --color-info: #2563eb;
+  
+  /* Interactive states */
+  --color-disabled: #9ca3af;
+  --color-disabled-text: #6b7280;
+  --color-link: #cc4402;
+  --color-link-hover: #ac390b;
+  
+  /* Chart infrastructure */
+  --color-chart-grid: #e5e7eb;
+  --color-chart-axis: #6b7280;
+  --color-chart-text: #374151;
+  --color-chart-zero: #6b7280;
+  --color-chart-accent: #2563eb;
+}
+
+/* Dark mode */
+.dark-mode {
+  /* Primary brand colors */
+  --color-primary: #ff8000;
+  --color-primary-hover: #ffa940;
+  --color-primary-light: #461404;
+  --color-primary-border: #ffa940;
+  
+  /* Text hierarchy */
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #e5e7eb;
+  --color-text-tertiary: #d1d5db;
+  --color-text-muted: #9ca3af;
+  
+  /* Surfaces */
+  --color-surface-primary: #111827;
+  --color-surface-secondary: #1f2937;
+  --color-surface-hover: #374151;
+  
+  /* Borders */
+  --color-border-default: #374151;
+  --color-border-strong: #4b5563;
+  --color-border-active: #ffa940;
+  
+  /* Semantic states */
+  --color-error: #f87171;
+  --color-error-bg: #450a0a;
+  --color-error-border: #7f1d1d;
+  --color-success: #4ade80;
+  --color-info: #60a5fa;
+  
+  /* Interactive states */
+  --color-disabled: #4b5563;
+  --color-disabled-text: #6b7280;
+  --color-link: #ff8000;
+  --color-link-hover: #ffa940;
+  
+  /* Chart infrastructure */
+  --color-chart-grid: #374151;
+  --color-chart-axis: #9ca3af;
+  --color-chart-text: #d1d5db;
+  --color-chart-zero: #9ca3af;
+  --color-chart-accent: #60a5fa;
+}
+
 .logo-outer-circle {
   stroke: #777;
   stroke-width: 2px;

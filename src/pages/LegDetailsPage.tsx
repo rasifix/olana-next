@@ -5,8 +5,12 @@ import { parseTime } from '@rasifix/orienteering-utils';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
 import LegRankingTable from '../components/LegRankingTable';
+import { useTheme } from '../contexts/ThemeContext';
+import { getCombinedChartPalette } from '../utils/chartColors';
 
 function LegDetailsPage() {
+  const { isDarkMode } = useTheme();
+  const categoryColorPalette = getCombinedChartPalette(isDarkMode);
   const { source, id, legId } = useParams<{ source: string; id: string; legId: string }>();
   const navigate = useNavigate();
   const { competition } = useCompetition();
@@ -63,15 +67,11 @@ function LegDetailsPage() {
   const categoryColors = useMemo(() => {
     if (!leg) return {};
     const colors: Record<string, string> = {};
-    const COLORS = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'];
-    const COLORS_DARK = ['#1a2f3a', '#1d6d63', '#a68a48', '#ab7143', '#a34e38'];
-    const colorPalette = [...COLORS, ...COLORS_DARK];
-    
     leg.categories.forEach((cat, idx) => {
-      colors[cat] = colorPalette[idx % colorPalette.length];
+      colors[cat] = categoryColorPalette[idx % categoryColorPalette.length];
     });
     return colors;
-  }, [leg]);
+  }, [leg, categoryColorPalette]);
 
   const toggleCategory = (category: string) => {
     setSelectedCategories(prev => {
@@ -97,12 +97,12 @@ function LegDetailsPage() {
   if (!leg) {
     return (
       <div className="px-4 py-6">
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-text-muted">
           Leg not found
         </div>
         <button
           onClick={() => navigate(`/competitions/${source}/${id}`)}
-          className="mt-4 text-rust-600 hover:text-rust-800"
+          className="mt-4 text-link hover:text-link-hover"
         >
           ← Back to competition
         </button>
@@ -121,22 +121,22 @@ function LegDetailsPage() {
       ]} />
       </div>
 
-      <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+      <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-text-primary">
             Leg: <Link 
               to={`/competitions/${source}/${id}/controls/${encodeURIComponent(leg.from)}`}
-              className="text-rust-600 hover:text-rust-800 hover:underline"
+              className="text-link hover:text-link-hover hover:underline"
             >
               {leg.from}
             </Link> → <Link 
               to={`/competitions/${source}/${id}/controls/${encodeURIComponent(leg.to)}`}
-              className="text-rust-600 hover:text-rust-800 hover:underline"
+              className="text-link hover:text-link-hover hover:underline"
             >
               {leg.to}
             </Link>
           </h2>
-          <p className="text-gray-600 mt-1">
+          <p className="text-text-tertiary mt-1">
             Categories: {leg.categories.join(', ')}
           </p>
         </div>
@@ -146,21 +146,21 @@ function LegDetailsPage() {
           <div className="mb-6">
             <div className="flex flex-wrap gap-3">
               <div
-                className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 cursor-pointer"
+                className="flex items-center gap-2 px-3 py-1 rounded-md bg-surface-secondary cursor-pointer"
                 onClick={toggleAll}
                 style={{
                   backgroundColor: selectedCategories.size === leg.categories.length ? '#e5e7eb' : undefined,
                   fontWeight: selectedCategories.size === leg.categories.length ? '600' : '400',
                 }}
               >
-                <span className="text-sm text-gray-700">All</span>
+                <span className="text-sm text-text-secondary">All</span>
               </div>
               {leg.categories.map(category => {
                 const isSelected = selectedCategories.has(category);
                 return (
                   <div
                     key={category}
-                    className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 cursor-pointer"
+                    className="flex items-center gap-2 px-3 py-1 rounded-md bg-surface-secondary cursor-pointer"
                     onClick={() => toggleCategory(category)}
                     style={{
                       backgroundColor: isSelected ? `${categoryColors[category]}20` : undefined,
@@ -170,7 +170,7 @@ function LegDetailsPage() {
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: categoryColors[category] }}
                     />
-                    <span className="text-sm font-medium text-gray-700">{category}</span>
+                    <span className="text-sm font-medium text-text-secondary">{category}</span>
                   </div>
                 );
               })}

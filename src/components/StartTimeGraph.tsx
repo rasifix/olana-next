@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { StartTimeRunner } from '../types';
+import { useTheme } from '../contexts/ThemeContext';
+import { getCombinedChartPalette } from '../utils/chartColors';
 
 interface StartTimeGraphProps {
   runners: StartTimeRunner[];
@@ -28,6 +30,8 @@ function formatTime(seconds: number): string {
 }
 
 function StartTimeGraph({ runners }: StartTimeGraphProps) {
+  const { isDarkMode } = useTheme();
+  const categoryColors = getCombinedChartPalette(isDarkMode);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
@@ -69,17 +73,13 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
   const graphHeight = height - padding.top - padding.bottom;
 
   // Create color map for categories
-  const categoryColors = useMemo(() => {
+  const categoryColorMap = useMemo(() => {
     const colors: Record<string, string> = {};
-    const COLORS = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'];
-    const COLORS_DARK = ['#1a2f3a', '#1d6d63', '#a68a48', '#ab7143', '#a34e38'];
-    const colorPalette = [...COLORS, ...COLORS_DARK];
-    
     categories.forEach((cat, idx) => {
-      colors[cat] = colorPalette[idx % colorPalette.length];
+      colors[cat] = categoryColors[idx % categoryColors.length];
     });
     return colors;
-  }, [categories]);
+  }, [categories, categoryColors]);
 
   // Scale functions
   const scaleX = (startTimeSeconds: number) => {
@@ -179,15 +179,15 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
 
   if (processedData.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <p className="text-gray-600">No start time data available</p>
+      <div className="bg-surface-primary rounded-lg shadow p-6">
+        <p className="text-text-tertiary">No start time data available</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">Start Time Analysis</h2>
+    <div className="bg-surface-primary rounded-lg shadow p-6">
+      <h2 className="text-2xl font-bold text-text-primary mb-4">Start Time Analysis</h2>
       
       <div className="mb-4 flex flex-wrap gap-3">
         {categories.map(category => {
@@ -195,20 +195,20 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
           return (
             <div
               key={category}
-              className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50"
+              className="flex items-center gap-2 px-3 py-1 rounded-md bg-surface-secondary"
               onClick={() => setActiveCategory(activeCategory === category ? null : category)}
               onMouseEnter={() => !activeCategory && setHoveredCategory(category)}
               onMouseLeave={() => !activeCategory && setHoveredCategory(null)}
               style={{
-                backgroundColor: effectiveCategory === category ? `${categoryColors[category]}20` : undefined,
+                backgroundColor: effectiveCategory === category ? `${categoryColorMap[category]}20` : undefined,
                 cursor: 'pointer',
               }}
             >
               <div
                 className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: categoryColors[category] }}
+                style={{ backgroundColor: categoryColorMap[category] }}
               />
-              <span className="text-sm font-medium text-gray-700">{category}</span>
+              <span className="text-sm font-medium text-text-secondary">{category}</span>
             </div>
           );
         })}
@@ -217,7 +217,7 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
       <svg 
         width={width} 
         height={height} 
-        className="border border-gray-200 rounded"
+        className="border border-border-default rounded"
         onClick={(e) => {
           // Clear active category when clicking on SVG background
           if (e.target === e.currentTarget) {
@@ -334,7 +334,7 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
                 cx={x}
                 cy={y}
                 r={isHighlighted ? 6 : 4}
-                fill={categoryColors[runner.category]}
+                fill={categoryColorMap[runner.category]}
                 opacity={isDimmed ? 0.2 : isHighlighted ? 1 : 0.7}
                 stroke={isHighlighted ? '#000' : 'none'}
                 strokeWidth={isHighlighted ? 1.5 : 0}

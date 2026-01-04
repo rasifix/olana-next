@@ -14,7 +14,7 @@ function ControlsList({ controls }: ControlsListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   if (controls.length === 0) {
-    return <p className="text-gray-500">No controls available</p>;
+    return <p className="text-text-muted">No controls available</p>;
   }
 
   const filteredControls = controls.filter(
@@ -38,14 +38,14 @@ function ControlsList({ controls }: ControlsListProps) {
             <Link
               key={control.code}
               to={`/competitions/${source}/${id}/controls/${encodeURIComponent(control.code)}`}
-              className="block bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-colors"
+              className="block bg-surface-secondary rounded-lg p-4 border border-border-default hover:bg-surface-hover hover:border-border-strong transition-colors"
             >
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h4 className="font-semibold text-gray-900">
+                  <h4 className="font-semibold text-text-primary">
                     Control {control.code}
                   </h4>
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-text-tertiary mt-1">
                     <span><span className="font-medium">Categories:</span> {control.categories.join(', ')}</span>
                   </div>
                 </div>

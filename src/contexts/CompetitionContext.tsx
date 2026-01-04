@@ -41,7 +41,7 @@ export function CompetitionProvider() {
     return (
       <div className="px-4 py-6">
         <div className="flex justify-center items-center py-8">
-          <div className="text-gray-600">Loading competition...</div>
+          <div className="text-text-tertiary">Loading competition...</div>
         </div>
       </div>
     );
@@ -50,7 +50,7 @@ export function CompetitionProvider() {
   if (error || !competition) {
     return (
       <div className="px-4 py-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+        <div className="bg-error-bg border border-error-border rounded-lg p-4 text-error">
           Error: {error || 'Competition not found'}
         </div>
       </div>
