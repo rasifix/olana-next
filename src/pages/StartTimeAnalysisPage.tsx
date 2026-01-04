@@ -15,12 +15,14 @@ function StartTimeAnalysisPage() {
   }, [competition]);
 
   return (
-    <div className="px-4 py-6">
+    <div className="md:px-4 py-6">
+      <div className="px-4">
       <Breadcrumbs items={[
         { label: 'Home', path: '/competitions', isHome: true },
         { label: `${competition?.name || 'Competition'}`, path: `/competitions/${source}/${id}` },
         { label: 'Start Times', path: `/competitions/${source}/${id}/starttime` }
       ]} />
+      </div>
 
       <StartTimeGraph runners={runners} />
     </div>

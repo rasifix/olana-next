@@ -235,15 +235,17 @@ function CustomCategoryRunnerDetailsPage() {
   }
 
   return (
-    <div className="px-4 py-6">
+    <div className="md:px-4 py-6">
+      <div className="px-4">
       <Breadcrumbs items={[
         { label: 'Home', path: '/competitions', isHome: true },
         { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
         { label: 'Custom Category', path: `/competitions/${source}/${id}/custom` },
         { label: runner.fullName, path: `/competitions/${source}/${id}/custom/runners/${runnerId}` }
       ]} />
+      </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {runner.fullName}
         </h2>
