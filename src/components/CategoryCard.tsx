@@ -10,7 +10,7 @@ interface CategoryCardProps {
 
 function CategoryCard({ name, controls, distance, elevation, runnerCount }: CategoryCardProps) {
   return (
-    <div className="flex items-center justify-between p-4">
+    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
       <div className="flex items-center gap-4">
         <h4 className="font-semibold text-gray-900">
           {name}

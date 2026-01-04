@@ -72,7 +72,7 @@ function CategoryDetailsPage() {
       </div>
 
       <div className="bg-white rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-        <div className="mb-6 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="mb-6">
           <CategoryCard
             name={category.name}
             controls={category.controls}

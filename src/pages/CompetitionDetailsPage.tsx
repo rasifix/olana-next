@@ -127,7 +127,7 @@ function CompetitionDetailsPage() {
                   <Link
                     key={index}
                     to={`/competitions/${source}/${id}/categories/${encodeURIComponent(category.name)}`}
-                    className="bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-colors block"
+                    className="hover:opacity-80 transition-opacity block"
                   >
                     <CategoryCard
                       name={category.name}
@@ -154,7 +154,7 @@ function CompetitionDetailsPage() {
                   <Link
                     key={course.id}
                     to={`/competitions/${source}/${id}/courses/${encodeURIComponent(course.id)}`}
-                    className="bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-colors block"
+                    className="hover:opacity-80 transition-opacity block"
                   >
                     <CategoryCard
                       name={course.name}

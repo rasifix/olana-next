@@ -58,7 +58,7 @@ function ControlDetailsPage() {
               <Link
                 key={category.name}
                 to={`/competitions/${source}/${id}/categories/${encodeURIComponent(category.name)}`}
-                className="mb-1 bg-gray-50 rounded-lg border border-gray-200"
+                className="hover:opacity-80 transition-opacity block"
               >
                 <CategoryCard name={category.name} distance={category.distance} elevation={category.elevation} controls={category.controls} runnerCount={category.runners} />
               </Link>
