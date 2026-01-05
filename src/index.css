@@ -40,6 +40,74 @@
   .label-small {
     @apply text-xs font-medium text-text-secondary uppercase tracking-wider;
   }
+
+  /* ============================================
+     TABLE COMPONENTS
+     ============================================ */
+  
+  /* Table container - Provides horizontal scrolling on overflow */
+  .table-container {
+    @apply overflow-x-auto;
+  }
+
+  /* Table base - Standard table styling with dividers */
+  .table-base {
+    @apply min-w-full divide-y divide-border-default;
+  }
+
+  /* Table header - Background and structure */
+  .table-header {
+    @apply bg-surface-secondary;
+  }
+
+  /* Table header cell - Responsive padding and text styling */
+  .table-th {
+    @apply px-2 md:px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider;
+  }
+
+  /* Table body - Background and row dividers */
+  .table-body {
+    @apply bg-surface-primary divide-y divide-border-default;
+  }
+
+  /* Table row - Base styling without interactive states */
+  .table-row {
+    @apply;
+  }
+
+  /* Table data cell - Responsive padding and text styling */
+  .table-td {
+    @apply px-2 md:px-6 py-4 whitespace-nowrap text-sm text-text-primary;
+  }
+
+  /* Table data cell - Muted text variant */
+  .table-td-muted {
+    @apply px-2 md:px-6 py-4 whitespace-nowrap text-sm text-text-tertiary;
+  }
+
+  /* ============================================
+     UNIVERSAL STATE MODIFIERS
+     ============================================ */
+  
+  /* Hover state - Applied to interactive elements */
+  .hover {
+    @apply hover:bg-surface-hover;
+  }
+
+  /* Selected state - Applied to selected rows/items */
+  .selected {
+    @apply bg-primary-light;
+  }
+
+  /* Shadow hover effect - For cards with shadow transitions */
+  .shadow-hover {
+    @apply shadow hover:shadow-md transition-shadow;
+  }
+
+  /* Opacity hover effect - For clickable elements */
+  .opacity-hover {
+    @apply hover:opacity-80 transition-opacity;
+  }
 }
 
 /* Light mode (default) */

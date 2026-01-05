@@ -61,9 +61,9 @@ function RankingTable({
       </div>
 
       {runners.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-border-default">
-            <thead className="bg-surface-secondary">
+        <div className="table-container">
+          <table className="table-base">
+            <thead className="table-header">
               <tr>
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.select')}
@@ -98,13 +98,13 @@ function RankingTable({
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-surface-primary divide-y divide-border-default">
+            <tbody className="table-body">
               {runners.map((runner, index) => (
                 <tr 
                   key={runner.id || index} 
-                  className={`hover:bg-surface-hover ${selectedRunners.has(index) ? 'bg-primary-light' : ''}`}
+                  className={`hover ${selectedRunners.has(index) ? 'selected' : ''}`}
                 >
-                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm">
+                  <td className="table-td hidden md:table-cell">
                     <input
                       type="checkbox"
                       className="rounded"
@@ -113,32 +113,32 @@ function RankingTable({
                       disabled={!selectedRunners.has(index) && selectedRunners.size >= 5}
                     />
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-text-primary">
+                  <td className="table-td font-medium">
                     {runner.rank}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-text-primary">
+                  <td className="table-td">
                     {renderName ? renderName(runner, index) : runner.fullName}
                   </td>
                   {showCategoryColumn && (
-                    <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-tertiary">
+                    <td className="table-td-muted hidden md:table-cell">
                       {renderCategory ? renderCategory(runner, index) : (runner.category || '-')}
                     </td>
                   )}
-                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-muted">
+                  <td className="table-td-muted hidden md:table-cell">
                     {runner.club}
                   </td>
-                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-muted">
+                  <td className="table-td-muted hidden md:table-cell">
                     {runner.city}
                   </td>
                   {showYearColumn && (
-                    <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-muted">
+                    <td className="table-td-muted hidden md:table-cell">
                       {runner.yearOfBirth}
                     </td>
                   )}
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-text-primary">
+                  <td className="table-td">
                     {runner.time}
                   </td>
-                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-primary">
+                  <td className="table-td hidden md:table-cell">
                     {index === 0 ? '' : `+${timeBehind(runner.time, runners[0].time)}`}
                   </td>
                 </tr>

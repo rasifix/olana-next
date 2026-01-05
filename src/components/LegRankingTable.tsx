@@ -38,46 +38,46 @@ function LegRankingTable({ runners, source, competitionId }: LegRankingTableProp
   const fastestSplit = runners.length > 0 ? runners[0].split : '';
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-border-default">
-        <thead className="bg-surface-secondary">
+    <div className="table-container">
+      <table className="table-base">
+        <thead className="table-header">
           <tr>
-            <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th">
               #
             </th>
-            <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th">
               {t('table.name')}
             </th>
-            <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th">
               {t('table.category')}
             </th>
-            <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th hidden lg:table-cell">
               {t('table.club')}
             </th>
-            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th hidden md:table-cell">
               {t('table.year')}
             </th>
-            <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th hidden lg:table-cell">
               {t('table.city')}
             </th>
-            <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th">
               {t('table.split')}
             </th>
-            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th hidden md:table-cell">
               {t('table.behind')}
             </th>
-            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+            <th className="table-th hidden md:table-cell">
               {t('table.timeLoss')}
             </th>
           </tr>
         </thead>
-        <tbody className="bg-surface-primary divide-y divide-border-default">
+        <tbody className="table-body">
           {runners.map((runner, index) => (
-            <tr key={index} className="hover:bg-surface-hover">
-              <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary">
+            <tr key={index} className="hover">
+              <td className="table-td font-medium">
                 {runner.splitRank}
               </td>
-              <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm text-text-primary">
+              <td className="table-td">
                 <Link
                   to={`/competitions/${source}/${competitionId}/categories/${encodeURIComponent(runner.category)}/runners/${runner.id}`}
                   className="text-link hover:text-link-hover hover:underline"
@@ -85,29 +85,29 @@ function LegRankingTable({ runners, source, competitionId }: LegRankingTableProp
                   {runner.fullName}
                 </Link>
               </td>
-              <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm text-text-tertiary">
+              <td className="table-td-muted">
                 <Link
                   to={`/competitions/${source}/${competitionId}/categories/${encodeURIComponent(runner.category)}`}
                   className="text-link hover:text-link-hover hover:underline">
                   {runner.category}
                 </Link>
               </td>
-              <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-text-tertiary">
+              <td className="table-td-muted hidden lg:table-cell">
                 {runner.club}
               </td>
-              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-text-tertiary">
+              <td className="table-td-muted hidden md:table-cell">
                 {runner.yearOfBirth}
               </td>
-              <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-text-tertiary">
+              <td className="table-td-muted hidden lg:table-cell">
                 {runner.city}
               </td>
-              <td className="px-2 md:px-6 py-4 whitespace-nowrap text-sm text-sm text-text-primary font-mono">
+              <td className="table-td font-mono">
                 {runner.split}
               </td>
-              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-text-tertiary font-mono">
+              <td className="table-td-muted hidden md:table-cell font-mono">
                 {getTimeBehind(runner.split, fastestSplit)}
               </td>
-              <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-text-tertiary font-mono">
+              <td className="table-td-muted hidden md:table-cell font-mono">
                 {runner.timeLoss || '-'}
               </td>
             </tr>
