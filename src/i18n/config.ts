@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import HttpBackend from 'i18next-http-backend';
 
 // Browser language detection
 const getBrowserLanguage = (): string => {
@@ -14,47 +15,27 @@ const getInitialLanguage = (): string => {
 };
 
 i18n
+  .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    resources: {
-      en: {
-        translation: {} // Will be loaded dynamically
-      },
-      de: {
-        translation: {} // Will be loaded dynamically
-      },
-      fr: {
-        translation: {} // Will be loaded dynamically
-      },
-      it: {
-        translation: {} // Will be loaded dynamically
-      }
-    },
     lng: getInitialLanguage(),
     fallbackLng: 'de',
     debug: process.env.NODE_ENV === 'development',
+    
+    backend: {
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
+    },
+    
+    ns: ['translation'],
+    defaultNS: 'translation',
+    
     interpolation: {
       escapeValue: false // React already escapes
+    },
+    
+    react: {
+      useSuspense: true // Enable Suspense for proper loading handling
     }
   });
-
-// Load translation files dynamically
-const loadTranslations = async () => {
-  try {
-    const enTranslation = await fetch('/locales/en/translation.json').then(res => res.json());
-    const deTranslation = await fetch('/locales/de/translation.json').then(res => res.json());
-    const frTranslation = await fetch('/locales/fr/translation.json').then(res => res.json());
-    const itTranslation = await fetch('/locales/it/translation.json').then(res => res.json());
-    
-    i18n.addResourceBundle('en', 'translation', enTranslation, true, true);
-    i18n.addResourceBundle('de', 'translation', deTranslation, true, true);
-    i18n.addResourceBundle('fr', 'translation', frTranslation, true, true);
-    i18n.addResourceBundle('it', 'translation', itTranslation, true, true);
-  } catch (error) {
-    console.error('Failed to load translations:', error);
-  }
-};
-
-loadTranslations();
 
 export default i18n;

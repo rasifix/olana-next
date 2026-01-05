@@ -41,7 +41,7 @@ function LanguageSelector() {
               <button
                 key={lang.code}
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`w-full px-4 py-2 text-left flex items-center gap-3 hover:bg-surface-hover transition-colors ${
+                className={`dropdown-item w-full text-left flex items-center gap-3 hover:bg-surface-hover transition-colors ${
                   language === lang.code ? 'bg-surface-secondary' : ''
                 }`}
               >

@@ -154,8 +154,8 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-surface-primary rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="modal-overlay">
+      <div className="modal-content max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-6 py-4 border-b border-border-default">
           <div className="flex justify-between items-center">
@@ -164,7 +164,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
             </h2>
             <button
               onClick={onCancel}
-              className="text-text-muted hover:text-text-tertiary text-2xl font-bold"
+              className="btn-icon-close"
             >
               ×
             </button>
@@ -229,7 +229,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
                         checked={selectedCategories.has(category.name)}
                         onChange={() => handleCategoryToggle(category.name)}
                         disabled={isDisabled}
-                        className="h-4 w-4 text-primary focus:ring-primary-border border-border-strong rounded disabled:cursor-not-allowed"
+                        className="checkbox-input focus disabled"
                       />
                       <span className="text-sm font-medium text-text-primary flex-1">
                         {category.name}
@@ -264,7 +264,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
                       type="checkbox"
                       checked={selectedLegs.has(leg)}
                       onChange={() => handleLegToggle(leg)}
-                      className="h-4 w-4 text-primary focus:ring-primary-border border-border-strong rounded"
+                      className="checkbox-input focus"
                     />
                     <span className="text-sm font-medium text-text-primary">
                       {leg}
@@ -299,7 +299,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
               <button
                 onClick={handleNext}
                 disabled={selectedCategories.size === 0}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover disabled:bg-disabled disabled:cursor-not-allowed transition-colors font-semibold"
+                className="btn-primary disabled"
               >
                 Next →
               </button>
@@ -308,7 +308,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
               <button
                 onClick={handleCreate}
                 disabled={selectedLegs.size === 0}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover disabled:bg-disabled disabled:cursor-not-allowed transition-colors font-semibold"
+                className="btn-primary disabled"
               >
                 Create Custom Category
               </button>

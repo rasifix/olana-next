@@ -62,7 +62,7 @@ function CompetitionsPage() {
             id="year-filter"
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="block w-full md:w-40 px-3 py-2 border border-border-default rounded-md shadow-sm focus:outline-none focus:ring-primary-border focus:border-primary-border sm:text-sm bg-surface-primary text-text-primary"
+            className="select-input md:w-40 focus"
           >
             {yearOptions.map(year => (
               <option key={year} value={year}>
@@ -80,7 +80,7 @@ function CompetitionsPage() {
               id="source-filter"
               value={selectedSource}
               onChange={(e) => setSelectedSource(e.target.value)}
-              className="block w-full md:w-64 px-3 py-2 border border-border-default rounded-md shadow-sm focus:outline-none focus:ring-primary-border focus:border-primary-border sm:text-sm bg-surface-primary text-text-primary"
+              className="select-input md:w-64 focus"
             >
               <option value="all">{t('form.allSources')}</option>
               {allSources.map(source => (

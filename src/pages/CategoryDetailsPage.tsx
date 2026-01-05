@@ -63,7 +63,7 @@ function CategoryDetailsPage() {
   };
 
   return (
-    <div className="md:px-4 py-6">
+    <div className="page-layout">
       <div className="px-4">
       <Breadcrumbs items={[
         { label: t('navigation.home'), path: '/competitions', isHome: true },

@@ -65,8 +65,8 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
 
   if (comparisonData.length === 0) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-surface-primary rounded-lg shadow-xl p-6 max-w-6xl w-full">
+      <div className="modal-overlay">
+        <div className="modal-content p-6 max-w-6xl w-full">
           <p className="text-text-muted">{t('error.noComparisonData')}</p>
           <button
             onClick={onClose}
@@ -146,8 +146,8 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-surface-primary rounded-lg shadow-xl p-6 max-w-6xl w-full max-h-[90vh] overflow-auto">
+    <div className="modal-overlay">
+      <div className="modal-content p-6 max-w-6xl w-full max-h-[90vh] overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <div>
             <h3 className="text-xl font-bold text-text-primary">{t('chart.runnerComparison')}</h3>
@@ -158,7 +158,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
           </div>
           <button
             onClick={onClose}
-            className="text-text-muted hover:text-text-tertiary text-2xl font-bold"
+            className="btn-icon-close"
           >
             ×
           </button>

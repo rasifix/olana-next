@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import CompetitionsPage from './pages/CompetitionsPage';
@@ -85,7 +86,13 @@ function App() {
   return (
     <LanguageProvider>
       <ThemeProvider>
-        <AppContent />
+        <Suspense fallback={
+          <div className="min-h-screen bg-surface-primary flex items-center justify-center">
+            <div className="text-text-secondary">Loading...</div>
+          </div>
+        }>
+          <AppContent />
+        </Suspense>
       </ThemeProvider>
     </LanguageProvider>
   );

@@ -41,7 +41,7 @@ function CompetitionDetailsPage() {
   }, [competition]);
 
   return (
-    <div className="md:px-4 py-6">
+    <div className="page-layout">
       <div className="px-4">
       <Breadcrumbs items={[
         { label: t('navigation.home'), path: '/competitions', isHome: true },
@@ -61,9 +61,9 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/categories`}
               className={`${
                 activeTab === 'categories'
-                  ? 'border-primary-border text-link'
-                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
+                  ? 'tab-link-active'
+                  : 'tab-link hover:text-text-secondary hover:border-border-strong'
+              } whitespace-nowrap transition-colors`}
             >
               {t('navigation.categories')}<span className="hidden md:inline"> ({competition?.categories?.length || 0})</span>
             </Link>
@@ -71,9 +71,9 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/courses`}
               className={`${
                 activeTab === 'courses'
-                  ? 'border-primary-border text-link'
-                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
+                  ? 'tab-link-active'
+                  : 'tab-link hover:text-text-secondary hover:border-border-strong'
+              } whitespace-nowrap transition-colors`}
             >
               {t('navigation.courses')}<span className="hidden md:inline"> ({courses.length})</span>
             </Link>
@@ -81,9 +81,9 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/legs`}
               className={`${
                 activeTab === 'legs'
-                  ? 'border-primary-border text-link'
-                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
+                  ? 'tab-link-active'
+                  : 'tab-link hover:text-text-secondary hover:border-border-strong'
+              } whitespace-nowrap transition-colors`}
             >
               {t('navigation.legs')}<span className="hidden md:inline"> ({legs.length})</span>
             </Link>
@@ -91,9 +91,9 @@ function CompetitionDetailsPage() {
               to={`/competitions/${source}/${id}/controls`}
               className={`${
                 activeTab === 'controls'
-                  ? 'border-primary-border text-link'
-                  : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
+                  ? 'tab-link-active'
+                  : 'tab-link hover:text-text-secondary hover:border-border-strong'
+              } whitespace-nowrap transition-colors`}
             >
               {t('navigation.controls')}<span className="hidden md:inline"> ({controls.length})</span>
             </Link>

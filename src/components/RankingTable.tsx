@@ -46,13 +46,13 @@ function RankingTable({
             <button
               onClick={onShowGraph}
               disabled={selectedRunners.size < 2}
-              className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover transition-colors disabled:bg-disabled disabled:cursor-not-allowed"
+              className="btn-primary hover:bg-primary-hover transition-colors disabled"
             >
               {t('button.showSplitGraph')}
             </button>
             <button
               onClick={onClearSelection}
-              className="px-3 py-2 text-sm text-text-tertiary hover:text-text-primary transition-colors"
+              className="btn-secondary hover:text-text-primary transition-colors"
             >
               {t('button.clear')}
             </button>
@@ -107,7 +107,7 @@ function RankingTable({
                   <td className="table-td hidden md:table-cell">
                     <input
                       type="checkbox"
-                      className="rounded"
+                      className="checkbox-input focus disabled"
                       checked={selectedRunners.has(index)}
                       onChange={() => onToggleRunner(index)}
                       disabled={!selectedRunners.has(index) && selectedRunners.size >= 5}

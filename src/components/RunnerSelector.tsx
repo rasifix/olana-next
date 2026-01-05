@@ -27,7 +27,7 @@ function RunnerSelector({
         <select
           value={comparisonRunnerId || ''}
           onChange={(e) => onSelectionChange(e.target.value || null)}
-          className="flex-1 rounded-md border-border-strong shadow-sm focus:border-primary-border focus:ring-primary-border bg-surface-primary text-text-primary"
+          className="select-input flex-1 focus"
         >
           <option value="">{t('runner.selectRunner')}</option>
           {rankedRunners
@@ -41,7 +41,7 @@ function RunnerSelector({
         <button
           onClick={onCompare}
           disabled={!comparisonRunnerId}
-          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover disabled:bg-disabled disabled:cursor-not-allowed transition-colors"
+          className="btn-primary hover:bg-primary-hover disabled transition-colors"
         >
           {t('button.compare')}
         </button>

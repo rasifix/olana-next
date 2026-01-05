@@ -18,7 +18,7 @@ function CategoryFilter({ selectedCategory, categories, onChange }: CategoryFilt
         id="category-filter"
         value={selectedCategory}
         onChange={(e) => onChange(e.target.value)}
-        className="block w-full md:w-64 px-3 py-2 border border-border-strong rounded-md shadow-sm focus:outline-none focus:ring-primary-border focus:border-primary-border sm:text-sm bg-surface-primary text-text-primary"
+        className="select-input md:w-64 focus"
       >
         <option value="all">{t('form.allCategories')}</option>
         {categories.map(category => (
