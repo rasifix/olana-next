@@ -43,15 +43,15 @@ function ControlDetailsPage() {
 
       <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-text-primary">
-            Control {control.code}
+          <h2 className="page-title">
+            {t('table.control')} {control.code}
           </h2>
         </div>
 
         {/* Categories Section */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">
-            Categories
+          <h3 className="card-title">
+            {t('table.categories')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {control.categories.map((category) => (
@@ -69,8 +69,8 @@ function ControlDetailsPage() {
         {/* Incoming Legs Section */}
         {control.from.length > 0 && (
           <div className="mb-8">
-            <h3 className="text-lg font-semibold text-text-primary mb-4">
-              Incoming Legs ({control.from.length})
+            <h3 className="card-title">
+              {t('table.incomingLegs')} ({control.from.length})
             </h3>
             <div className="flex flex-col gap-3">
               {control.from.map((leg) => (
@@ -93,8 +93,8 @@ function ControlDetailsPage() {
         {/* Outgoing Legs Section */}
         {control.to.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-text-primary mb-4">
-              Outgoing Legs ({control.to.length})
+            <h3 className="card-title">
+              {t('table.outgoingLegs')} ({control.to.length})
             </h3>
             <div className="flex flex-col gap-3">
               {control.to.map((leg) => (

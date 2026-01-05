@@ -2,6 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   TYPOGRAPHY & TEXT STYLES
+   ============================================ */
+@layer components {
+  /* Page title - Used for main page headings (h2) */
+  .page-title {
+    @apply text-2xl md:text-3xl font-bold text-text-primary mb-6;
+  }
+
+  /* Section heading - Used for major section headings (h3) */
+  .section-heading {
+    @apply text-xl font-semibold text-text-primary mb-4;
+  }
+
+  /* Card title - Used for headings within cards (h3, h4) */
+  .card-title {
+    @apply text-lg font-semibold text-text-primary mb-2;
+  }
+
+  /* Small heading - Used for small headings (h4) with default text size */
+  .heading-small {
+    @apply font-semibold text-text-primary;
+  }
+
+  /* Secondary text - Used for less prominent text */
+  .text-secondary {
+    @apply text-sm text-text-secondary;
+  }
+
+  /* Muted text - Used for de-emphasized text */
+  .text-muted {
+    @apply text-sm text-text-muted;
+  }
+
+  /* Small label - Used for form labels and small descriptive text */
+  .label-small {
+    @apply text-xs font-medium text-text-secondary uppercase tracking-wider;
+  }
+}
+
 /* Light mode (default) */
 :root {
   /* Primary brand colors */

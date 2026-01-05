@@ -37,7 +37,9 @@
     "elevation": "Höhe",
     "ascent": "Steigung",
     "length": "Länge",
-    "timeLoss": "Zeitverlust"
+    "timeLoss": "Zeitverlust",
+    "incomingLegs": "Eingehende Strecken",
+    "outgoingLegs": "Ausgehende Strecken"
   },
   "button": {
     "showSplitGraph": "Zwischenzeitgrafik anzeigen",

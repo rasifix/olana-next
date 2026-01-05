@@ -164,7 +164,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
           </button>
         </div>
 
-        <div className="mb-4 flex gap-6 text-sm text-text-secondary">
+        <div className="mb-4 flex gap-6 text-secondary">
           <div>
             <span className="font-semibold">{t('chart.totalTimeDifference')} </span>
             <span className={comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0 ? 'text-green-600' : 'text-red-600'}>

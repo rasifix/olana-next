@@ -17,7 +17,7 @@ function CompetitionCard({ competition }: CompetitionCardProps) {
           <div className="text-sm text-text-tertiary">{month}</div>
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-text-primary mb-2">
+          <h3 className="card-title">
             {competition.name}
           </h3>
           <div className="space-y-1 text-sm text-text-tertiary">

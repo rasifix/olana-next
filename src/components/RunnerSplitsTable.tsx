@@ -13,7 +13,7 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
   
   return (
     <div className="mt-6">
-      <h3 className="text-xl font-semibold text-text-primary mb-4">{t('table.splitTimes')}</h3>
+      <h3 className="section-heading">{t('table.splitTimes')}</h3>
 
       {runner.splits && runner.splits.length > 0 ? (
         <>

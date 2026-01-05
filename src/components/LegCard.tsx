@@ -16,7 +16,7 @@ function LegCard({ title, categories, runners, errorFrequency }: LegCardProps) {
     <div className="block bg-surface-secondary rounded-lg p-4 border border-border-default hover:bg-surface-hover hover:border-border-strong transition-colors">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h4 className="font-semibold text-text-primary">
+          <h4 className="heading-small">
             {title}
           </h4>
           <div className="text-sm text-text-tertiary mt-1">

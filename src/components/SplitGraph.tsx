@@ -111,7 +111,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
       <div className="bg-surface-primary rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold text-text-primary">{t('chart.splitAnalysis')}</h3>
+            <h3 className="section-heading">{t('chart.splitAnalysis')}</h3>
             <button
               onClick={onClose}
               className="text-text-muted hover:text-text-secondary text-2xl leading-none"

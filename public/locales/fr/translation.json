@@ -37,7 +37,9 @@
     "elevation": "Altitude",
     "ascent": "Montée",
     "length": "Longueur",
-    "timeLoss": "Perte de temps"
+    "timeLoss": "Perte de temps",
+    "incomingLegs": "Tronçons entrants",
+    "outgoingLegs": "Tronçons sortants"
   },
   "button": {
     "showSplitGraph": "Afficher le graphique des temps partiels",

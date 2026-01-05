@@ -169,7 +169,7 @@ function CustomCategoryPage() {
 
         {!hasCustomCategory ? (
           <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-            <h2 className="text-2xl font-bold text-text-primary mb-4">
+            <h2 className="page-title">
               Custom Category
             </h2>
             <p className="text-text-tertiary mb-6">
@@ -186,7 +186,7 @@ function CustomCategoryPage() {
           <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-text-primary">
+                <h2 className="page-title">
                   Custom Category
                 </h2>
                 <p className="text-sm text-text-tertiary mt-1">

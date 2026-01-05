@@ -125,7 +125,7 @@ function LegDetailsPage() {
 
       <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-text-primary">
+          <h2 className="page-title">
             Leg: <Link 
               to={`/competitions/${source}/${id}/controls/${encodeURIComponent(leg.from)}`}
               className="text-link hover:text-link-hover hover:underline"
@@ -155,7 +155,7 @@ function LegDetailsPage() {
                   fontWeight: selectedCategories.size === leg.categories.length ? '600' : '400',
                 }}
               >
-                <span className="text-sm text-text-secondary">All</span>
+                <span className="text-secondary">All</span>
               </div>
               {leg.categories.map(category => {
                 const isSelected = selectedCategories.has(category);

@@ -60,7 +60,7 @@ function RunnerDetailsPage() {
       </div>
 
       <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
-        <h2 className="text-2xl font-bold text-text-primary mb-2">
+        <h2 className="page-title">
           {runner.fullName}
         </h2>
         <p className="text-text-primary font-semibold mb-2">

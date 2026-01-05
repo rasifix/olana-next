@@ -159,7 +159,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
         {/* Header */}
         <div className="px-6 py-4 border-b border-border-default">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-text-primary">
+            <h2 className="page-title">
               Custom Category Builder
             </h2>
             <button
@@ -204,7 +204,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
         <div className="flex-1 overflow-y-auto px-6 py-6">
           {currentStep === 1 && (
             <div>
-              <h3 className="text-lg font-semibold text-text-primary mb-4">
+              <h3 className="card-title">
                 Select Categories to Combine
               </h3>
               <p className="text-sm text-text-tertiary mb-4">
@@ -248,7 +248,7 @@ function CustomCategoryBuilder({ competition, onComplete, onCancel }: CustomCate
 
           {currentStep === 2 && (
             <div>
-              <h3 className="text-lg font-semibold text-text-primary mb-4">
+              <h3 className="card-title">
                 Select Legs ({availableLegs.length} common legs found)
               </h3>
               <p className="text-sm text-text-tertiary mb-4">

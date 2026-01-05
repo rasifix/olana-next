@@ -12,7 +12,7 @@ function CategoryCard({ name, controls, distance, elevation, runnerCount }: Cate
   return (
     <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-lg border border-border-default">
       <div className="flex items-center gap-4">
-        <h4 className="font-semibold text-text-primary">
+        <h4 className="heading-small">
           {name}
         </h4>
         <span className="text-sm text-text-tertiary">

@@ -37,7 +37,9 @@
     "elevation": "Elevation",
     "ascent": "Ascent",
     "length": "Length",
-    "timeLoss": "Time Loss"
+    "timeLoss": "Time Loss",
+    "incomingLegs": "Incoming Legs",
+    "outgoingLegs": "Outgoing Legs"
   },
   "button": {
     "showSplitGraph": "Show Split Graph",

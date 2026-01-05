@@ -37,7 +37,9 @@
     "elevation": "Altitudine",
     "ascent": "Salita",
     "length": "Lunghezza",
-    "timeLoss": "Perdita di tempo"
+    "timeLoss": "Perdita di tempo",
+    "incomingLegs": "Tratte in entrata",
+    "outgoingLegs": "Tratte in uscita"
   },
   "button": {
     "showSplitGraph": "Mostra grafico tempi parziali",

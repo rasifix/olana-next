@@ -44,7 +44,7 @@ function ControlsList({ controls }: ControlsListProps) {
             >
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h4 className="font-semibold text-text-primary">
+                  <h4 className="heading-small">
                     {t('table.control')} {control.code}
                   </h4>
                   <div className="text-sm text-text-tertiary mt-1">

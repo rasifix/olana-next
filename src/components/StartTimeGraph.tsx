@@ -188,7 +188,7 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
 
   return (
     <div className="bg-surface-primary rounded-lg shadow p-6">
-      <h2 className="text-2xl font-bold text-text-primary mb-4">{t('chart.startTimeAnalysis')}</h2>
+      <h2 className="page-title">{t('chart.startTimeAnalysis')}</h2>
       
       <div className="mb-4 flex flex-wrap gap-3">
         {categories.map(category => {
