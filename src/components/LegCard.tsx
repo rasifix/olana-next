@@ -13,7 +13,7 @@ function LegCard({ title, categories, runners, errorFrequency }: LegCardProps) {
   const { t } = useTranslation();
   
   return (
-    <div className="block bg-surface-secondary rounded-lg p-4 border border-border-default hover:bg-surface-hover hover:border-border-strong transition-colors">
+    <div className="card-secondary block hover:bg-surface-hover hover:border-border-strong transition-colors">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h4 className="heading-small">

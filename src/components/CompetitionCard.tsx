@@ -10,7 +10,7 @@ function CompetitionCard({ competition }: CompetitionCardProps) {
   const month = date.toLocaleDateString('en-US', { month: 'short' });
 
   return (
-    <div className="bg-surface-primary rounded-lg shadow hover:shadow-md transition-shadow p-4 border border-border-default block">
+    <div className="card shadow-hover">
       <div className="flex gap-4">
         <div className="flex flex-col items-center justify-center min-w-[60px]">
           <div className="text-3xl font-bold text-text-primary">{day}</div>

@@ -41,7 +41,7 @@ function ControlDetailsPage() {
       ]} />
       </div>
 
-      <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+      <div className="page-container-card">
         <div className="mb-6">
           <h2 className="page-title">
             {t('table.control')} {control.code}

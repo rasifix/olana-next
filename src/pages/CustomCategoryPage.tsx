@@ -168,7 +168,7 @@ function CustomCategoryPage() {
         </div>
 
         {!hasCustomCategory ? (
-          <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+          <div className="page-container-card">
             <h2 className="page-title">
               Custom Category
             </h2>
@@ -183,7 +183,7 @@ function CustomCategoryPage() {
             </button>
           </div>
         ) : (
-          <div className="bg-surface-primary rounded-none md:rounded-lg shadow-lg p-4 md:p-6">
+          <div className="page-container-card">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="page-title">
