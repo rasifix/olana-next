@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { competitionService } from '../services/competitionService';
+import { useParams, Link } from 'react-router-dom';import { useTranslation } from 'react-i18next';import { competitionService } from '../services/competitionService';
 import LegCard from '../components/LegCard';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
 import CategoryCard from '@/components/CategoryCard';
 
 function ControlDetailsPage() {
+  const { t } = useTranslation();
   const { source, id, controlCode } = useParams<{ source: string; id: string; controlCode: string }>();
   const { competition } = useCompetition();
 
@@ -34,10 +34,10 @@ function ControlDetailsPage() {
     <div className="md:px-4 py-6">
       <div className="px-4">
       <Breadcrumbs items={[
-        { label: 'Home', path: '/competitions', isHome: true },
-        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
-        { label: 'Controls', path: `/competitions/${source}/${id}/controls` },
-        { label: `Control ${control.code}`, path: `/competitions/${source}/${id}/controls/${controlCode}` }
+        { label: t('navigation.home'), path: '/competitions', isHome: true },
+        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+        { label: t('navigation.controls'), path: `/competitions/${source}/${id}/controls` },
+        { label: `${t('table.control')} ${control.code}`, path: `/competitions/${source}/${id}/controls/${controlCode}` }
       ]} />
       </div>
 

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { competitionService } from '../services/competitionService';
 import { ranking } from '@rasifix/orienteering-utils';
 import RunnerSplitsTable from '../components/RunnerSplitsTable';
@@ -9,6 +10,7 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
 
 function CourseRunnerDetailsPage() {
+    const { t } = useTranslation();
     const { source, id, courseCode, runnerId } = useParams<{
         source: string;
         id: string;
@@ -42,7 +44,7 @@ function CourseRunnerDetailsPage() {
     if (!runner) {
         return (
             <div className="px-4 py-6">
-                <div className="text-center py-8 text-text-muted">Runner not found</div>
+                <div className="text-center py-8 text-text-muted">{t('error.runnerNotFound')}</div>
             </div>
         );
     }
@@ -51,9 +53,9 @@ function CourseRunnerDetailsPage() {
         <div className="md:px-4 py-6">
             <div className="px-4">
                 <Breadcrumbs items={[
-                    { label: 'Home', path: '/competitions', isHome: true },
-                    { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
-                    { label: courseName || 'Course', path: `/competitions/${source}/${id}/courses/${courseCode}` },
+                    { label: t('navigation.home'), path: '/competitions', isHome: true },
+                    { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+                    { label: courseName || t('navigation.courses'), path: `/competitions/${source}/${id}/courses/${courseCode}` },
                     { label: runner.fullName, path: `/competitions/${source}/${id}/courses/${courseCode}/runners/${runnerId}` }
                 ]} />
             </div>
@@ -63,10 +65,10 @@ function CourseRunnerDetailsPage() {
                     {runner.fullName}
                 </h2>
                 <p className="text-text-primary font-semibold mb-2">
-                    Final Time: {runner.time}
+                    {t('runner.finalTime')}: {runner.time}
                 </p>
                 <p className="text-error font-semibold mb-2">
-                    Error: {runner.errorTime ? runner.errorTime : '00:00'}
+                    {t('runner.error')}: {runner.errorTime ? runner.errorTime : '00:00'}
                 </p>
                 <p className="text-text-tertiary mb-6">
                     {runner.club} • {runner.yearOfBirth}

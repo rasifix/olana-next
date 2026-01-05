@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ranking } from '@rasifix/orienteering-utils';
+import { useTranslation } from 'react-i18next';
 import RunnerSplitsTable from '../components/RunnerSplitsTable';
 import RunnerComparisonGraph from '../components/RunnerComparisonGraph';
 import RunnerSelector from '../components/RunnerSelector';
@@ -8,6 +9,7 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
 
 function RunnerDetailsPage() {
+  const { t } = useTranslation();
   const { source, id, categoryName, runnerId } = useParams<{
     source: string;
     id: string;
@@ -41,7 +43,7 @@ function RunnerDetailsPage() {
   if (!runner) {
     return (
       <div className="px-4 py-6">
-        <div className="text-center py-8 text-text-muted">Runner not found</div>
+        <div className="text-center py-8 text-text-muted">{t('error.runnerNotFound')}</div>
       </div>
     );
   }
@@ -50,9 +52,9 @@ function RunnerDetailsPage() {
     <div className="md:px-4 py-6">
       <div className="px-4">
       <Breadcrumbs items={[
-        { label: 'Home', path: '/competitions', isHome: true },
-        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
-        { label: category?.name || 'Category', path: `/competitions/${source}/${id}/categories/${categoryName}` },
+        { label: t('navigation.home'), path: '/competitions', isHome: true },
+        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+        { label: category?.name || t('table.category'), path: `/competitions/${source}/${id}/categories/${categoryName}` },
         { label: runner.fullName, path: `/competitions/${source}/${id}/categories/${categoryName}/runners/${runnerId}` }
       ]} />
       </div>
@@ -62,10 +64,10 @@ function RunnerDetailsPage() {
           {runner.fullName}
         </h2>
         <p className="text-text-primary font-semibold mb-2">
-          Final Time: {runner.time}
+          {t('runner.finalTime')}: {runner.time}
         </p>
         <p className="text-error font-semibold mb-2">
-          Error: {runner.errorTime ? runner.errorTime : '00:00'}
+          {t('runner.error')}: {runner.errorTime ? runner.errorTime : '00:00'}
         </p>
         <p className="text-text-tertiary mb-6">
           {runner.club} • {runner.yearOfBirth}

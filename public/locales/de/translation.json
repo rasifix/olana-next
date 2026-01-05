@@ -1,0 +1,149 @@
+{
+  "navigation": {
+    "home": "Start",
+    "competitions": "Wettkämpfe",
+    "categories": "Kategorien",
+    "courses": "Bahnen",
+    "legs": "Strecken",
+    "controls": "Posten",
+    "customCategory": "Eigene Kategorie",
+    "startTimes": "Startzeiten"
+  },
+  "table": {
+    "rank": "Rang",
+    "name": "Name",
+    "category": "Kategorie",
+    "categories": "Kategorien",
+    "club": "Verein",
+    "city": "Ort",
+    "time": "Zeit",
+    "behind": "Rückstand",
+    "year": "Jahr",
+    "select": "Auswählen",
+    "split": "Zwischenzeit",
+    "overall": "Gesamt",
+    "control": "Posten",
+    "splitTime": "Streckenzeit",
+    "splitRank": "Streckenrang",
+    "splitBehind": "Streckenrückstand",
+    "overallRank": "Gesamtrang",
+    "overallTime": "Gesamtzeit",
+    "overallBehind": "Gesamtrückstand",
+    "splitTimes": "Zwischenzeiten",
+    "ideal": "Ideal",
+    "position": "Position",
+    "loss": "Verlust",
+    "distance": "Distanz",
+    "elevation": "Höhe",
+    "ascent": "Steigung",
+    "length": "Länge",
+    "timeLoss": "Zeitverlust"
+  },
+  "button": {
+    "showSplitGraph": "Zwischenzeitgrafik anzeigen",
+    "showGraph": "Grafik anzeigen",
+    "clear": "Löschen",
+    "compare": "Vergleichen",
+    "edit": "Bearbeiten",
+    "editSelection": "Auswahl bearbeiten",
+    "create": "Erstellen",
+    "createCustomCategory": "Eigene Kategorie erstellen",
+    "close": "Schließen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "apply": "Anwenden",
+    "reset": "Zurücksetzen",
+    "select": "Auswählen",
+    "selectAll": "Alle auswählen",
+    "deselectAll": "Alle abwählen"
+  },
+  "error": {
+    "loading": "Fehler beim Laden: {{error}}",
+    "loadingCompetitions": "Fehler beim Laden der Wettkämpfe",
+    "loadingCompetition": "Fehler beim Laden des Wettkampfes",
+    "notFound": "Nicht gefunden",
+    "competitionNotFound": "Wettkampf nicht gefunden",
+    "categoryNotFound": "Kategorie nicht gefunden",
+    "runnerNotFound": "Läufer nicht gefunden",
+    "courseNotFound": "Bahn nicht gefunden",
+    "legNotFound": "Teilstrecke nicht gefunden",
+    "controlNotFound": "Posten nicht gefunden",
+    "noData": "Keine Daten verfügbar",
+    "noRunners": "Keine Läufer in dieser Rangliste",
+    "noCompetitions": "Keine Wettkämpfe gefunden",
+    "noLegs": "Keine Teilstrecken verfügbar",
+    "noControls": "Keine Posten verfügbar",
+    "noComparisonData": "Keine Vergleichsdaten verfügbar"
+  },
+  "loading": {
+    "competitions": "Lade Wettkämpfe...",
+    "competition": "Lade Wettkampf...",
+    "data": "Lade Daten...",
+    "runners": "Lade Läufer...",
+    "runnerDetails": "Lade Läuferdetails..."
+  },
+  "chart": {
+    "splitAnalysis": "Zwischenzeitanalyse",
+    "runnerComparison": "Läufervergleich",
+    "startTimeAnalysis": "Startzeitanalyse",
+    "errorFrequency": "Fehlerverteilung",
+    "vs": "vs",
+    "totalTimeDifference": "Gesamtzeitunterschied:",
+    "isFaster": "ist schneller",
+    "isSlower": "ist langsamer"
+  },
+  "form": {
+    "filter": "Filter",
+    "source": "Quelle",
+    "allSources": "Alle Quellen",
+    "year": "Jahr",
+    "search": "Suche",
+    "selectCategories": "Kategorien auswählen",
+    "selectLegs": "Teilstrecken auswählen",
+    "category": "Kategorie",
+    "leg": "Posten",
+    "filterByCategory": "Nach Kategorie filtern",
+    "allCategories": "Alle Kategorien"
+  },
+  "runner": {
+    "selected": "{{count}} Läufer ausgewählt",
+    "selected_plural": "{{count}} Läufer ausgewählt",
+    "total": "{{count}} Läufer",
+    "total_plural": "{{count}} Läufer",
+    "comparing": "Vergleiche {{count}} Läufer",
+    "finalTime": "Laufzeit",
+    "error": "Fehler",
+    "backToCustomCategory": "← Zurück zur eigenen Kategorie",
+    "compareWith": "Vergleiche mit einem anderen Läufer:",
+    "selectRunner": "Läufer auswählen..."
+  },
+  "leg": {
+    "count": "{{count}} Teilstrecke",
+    "count_plural": "{{count}} Teilstrecken",
+    "fromTo": "Von {{from}} nach {{to}}"
+  },
+  "control": {
+    "count": "{{count}} Posten",
+    "count_plural": "{{count}} Posten"
+  },
+  "competition": {
+    "date": "Datum",
+    "location": "Ort",
+    "organizer": "Veranstalter",
+    "type": "Typ",
+    "results": "Resultate"
+  },
+  "accessibility": {
+    "switchToLightMode": "Zum hellen Modus wechseln",
+    "switchToDarkMode": "Zum dunklen Modus wechseln",
+    "changeLanguage": "Sprache ändern",
+    "closeDialog": "Dialog schließen",
+    "openMenu": "Menü öffnen"
+  },
+  "message": {
+    "selectUpToRunners": "Wähle bis zu {{max}} Läufer aus",
+    "minRunnersForGraph": "Wähle mindestens 2 Läufer aus, um die Grafik anzuzeigen",
+    "noSplits": "Keine Zwischenzeitdaten verfügbar",
+    "noSplitTimes": "Keine Zwischenzeiten verfügbar"
+  }
+}

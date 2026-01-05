@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { ranking, formatTime } from '@rasifix/orienteering-utils';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { getChartColors } from '../utils/chartColors';
 
@@ -17,6 +18,7 @@ interface LegComparison {
 }
 
 function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: RunnerComparisonGraphProps) {
+  const { t } = useTranslation();
   const { isDarkMode } = useTheme();
   const chartColors = getChartColors(isDarkMode);
   
@@ -65,12 +67,12 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-surface-primary rounded-lg shadow-xl p-6 max-w-6xl w-full">
-          <p className="text-text-muted">No comparison data available</p>
+          <p className="text-text-muted">{t('error.noComparisonData')}</p>
           <button
             onClick={onClose}
             className="mt-4 px-4 py-2 bg-disabled text-text-primary rounded hover:bg-surface-hover"
           >
-            Close
+            {t('button.close')}
           </button>
         </div>
       </div>
@@ -148,9 +150,9 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
       <div className="bg-surface-primary rounded-lg shadow-xl p-6 max-w-6xl w-full max-h-[90vh] overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h3 className="text-xl font-bold text-text-primary">Runner Comparison</h3>
+            <h3 className="text-xl font-bold text-text-primary">{t('chart.runnerComparison')}</h3>
             <p className="text-sm text-text-tertiary mt-1">
-              <span className="font-semibold text-success">{currentRunner.fullName}</span> vs{' '}
+              <span className="font-semibold text-success">{currentRunner.fullName}</span> {t('chart.vs')}{' '}
               <span className="font-semibold text-info">{comparisonRunner.fullName}</span>
             </p>
           </div>
@@ -162,16 +164,16 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
           </button>
         </div>
 
-        <div className="mb-4 flex gap-6 text-sm">
+        <div className="mb-4 flex gap-6 text-sm text-text-secondary">
           <div>
-            <span className="font-semibold">Total time difference: </span>
+            <span className="font-semibold">{t('chart.totalTimeDifference')} </span>
             <span className={comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0 ? 'text-green-600' : 'text-red-600'}>
               {comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0 ? '+' : ''}
               {formatTime(Math.abs(comparisonData[comparisonData.length - 1].cumulativeTimeDifference))}
             </span>
             {comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0 
-              ? ` (${currentRunner.fullName} is faster)`
-              : ` (${currentRunner.fullName} is slower)`
+              ? ` (${currentRunner.fullName} ${t('chart.isFaster')})`
+              : ` (${currentRunner.fullName} ${t('chart.isSlower')})`
             }
           </div>
         </div>
@@ -297,27 +299,6 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
           </svg>
         </div>
 
-        <div className="mt-6 flex gap-6 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-green-500 opacity-70"></div>
-            <span>{currentRunner.fullName} faster on this leg</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-error-bg0 opacity-70"></div>
-            <span>{currentRunner.fullName} slower on this leg</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-0.5 bg-blue-600"></div>
-            <span>Cumulative time difference</span>
-          </div>
-        </div>
-
-        <button
-          onClick={onClose}
-          className="mt-6 px-4 py-2 bg-disabled text-text-primary rounded hover:bg-surface-hover transition-colors"
-        >
-          Close
-        </button>
       </div>
     </div>
   );

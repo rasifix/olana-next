@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { parseTime, formatTime } from '@rasifix/orienteering-utils';
+import { useTranslation } from 'react-i18next';
 
 interface LegRunner {
   id: number | string;
@@ -20,6 +21,8 @@ interface LegRankingTableProps {
 }
 
 function LegRankingTable({ runners, source, competitionId }: LegRankingTableProps) {
+  const { t } = useTranslation();
+  
   const getTimeBehind = (split: string, fastestSplit: string): string => {
     if (split === fastestSplit) {
       return '';
@@ -43,28 +46,28 @@ function LegRankingTable({ runners, source, competitionId }: LegRankingTableProp
               #
             </th>
             <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-              Name
+              {t('table.name')}
             </th>
             <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-              Cat
+              {t('table.category')}
             </th>
             <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-              Club
+              {t('table.club')}
             </th>
             <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-              Year
+              {t('table.year')}
             </th>
             <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-              City
+              {t('table.city')}
             </th>
             <th className="px-2 md:px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-              Split
+              {t('table.split')}
             </th>
             <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-              Behind
+              {t('table.behind')}
             </th>
             <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-              Time Loss
+              {t('table.timeLoss')}
             </th>
           </tr>
         </thead>

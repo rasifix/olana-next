@@ -1,5 +1,6 @@
 import { ranking, formatTime } from '@rasifix/orienteering-utils';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface RunnerSplitsTableProps {
   runner: ranking.RankingRunner;
@@ -8,9 +9,11 @@ interface RunnerSplitsTableProps {
 }
 
 function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
+  const { t } = useTranslation();
+  
   return (
     <div className="mt-6">
-      <h3 className="text-xl font-semibold text-text-primary mb-4">Split Times</h3>
+      <h3 className="text-xl font-semibold text-text-primary mb-4">{t('table.splitTimes')}</h3>
 
       {runner.splits && runner.splits.length > 0 ? (
         <>
@@ -23,22 +26,22 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                     #
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider border-l border-border-strong">
-                    Split Rank
+                    {t('table.splitRank')}
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Split Time
+                    {t('table.splitTime')}
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider border-r border-border-strong">
-                    Split Behind
+                    {t('table.splitBehind')}
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Overall Rank
+                    {t('table.overallRank')}
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Overall Time
+                    {t('table.overallTime')}
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Overall Behind
+                    {t('table.overallBehind')}
                   </th>
                 </tr>
               </thead>
@@ -112,18 +115,18 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                   
                   {/* Split row */}
                   <div className="mb-3 pb-3 border-b border-border-default">
-                    <div className="text-xs font-medium text-text-muted uppercase mb-2">Split</div>
+                    <div className="text-xs font-medium text-text-muted uppercase mb-2">{t('table.split')}</div>
                     <div className="flex justify-between text-sm">
                       <div className="flex-1">
-                        <div className="text-text-muted text-xs">Rank</div>
+                        <div className="text-text-muted text-xs">{t('table.rank')}</div>
                         <div className="text-text-primary font-medium">{split.leg.rank}</div>
                       </div>
                       <div className="flex-1 text-center">
-                        <div className="text-text-muted text-xs">Time</div>
+                        <div className="text-text-muted text-xs">{t('table.time')}</div>
                         <div className="text-text-primary font-medium font-mono">{formatTime(split.splitTime)}</div>
                       </div>
                       <div className="flex-1 text-right">
-                        <div className="text-text-muted text-xs">Behind</div>
+                        <div className="text-text-muted text-xs">{t('table.behind')}</div>
                         <div className="text-text-primary font-medium font-mono flex items-center justify-end gap-1">
                           {split.leg.behind ? formatTime(split.leg.behind) : '0:00'}
                         </div>
@@ -136,18 +139,18 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                   
                   {/* Overall row */}
                   <div>
-                    <div className="text-xs font-medium text-text-muted uppercase mb-2">Overall</div>
+                    <div className="text-xs font-medium text-text-muted uppercase mb-2">{t('table.overall')}</div>
                     <div className="flex justify-between text-sm">
                       <div className="flex-1">
-                        <div className="text-text-muted text-xs">Rank</div>
+                        <div className="text-text-muted text-xs">{t('table.rank')}</div>
                         <div className="text-text-primary font-medium">{split.overall.rank}</div>
                       </div>
                       <div className="flex-1 text-center">
-                        <div className="text-text-muted text-xs">Time</div>
+                        <div className="text-text-muted text-xs">{t('table.time')}</div>
                         <div className="text-text-primary font-medium font-mono">{formatTime(split.time)}</div>
                       </div>
                       <div className="flex-1 text-right">
-                        <div className="text-text-muted text-xs">Behind</div>
+                        <div className="text-text-muted text-xs">{t('table.behind')}</div>
                         <div className="text-text-primary font-medium font-mono">{split.overall.behind ? formatTime(split.overall.behind) : '0:00'}</div>
                       </div>
                     </div>
@@ -158,7 +161,7 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
           </div>
         </>
       ) : (
-        <p className="text-text-muted">No split times available</p>
+        <p className="text-text-muted">{t('message.noSplitTimes')}</p>
       )}
     </div>
   );

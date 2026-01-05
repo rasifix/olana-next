@@ -1,0 +1,149 @@
+{
+  "navigation": {
+    "home": "Home",
+    "competitions": "Competizioni",
+    "categories": "Categorie",
+    "courses": "Percorsi",
+    "legs": "Tratte",
+    "controls": "Punti",
+    "customCategory": "Categoria personalizzata",
+    "startTimes": "Orari di partenza"
+  },
+  "table": {
+    "rank": "Posizione",
+    "name": "Nome",
+    "category": "Categoria",
+    "categories": "Categorie",
+    "club": "Società",
+    "city": "Città",
+    "time": "Tempo",
+    "behind": "Distacco",
+    "year": "Anno",
+    "select": "Seleziona",
+    "split": "Tempo parziale",
+    "overall": "Totale",
+    "control": "Punto",
+    "splitTime": "Tempo parziale",
+    "splitRank": "Posizione parziale",
+    "splitBehind": "Distacco parziale",
+    "overallRank": "Posizione totale",
+    "overallTime": "Tempo totale",
+    "overallBehind": "Distacco totale",
+    "splitTimes": "Tempi intermedi",
+    "ideal": "Ideale",
+    "position": "Posizione",
+    "loss": "Perdita",
+    "distance": "Distanza",
+    "elevation": "Altitudine",
+    "ascent": "Salita",
+    "length": "Lunghezza",
+    "timeLoss": "Perdita di tempo"
+  },
+  "button": {
+    "showSplitGraph": "Mostra grafico tempi parziali",
+    "showGraph": "Mostra grafico",
+    "clear": "Cancella",
+    "compare": "Confronta",
+    "edit": "Modifica",
+    "editSelection": "Modifica selezione",
+    "create": "Crea",
+    "createCustomCategory": "Crea categoria personalizzata",
+    "close": "Chiudi",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "apply": "Applica",
+    "reset": "Reimposta",
+    "select": "Seleziona",
+    "selectAll": "Seleziona tutti",
+    "deselectAll": "Deseleziona tutti"
+  },
+  "error": {
+    "loading": "Errore di caricamento: {{error}}",
+    "loadingCompetitions": "Errore nel caricamento delle competizioni",
+    "loadingCompetition": "Errore nel caricamento della competizione",
+    "notFound": "Non trovato",
+    "competitionNotFound": "Competizione non trovata",
+    "categoryNotFound": "Categoria non trovata",
+    "runnerNotFound": "Atleta non trovato",
+    "courseNotFound": "Percorso non trovato",
+    "legNotFound": "Tratta non trovata",
+    "controlNotFound": "Punto non trovato",
+    "noData": "Nessun dato disponibile",
+    "noRunners": "Nessun atleta in questa classifica",
+    "noCompetitions": "Nessuna competizione trovata",
+    "noLegs": "Nessuna tratta disponibile",
+    "noControls": "Nessun punto disponibile",
+    "noComparisonData": "Nessun dato di confronto disponibile"
+  },
+  "loading": {
+    "competitions": "Caricamento competizioni...",
+    "competition": "Caricamento competizione...",
+    "data": "Caricamento dati...",
+    "runners": "Caricamento atleti...",
+    "runnerDetails": "Caricamento dettagli atleta..."
+  },
+  "chart": {
+    "splitAnalysis": "Analisi tempi parziali",
+    "runnerComparison": "Confronto atleti",
+    "startTimeAnalysis": "Analisi orari di partenza",
+    "errorFrequency": "Distribuzione frequenza errori",
+    "vs": "vs",
+    "totalTimeDifference": "Differenza di tempo totale:",
+    "isFaster": "è più veloce",
+    "isSlower": "è più lento"
+  },
+  "form": {
+    "filter": "Filtra",
+    "source": "Fonte",
+    "allSources": "Tutte le fonti",
+    "year": "Anno",
+    "search": "Cerca",
+    "selectCategories": "Seleziona categorie",
+    "selectLegs": "Seleziona tratte",
+    "category": "Categoria",
+    "leg": "Tratta",
+    "filterByCategory": "Filtra per categoria",
+    "allCategories": "Tutte le categorie"
+  },
+  "runner": {
+    "selected": "{{count}} atleta selezionato",
+    "selected_plural": "{{count}} atleti selezionati",
+    "total": "{{count}} atleta",
+    "total_plural": "{{count}} atleti",
+    "comparing": "Confronto di {{count}} atleti",
+    "finalTime": "Tempo finale",
+    "error": "Errore",
+    "backToCustomCategory": "← Torna alla categoria personalizzata",
+    "compareWith": "Confronta con un altro atleta:",
+    "selectRunner": "Seleziona un atleta..."
+  },
+  "leg": {
+    "count": "{{count}} tratta",
+    "count_plural": "{{count}} tratte",
+    "fromTo": "Da {{from}} a {{to}}"
+  },
+  "control": {
+    "count": "{{count}} punto",
+    "count_plural": "{{count}} punti"
+  },
+  "competition": {
+    "date": "Data",
+    "location": "Luogo",
+    "organizer": "Organizzatore",
+    "type": "Tipo",
+    "results": "Risultati"
+  },
+  "accessibility": {
+    "switchToLightMode": "Passa alla modalità chiara",
+    "switchToDarkMode": "Passa alla modalità scura",
+    "changeLanguage": "Cambia lingua",
+    "closeDialog": "Chiudi finestra",
+    "openMenu": "Apri menu"
+  },
+  "message": {
+    "selectUpToRunners": "Seleziona fino a {{max}} atleti",
+    "minRunnersForGraph": "Seleziona almeno 2 atleti per visualizzare il grafico",
+    "noSplits": "Nessun dato di tempo parziale disponibile",
+    "noSplitTimes": "Nessun tempo intermedio disponibile"
+  }
+}

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ranking } from '@rasifix/orienteering-utils';
+import { useTranslation } from 'react-i18next';
 import SplitGraph from '../components/SplitGraph';
 import RankingTable from '../components/RankingTable';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -9,6 +10,7 @@ import { useCompetition } from '../contexts/CompetitionContext';
 
 
 function CategoryDetailsPage() {
+  const { t } = useTranslation();
   const { source, id, categoryName } = useParams<{ source: string; id: string; categoryName: string }>();
   const { competition } = useCompetition();
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
@@ -64,10 +66,10 @@ function CategoryDetailsPage() {
     <div className="md:px-4 py-6">
       <div className="px-4">
       <Breadcrumbs items={[
-        { label: 'Home', path: '/competitions', isHome: true },
-        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
-        { label: 'Categories', path: `/competitions/${source}/${id}/categories` },
-        { label: categoryName || 'Category', path: `/competitions/${source}/${id}/categories/${categoryName}` }
+        { label: t('navigation.home'), path: '/competitions', isHome: true },
+        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+        { label: t('navigation.categories'), path: `/competitions/${source}/${id}/categories` },
+        { label: categoryName || t('table.category'), path: `/competitions/${source}/${id}/categories/${categoryName}` }
       ]} />
       </div>
 

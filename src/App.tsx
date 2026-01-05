@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import CompetitionsPage from './pages/CompetitionsPage';
 import CompetitionDetailsPage from './pages/CompetitionDetailsPage';
 import CategoryDetailsPage from './pages/CategoryDetailsPage';
@@ -12,17 +13,21 @@ import CustomCategoryPage from './pages/CustomCategoryPage';
 import CustomCategoryRunnerDetailsPage from './pages/CustomCategoryRunnerDetailsPage';
 import StartTimeAnalysisPage from './pages/StartTimeAnalysisPage';
 import CompassLogo from './components/CompassLogo';
+import LanguageSelector from './components/LanguageSelector';
 import { CompetitionProvider } from './contexts/CompetitionContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { LanguageProvider } from './contexts/LanguageContext';
+import './i18n/config';
 
 function ThemeToggle() {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { t } = useTranslation();
   
   return (
     <button
       onClick={toggleTheme}
       className="p-2 rounded-md hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors"
-      aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={isDarkMode ? t('accessibility.switchToLightMode') : t('accessibility.switchToDarkMode')}
     >
       {isDarkMode ? (
         <Sun className="w-5 h-5" />
@@ -43,7 +48,10 @@ function AppContent() {
               <div className="flex items-center gap-4">
                 <CompassLogo />
               </div>
-              <ThemeToggle />
+              <div className="flex items-center gap-2">
+                <LanguageSelector />
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </header>
@@ -75,9 +83,11 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 

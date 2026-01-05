@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { competitionService } from '../services/competitionService';
 import LegsList from '../components/LegsList';
 import ControlsList from '../components/ControlsList';
@@ -8,6 +9,7 @@ import CategoryCard from '../components/CategoryCard';
 import { useCompetition } from '../contexts/CompetitionContext';
 
 function CompetitionDetailsPage() {
+  const { t } = useTranslation();
   const { source, id, tab } = useParams<{ source: string; id: string; tab?: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,8 +44,8 @@ function CompetitionDetailsPage() {
     <div className="md:px-4 py-6">
       <div className="px-4">
       <Breadcrumbs items={[
-        { label: 'Home', path: '/competitions', isHome: true },
-        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` }
+        { label: t('navigation.home'), path: '/competitions', isHome: true },
+        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` }
       ]} />
       </div>
 
@@ -63,7 +65,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Categories<span className="hidden md:inline"> ({competition?.categories?.length || 0})</span>
+              {t('navigation.categories')}<span className="hidden md:inline"> ({competition?.categories?.length || 0})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/courses`}
@@ -73,7 +75,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Courses<span className="hidden md:inline"> ({courses.length})</span>
+              {t('navigation.courses')}<span className="hidden md:inline"> ({courses.length})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/legs`}
@@ -83,7 +85,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Legs<span className="hidden md:inline"> ({legs.length})</span>
+              {t('navigation.legs')}<span className="hidden md:inline"> ({legs.length})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/controls`}
@@ -93,7 +95,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Controls<span className="hidden md:inline"> ({controls.length})</span>
+              {t('navigation.controls')}<span className="hidden md:inline"> ({controls.length})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/custom`}
@@ -103,7 +105,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Custom Category
+              {t('navigation.customCategory')}
             </Link>
             <Link
               to={`/competitions/${source}/${id}/starttime`}
@@ -113,7 +115,7 @@ function CompetitionDetailsPage() {
                   : 'border-transparent text-text-muted hover:text-text-secondary hover:border-border-strong'
               } hidden md:inline-flex whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
             >
-              Start Times
+              {t('navigation.startTimes')}
             </Link>
           </nav>
         </div>

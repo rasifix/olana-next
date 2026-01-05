@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Runner } from '../types';
 import { competitionService } from '../services/competitionService';
 import { ranking, parseTime, formatTime } from '@rasifix/orienteering-utils';
@@ -10,6 +11,7 @@ import { useCustomCategory } from '../contexts/CustomCategoryContext';
 import Breadcrumbs from '../components/Breadcrumbs';
 
 function CustomCategoryRunnerDetailsPage() {
+  const { t } = useTranslation();
   const { source, id, runnerId } = useParams<{
     source: string;
     id: string;
@@ -199,7 +201,7 @@ function CustomCategoryRunnerDetailsPage() {
     return (
       <div className="px-4 py-6">
         <div className="flex justify-center items-center py-8">
-          <div className="text-text-tertiary">Loading runner details...</div>
+          <div className="text-text-tertiary">{t('loading.runnerDetails')}</div>
         </div>
       </div>
     );
@@ -209,13 +211,13 @@ function CustomCategoryRunnerDetailsPage() {
     return (
       <div className="px-4 py-6">
         <div className="bg-error-bg border border-error-border rounded-lg p-4 text-error">
-          Error: {error}
+          {t('runner.error')}: {error}
         </div>
         <button
           onClick={() => navigate(`/competitions/${source}/${id}/custom`)}
           className="mt-4 text-link hover:text-link-hover"
         >
-          ← Back to custom category
+          {t('runner.backToCustomCategory')}
         </button>
       </div>
     );
@@ -224,12 +226,12 @@ function CustomCategoryRunnerDetailsPage() {
   if (!runner) {
     return (
       <div className="px-4 py-6">
-        <div className="text-center py-8 text-text-muted">Runner not found</div>
+        <div className="text-center py-8 text-text-muted">{t('error.runnerNotFound')}</div>
         <button
           onClick={() => navigate(`/competitions/${source}/${id}/custom`)}
           className="mt-4 text-link hover:text-link-hover"
         >
-          ← Back to custom category
+          {t('runner.backToCustomCategory')}
         </button>
       </div>
     );
@@ -239,9 +241,9 @@ function CustomCategoryRunnerDetailsPage() {
     <div className="md:px-4 py-6">
       <div className="px-4">
       <Breadcrumbs items={[
-        { label: 'Home', path: '/competitions', isHome: true },
-        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
-        { label: 'Custom Category', path: `/competitions/${source}/${id}/custom` },
+        { label: t('navigation.home'), path: '/competitions', isHome: true },
+        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+        { label: t('navigation.customCategory'), path: `/competitions/${source}/${id}/custom` },
         { label: runner.fullName, path: `/competitions/${source}/${id}/custom/runners/${runnerId}` }
       ]} />
       </div>
@@ -251,10 +253,10 @@ function CustomCategoryRunnerDetailsPage() {
           {runner.fullName}
         </h2>
         <p className="text-text-primary font-semibold mb-2">
-          Final Time: {runner.time}
+          {t('runner.finalTime')}: {runner.time}
         </p>
         <p className="text-red-800 font-semibold mb-2">
-          Error: {runner.errorTime ? runner.errorTime : '00:00'}
+          {t('runner.error')}: {runner.errorTime ? runner.errorTime : '00:00'}
         </p>
         <p className="text-text-tertiary mb-6">
           {runner.club} • {runner.yearOfBirth}

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import CompetitionList from '../components/CompetitionList';
 import { competitionService } from '../services/competitionService';
 import { Competition } from '../types';
 
 function CompetitionsPage() {
+  const { t } = useTranslation();
   // Default to current year, except in January where we use previous year
   const getDefaultYear = () => {
     const now = new Date();
@@ -54,7 +56,7 @@ function CompetitionsPage() {
       <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-end">
         <div className="flex-1 sm:flex-initial">
           <label htmlFor="year-filter" className="block text-sm font-medium text-text-secondary mb-1">
-            Year
+            {t('form.year')}
           </label>
           <select
             id="year-filter"
@@ -72,7 +74,7 @@ function CompetitionsPage() {
         {!loading && !error && competitions.length > 0 && (
           <div className="flex-1 sm:flex-initial">
             <label htmlFor="source-filter" className="block text-sm font-medium text-text-secondary mb-1">
-              Source
+              {t('form.source')}
             </label>
             <select
               id="source-filter"
@@ -80,7 +82,7 @@ function CompetitionsPage() {
               onChange={(e) => setSelectedSource(e.target.value)}
               className="block w-full md:w-64 px-3 py-2 border border-border-default rounded-md shadow-sm focus:outline-none focus:ring-primary-border focus:border-primary-border sm:text-sm bg-surface-primary text-text-primary"
             >
-              <option value="all">All Sources</option>
+              <option value="all">{t('form.allSources')}</option>
               {allSources.map(source => (
                 <option key={source} value={source}>
                   {source}

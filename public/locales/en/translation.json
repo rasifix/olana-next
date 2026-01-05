@@ -1,0 +1,149 @@
+{
+  "navigation": {
+    "home": "Home",
+    "competitions": "Competitions",
+    "categories": "Categories",
+    "courses": "Courses",
+    "legs": "Legs",
+    "controls": "Controls",
+    "customCategory": "Custom Category",
+    "startTimes": "Start Times"
+  },
+  "table": {
+    "rank": "Rank",
+    "name": "Name",
+    "category": "Category",
+    "categories": "Categories",
+    "club": "Club",
+    "city": "City",
+    "time": "Time",
+    "behind": "Behind",
+    "year": "Year",
+    "select": "Select",
+    "split": "Split",
+    "overall": "Overall",
+    "control": "Control",
+    "splitTime": "Split time",
+    "splitRank": "Split rank",
+    "splitBehind": "Split Behind",
+    "overallRank": "Overall Rank",
+    "overallTime": "Overall Time",
+    "overallBehind": "Overall Behind",
+    "splitTimes": "Split Times",
+    "ideal": "Ideal",
+    "position": "Position",
+    "loss": "Loss",
+    "distance": "Distance",
+    "elevation": "Elevation",
+    "ascent": "Ascent",
+    "length": "Length",
+    "timeLoss": "Time Loss"
+  },
+  "button": {
+    "showSplitGraph": "Show Split Graph",
+    "showGraph": "Show Graph",
+    "clear": "Clear",
+    "compare": "Compare",
+    "edit": "Edit",
+    "editSelection": "Edit Selection",
+    "create": "Create",
+    "createCustomCategory": "Create Custom Category",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "apply": "Apply",
+    "reset": "Reset",
+    "select": "Select",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All"
+  },
+  "error": {
+    "loading": "Error loading: {{error}}",
+    "loadingCompetitions": "Error loading competitions",
+    "loadingCompetition": "Error loading competition",
+    "notFound": "Not found",
+    "competitionNotFound": "Competition not found",
+    "categoryNotFound": "Category not found",
+    "runnerNotFound": "Runner not found",
+    "courseNotFound": "Course not found",
+    "legNotFound": "Leg not found",
+    "controlNotFound": "Control not found",
+    "noData": "No data available",
+    "noRunners": "No runners in this ranking",
+    "noCompetitions": "No competitions found",
+    "noLegs": "No legs available",
+    "noControls": "No controls available",
+    "noComparisonData": "No comparison data available"
+  },
+  "loading": {
+    "competitions": "Loading competitions...",
+    "competition": "Loading competition...",
+    "data": "Loading data...",
+    "runners": "Loading runners...",
+    "runnerDetails": "Loading runner details..."
+  },
+  "chart": {
+    "splitAnalysis": "Split Analysis",
+    "runnerComparison": "Runner Comparison",
+    "startTimeAnalysis": "Start Time Analysis",
+    "errorFrequency": "Error Frequency Distribution",
+    "vs": "vs",
+    "totalTimeDifference": "Total time difference:",
+    "isFaster": "is faster",
+    "isSlower": "is slower"
+  },
+  "form": {
+    "filter": "Filter",
+    "source": "Source",
+    "allSources": "All Sources",
+    "year": "Year",
+    "search": "Search",
+    "selectCategories": "Select Categories",
+    "selectLegs": "Select Legs",
+    "category": "Category",
+    "leg": "Leg",
+    "filterByCategory": "Filter by Category",
+    "allCategories": "All Categories"
+  },
+  "runner": {
+    "selected": "{{count}} runner selected",
+    "selected_plural": "{{count}} runners selected",
+    "total": "{{count}} runner",
+    "total_plural": "{{count}} runners",
+    "comparing": "Comparing {{count}} runners",
+    "finalTime": "Final Time",
+    "error": "Error",
+    "backToCustomCategory": "← Back to custom category",
+    "compareWith": "Compare with another runner:",
+    "selectRunner": "Select a runner..."
+  },
+  "leg": {
+    "count": "{{count}} leg",
+    "count_plural": "{{count}} legs",
+    "fromTo": "From {{from}} to {{to}}"
+  },
+  "control": {
+    "count": "{{count}} control",
+    "count_plural": "{{count}} controls"
+  },
+  "competition": {
+    "date": "Date",
+    "location": "Location",
+    "organizer": "Organizer",
+    "type": "Type",
+    "results": "Results"
+  },
+  "accessibility": {
+    "switchToLightMode": "Switch to light mode",
+    "switchToDarkMode": "Switch to dark mode",
+    "changeLanguage": "Change language",
+    "closeDialog": "Close dialog",
+    "openMenu": "Open menu"
+  },
+  "message": {
+    "selectUpToRunners": "Select up to {{max}} runners",
+    "minRunnersForGraph": "Select at least 2 runners to show the graph",
+    "noSplits": "No split data available",
+    "noSplitTimes": "No split times available"
+  }
+}

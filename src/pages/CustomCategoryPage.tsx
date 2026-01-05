@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, Outlet } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Runner } from '../types';
 import { ranking, parseTime, formatTime } from '@rasifix/orienteering-utils';
 import SplitGraph from '../components/SplitGraph';
@@ -10,6 +11,7 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
 
 function CustomCategoryPage() {
+  const { t } = useTranslation();
   const { source, id } = useParams<{ source: string; id: string }>();
   const { competition } = useCompetition();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -159,9 +161,9 @@ function CustomCategoryPage() {
       <div className="md:px-4 py-6">
         <div className="px-4">
         <Breadcrumbs items={[
-          { label: 'Home', path: '/competitions', isHome: true },
-          { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
-          { label: 'Custom Category', path: `/competitions/${source}/${id}/custom` }
+          { label: t('navigation.home'), path: '/competitions', isHome: true },
+          { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+          { label: t('navigation.customCategory'), path: `/competitions/${source}/${id}/custom` }
         ]} />
         </div>
 

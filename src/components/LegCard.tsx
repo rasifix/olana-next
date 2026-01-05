@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import RunnersBadge from './RunnersBadge';
 import ErrorFrequencyBar from './ErrorFrequencyBar';
 
@@ -9,6 +10,8 @@ interface LegCardProps {
 }
 
 function LegCard({ title, categories, runners, errorFrequency }: LegCardProps) {
+  const { t } = useTranslation();
+  
   return (
     <div className="block bg-surface-secondary rounded-lg p-4 border border-border-default hover:bg-surface-hover hover:border-border-strong transition-colors">
       <div className="flex items-center justify-between mb-3">
@@ -17,7 +20,7 @@ function LegCard({ title, categories, runners, errorFrequency }: LegCardProps) {
             {title}
           </h4>
           <div className="text-sm text-text-tertiary mt-1">
-            <span><span className="font-medium">Categories:</span> {categories.join(', ')}</span>
+            <span><span className="font-medium">{t('table.categories')}:</span> {categories.join(', ')}</span>
           </div>
         </div>
         <div className="text-right">

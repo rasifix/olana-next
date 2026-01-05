@@ -1,0 +1,149 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "competitions": "Compétitions",
+    "categories": "Catégories",
+    "courses": "Parcours",
+    "legs": "Tronçons",
+    "controls": "Postes",
+    "customCategory": "Catégorie personnalisée",
+    "startTimes": "Heures de départ"
+  },
+  "table": {
+    "rank": "Rang",
+    "name": "Nom",
+    "category": "Catégorie",
+    "categories": "Catégories",
+    "club": "Club",
+    "city": "Ville",
+    "time": "Temps",
+    "behind": "Retard",
+    "year": "Année",
+    "select": "Sélectionner",
+    "split": "Temps partiel",
+    "overall": "Global",
+    "control": "Poste",
+    "splitTime": "Temps partiel",
+    "splitRank": "Rang partiel",
+    "splitBehind": "Retard partiel",
+    "overallRank": "Rang global",
+    "overallTime": "Temps global",
+    "overallBehind": "Retard global",
+    "splitTimes": "Temps intermédiaires",
+    "ideal": "Idéal",
+    "position": "Position",
+    "loss": "Perte",
+    "distance": "Distance",
+    "elevation": "Altitude",
+    "ascent": "Montée",
+    "length": "Longueur",
+    "timeLoss": "Perte de temps"
+  },
+  "button": {
+    "showSplitGraph": "Afficher le graphique des temps partiels",
+    "showGraph": "Afficher le graphique",
+    "clear": "Effacer",
+    "compare": "Comparer",
+    "edit": "Modifier",
+    "editSelection": "Modifier la sélection",
+    "create": "Créer",
+    "createCustomCategory": "Créer une catégorie personnalisée",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "apply": "Appliquer",
+    "reset": "Réinitialiser",
+    "select": "Sélectionner",
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner"
+  },
+  "error": {
+    "loading": "Erreur de chargement : {{error}}",
+    "loadingCompetitions": "Erreur de chargement des compétitions",
+    "loadingCompetition": "Erreur de chargement de la compétition",
+    "notFound": "Non trouvé",
+    "competitionNotFound": "Compétition non trouvée",
+    "categoryNotFound": "Catégorie non trouvée",
+    "runnerNotFound": "Coureur non trouvé",
+    "courseNotFound": "Parcours non trouvé",
+    "legNotFound": "Tronçon non trouvé",
+    "controlNotFound": "Poste non trouvé",
+    "noData": "Aucune donnée disponible",
+    "noRunners": "Aucun coureur dans ce classement",
+    "noCompetitions": "Aucune compétition trouvée",
+    "noLegs": "Aucun tronçon disponible",
+    "noControls": "Aucun poste disponible",
+    "noComparisonData": "Aucune donnée de comparaison disponible"
+  },
+  "loading": {
+    "competitions": "Chargement des compétitions...",
+    "competition": "Chargement de la compétition...",
+    "data": "Chargement des données...",
+    "runners": "Chargement des coureurs...",
+    "runnerDetails": "Chargement des détails du coureur..."
+  },
+  "chart": {
+    "splitAnalysis": "Analyse des temps partiels",
+    "runnerComparison": "Comparaison de coureurs",
+    "startTimeAnalysis": "Analyse des heures de départ",
+    "errorFrequency": "Distribution de la fréquence d'erreurs",
+    "vs": "vs",
+    "totalTimeDifference": "Différence de temps totale :",
+    "isFaster": "est plus rapide",
+    "isSlower": "est plus lent"
+  },
+  "form": {
+    "filter": "Filtrer",
+    "source": "Source",
+    "allSources": "Toutes les sources",
+    "year": "Année",
+    "search": "Rechercher",
+    "selectCategories": "Sélectionner les catégories",
+    "selectLegs": "Sélectionner les tronçons",
+    "category": "Catégorie",
+    "leg": "Tronçon",
+    "filterByCategory": "Filtrer par catégorie",
+    "allCategories": "Toutes les catégories"
+  },
+  "runner": {
+    "selected": "{{count}} coureur sélectionné",
+    "selected_plural": "{{count}} coureurs sélectionnés",
+    "total": "{{count}} coureur",
+    "total_plural": "{{count}} coureurs",
+    "comparing": "Comparaison de {{count}} coureurs",
+    "finalTime": "Temps final",
+    "error": "Erreur",
+    "backToCustomCategory": "← Retour à la catégorie personnalisée",
+    "compareWith": "Comparer avec un autre coureur :",
+    "selectRunner": "Sélectionner un coureur..."
+  },
+  "leg": {
+    "count": "{{count}} tronçon",
+    "count_plural": "{{count}} tronçons",
+    "fromTo": "De {{from}} à {{to}}"
+  },
+  "control": {
+    "count": "{{count}} poste",
+    "count_plural": "{{count}} postes"
+  },
+  "competition": {
+    "date": "Date",
+    "location": "Lieu",
+    "organizer": "Organisateur",
+    "type": "Type",
+    "results": "Résultats"
+  },
+  "accessibility": {
+    "switchToLightMode": "Passer en mode clair",
+    "switchToDarkMode": "Passer en mode sombre",
+    "changeLanguage": "Changer de langue",
+    "closeDialog": "Fermer la boîte de dialogue",
+    "openMenu": "Ouvrir le menu"
+  },
+  "message": {
+    "selectUpToRunners": "Sélectionner jusqu'à {{max}} coureurs",
+    "minRunnersForGraph": "Sélectionner au moins 2 coureurs pour afficher le graphique",
+    "noSplits": "Aucune donnée de temps partiel disponible",
+    "noSplitTimes": "Aucun temps intermédiaire disponible"
+  }
+}

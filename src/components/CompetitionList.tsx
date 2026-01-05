@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Competition } from '../types';
 import CompetitionCard from './CompetitionCard';
 
@@ -9,10 +11,13 @@ interface CompetitionListProps {
 }
 
 function CompetitionList({ competitions, loading, error }: CompetitionListProps) {
+  const { t } = useTranslation();
+  const { language } = useLanguage();
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="text-text-tertiary">Loading competitions...</div>
+        <div className="text-text-tertiary">{t('loading.competitions')}</div>
       </div>
     );
   }
@@ -20,7 +25,7 @@ function CompetitionList({ competitions, loading, error }: CompetitionListProps)
   if (error) {
     return (
       <div className="bg-error-bg border border-error-border rounded-lg p-4 text-error">
-        Error loading competitions: {error}
+        {t('error.loading', { error })}
       </div>
     );
   }
@@ -28,7 +33,7 @@ function CompetitionList({ competitions, loading, error }: CompetitionListProps)
   if (!competitions || competitions.length === 0) {
     return (
       <div className="text-center py-8 text-text-muted">
-        No competitions found
+        {t('error.noCompetitions')}
       </div>
     );
   }
@@ -36,7 +41,7 @@ function CompetitionList({ competitions, loading, error }: CompetitionListProps)
   // Group competitions by month
   const groupedByMonth = competitions.reduce((groups, competition) => {
     const date = new Date(competition.date);
-    const monthKey = date.toLocaleDateString('en-US', { month: 'long' });
+    const monthKey = date.toLocaleDateString(language, { month: 'long' });
     
     if (!groups[monthKey]) {
       groups[monthKey] = [];

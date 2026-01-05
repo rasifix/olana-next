@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StartTimeRunner } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 import { getCombinedChartPalette } from '../utils/chartColors';
@@ -30,6 +31,7 @@ function formatTime(seconds: number): string {
 }
 
 function StartTimeGraph({ runners }: StartTimeGraphProps) {
+  const { t } = useTranslation();
   const { isDarkMode } = useTheme();
   const categoryColors = getCombinedChartPalette(isDarkMode);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -37,7 +39,6 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
 
   const { processedData, categories, minStartTime, maxStartTime, minRunTime, maxRunTime } = useMemo(() => {
     // Filter out runners without valid data
-    console.log("Processing runners for StartTimeGraph:", runners);
     const validRunners = (runners || []).filter(r => r.startTime && r.time);
     
     // Parse times to seconds
@@ -180,14 +181,14 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
   if (processedData.length === 0) {
     return (
       <div className="bg-surface-primary rounded-lg shadow p-6">
-        <p className="text-text-tertiary">No start time data available</p>
+        <p className="text-text-tertiary">{t('message.noSplits')}</p>
       </div>
     );
   }
 
   return (
     <div className="bg-surface-primary rounded-lg shadow p-6">
-      <h2 className="text-2xl font-bold text-text-primary mb-4">Start Time Analysis</h2>
+      <h2 className="text-2xl font-bold text-text-primary mb-4">{t('chart.startTimeAnalysis')}</h2>
       
       <div className="mb-4 flex flex-wrap gap-3">
         {categories.map(category => {
@@ -306,7 +307,7 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
           fontWeight="bold"
           fill="#111827"
         >
-          Start Time
+          {t('navigation.startTimes')}
         </text>
         <text
           x={-height / 2}
@@ -317,7 +318,7 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
           fill="#111827"
           transform={`rotate(-90, 20, ${height / 2})`}
         >
-          Run Time
+          {t('table.time')}
         </text>
 
         {/* Data points */}

@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { ranking, formatTime, parseTime } from '@rasifix/orienteering-utils';
+import { useTranslation } from 'react-i18next';
 
 interface RankingTableProps {
   runners: ranking.RankingRunner[];
@@ -24,6 +25,7 @@ function RankingTable({
   renderName,
   renderCategory
 }: RankingTableProps) {
+  const { t } = useTranslation();
   
   function timeBehind(time: string | undefined, fastest: string | undefined) {
     if (time === fastest) {
@@ -39,20 +41,20 @@ function RankingTable({
         {selectedRunners.size > 0 && (
           <div className="flex items-center gap-3">
             <span className="text-sm text-text-tertiary">
-              {selectedRunners.size} runner{selectedRunners.size !== 1 ? 's' : ''} selected
+              {t('runner.selected', { count: selectedRunners.size })}
             </span>
             <button
               onClick={onShowGraph}
               disabled={selectedRunners.size < 2}
               className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover transition-colors disabled:bg-disabled disabled:cursor-not-allowed"
             >
-              Show Split Graph
+              {t('button.showSplitGraph')}
             </button>
             <button
               onClick={onClearSelection}
               className="px-3 py-2 text-sm text-text-tertiary hover:text-text-primary transition-colors"
             >
-              Clear
+              {t('button.clear')}
             </button>
           </div>
         )}
@@ -64,35 +66,35 @@ function RankingTable({
             <thead className="bg-surface-secondary">
               <tr>
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Select
+                  {t('table.select')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Rank
+                  {t('table.rank')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Name
+                  {t('table.name')}
                 </th>
                 {showCategoryColumn && (
                   <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Category
+                    {t('table.category')}
                   </th>
                 )}
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Club
+                  {t('table.club')}
                 </th>
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  City
+                  {t('table.city')}
                 </th>
                 {showYearColumn && (
                   <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    Year
+                    {t('table.year')}
                   </th>
                 )}
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Time
+                  {t('table.time')}
                 </th>
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Behind
+                  {t('table.behind')}
                 </th>
               </tr>
             </thead>
@@ -145,7 +147,7 @@ function RankingTable({
           </table>
         </div>
       ) : (
-        <p className="text-text-muted">No runners in this ranking</p>
+        <p className="text-text-muted">{t('error.noRunners')}</p>
       )}
     </div>
   );

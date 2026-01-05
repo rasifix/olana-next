@@ -1,5 +1,6 @@
 import { ranking, formatTime } from '@rasifix/orienteering-utils';
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { getChartColorByIndex, getChartColors } from '../utils/chartColors';
 
@@ -18,6 +19,7 @@ interface HoverInfo {
 }
 
 function SplitGraph({ runners, onClose }: SplitGraphProps) {
+  const { t } = useTranslation();
   const { isDarkMode } = useTheme();
   const chartColors = getChartColors(isDarkMode);
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
@@ -109,7 +111,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
       <div className="bg-surface-primary rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold text-text-primary">Split Analysis</h3>
+            <h3 className="text-xl font-semibold text-text-primary">{t('chart.splitAnalysis')}</h3>
             <button
               onClick={onClose}
               className="text-text-muted hover:text-text-secondary text-2xl leading-none"
@@ -428,7 +430,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
-                    Control: {hoverInfo.split.code}
+                    {t('table.control')}: {hoverInfo.split.code}
                   </text>
                   <text
                     x={hoverInfo.x + 20}
@@ -437,7 +439,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
-                    Split time: {hoverInfo.split.splitTime ? formatTime(hoverInfo.split.splitTime) : 'N/A'}
+                    {t('table.splitTime')}: {hoverInfo.split.splitTime ? formatTime(hoverInfo.split.splitTime) : 'N/A'}
                   </text>
                   <text
                     x={hoverInfo.x + 20}
@@ -446,7 +448,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
-                    Split rank: {hoverInfo.split.leg.rank || 'N/A'}
+                    {t('table.splitRank')}: {hoverInfo.split.leg.rank || 'N/A'}
                   </text>
                   <text
                     x={hoverInfo.x + 20}
@@ -455,7 +457,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
-                    Ideal: {formatTime(hoverInfo.split.leg.idealBehind || 0)}
+                    {t('table.ideal')}: {formatTime(hoverInfo.split.leg.idealBehind || 0)}
                   </text>
                 </g>
               )}

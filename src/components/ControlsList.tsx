@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Control } from '../types';
 import RunnersBadge from './RunnersBadge';
 import CategoryFilter from './CategoryFilter';
@@ -10,11 +11,12 @@ interface ControlsListProps {
 }
 
 function ControlsList({ controls }: ControlsListProps) {
+  const { t } = useTranslation();
   const { source, id } = useParams<{ source: string; id: string }>();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   if (controls.length === 0) {
-    return <p className="text-text-muted">No controls available</p>;
+    return <p className="text-text-muted">{t('error.noControls')}</p>;
   }
 
   const filteredControls = controls.filter(
@@ -43,10 +45,10 @@ function ControlsList({ controls }: ControlsListProps) {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <h4 className="font-semibold text-text-primary">
-                    Control {control.code}
+                    {t('table.control')} {control.code}
                   </h4>
                   <div className="text-sm text-text-tertiary mt-1">
-                    <span><span className="font-medium">Categories:</span> {control.categories.join(', ')}</span>
+                    <span><span className="font-medium">{t('table.categories')}:</span> {control.categories.join(', ')}</span>
                   </div>
                 </div>
                 <div className="text-right">

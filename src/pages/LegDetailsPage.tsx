@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { competitionService } from '../services/competitionService';
 import { parseTime } from '@rasifix/orienteering-utils';
@@ -9,6 +10,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { getCombinedChartPalette } from '../utils/chartColors';
 
 function LegDetailsPage() {
+  const { t } = useTranslation();
   const { isDarkMode } = useTheme();
   const categoryColorPalette = getCombinedChartPalette(isDarkMode);
   const { source, id, legId } = useParams<{ source: string; id: string; legId: string }>();
@@ -114,10 +116,10 @@ function LegDetailsPage() {
     <div className="md:px-4 py-6">
       <div className="px-4">
       <Breadcrumbs items={[
-        { label: 'Home', path: '/competitions', isHome: true },
-        { label: competition?.name || 'Competition', path: `/competitions/${source}/${id}` },
-        { label: 'Legs', path: `/competitions/${source}/${id}/legs` },
-        { label: `Leg ${leg.from} → ${leg.to}`, path: `/competitions/${source}/${id}/legs/${legId}` }
+        { label: t('navigation.home'), path: '/competitions', isHome: true },
+        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+        { label: t('navigation.legs'), path: `/competitions/${source}/${id}/legs` },
+        { label: t('leg.fromTo', { from: leg.from, to: leg.to }), path: `/competitions/${source}/${id}/legs/${legId}` }
       ]} />
       </div>
 
