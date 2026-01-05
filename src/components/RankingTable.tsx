@@ -63,7 +63,7 @@ function RankingTable({
       {runners.length > 0 ? (
         <div className="table-container">
           <table className="table-base">
-            <thead className="table-header">
+            <thead>
               <tr>
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.select')}

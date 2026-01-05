@@ -20,32 +20,32 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
           {/* Desktop table */}
           <div className="hidden md:block table-container">
             <table className="table-base">
-              <thead className="table-header">
+              <thead>
                 <tr>
-                  <th className="table-th">
+                  <th>
                     #
                   </th>
-                  <th className="table-th text-right border-l border-border-strong">
+                  <th className="text-right border-l border-border-strong">
                     {t('table.splitRank')}
                   </th>
-                  <th className="table-th text-right">
+                  <th className="text-right">
                     {t('table.splitTime')}
                   </th>
-                  <th className="table-th text-right border-r border-border-strong">
+                  <th className="text-right border-r border-border-strong">
                     {t('table.splitBehind')}
                   </th>
-                  <th className="table-th text-right">
+                  <th className="text-right">
                     {t('table.overallRank')}
                   </th>
-                  <th className="table-th text-right">
+                  <th className="text-right">
                     {t('table.overallTime')}
                   </th>
-                  <th className="table-th text-right">
+                  <th className="text-right">
                     {t('table.overallBehind')}
                   </th>
                 </tr>
               </thead>
-              <tbody className="table-body">
+              <tbody>
                 {runner.splits.map((split, index) => {
                   const legId = index === 0 
                     ? `St-${split.code}` 
@@ -53,7 +53,7 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                   
                   return (
                     <tr key={index} className="hover">
-                      <td className="table-td font-medium">
+                      <td className="font-medium">
                         <Link 
                           to={`/competitions/${source}/${id}/legs/${encodeURIComponent(legId)}`}
                           className="text-link hover:text-link-hover hover:underline"
@@ -61,13 +61,13 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                           {split.code}
                         </Link>
                       </td>
-                      <td className="table-td text-right border-l border-border-strong">
+                      <td className="text-right border-l border-border-strong">
                         {split.leg.rank}
                       </td>
-                      <td className="table-td text-right font-mono">
+                      <td className="text-right font-mono">
                         {formatTime(split.splitTime)}
                       </td>
-                      <td className="table-td text-right border-r border-border-strong font-mono">
+                      <td className="text-right border-r border-border-strong font-mono">
                         {split.timeLoss && 
                           <span 
                             className="text-error font-medium cursor-pointer" 
@@ -79,13 +79,13 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                         }
                         {split.leg.behind ? formatTime(split.leg.behind) : '0:00'}
                       </td>
-                      <td className="table-td text-right">
+                      <td className="text-right">
                         {split.overall.rank}
                       </td>
-                      <td className="table-td text-right font-mono">
+                      <td className="text-right font-mono">
                         {formatTime(split.time)}
                       </td>
-                      <td className="table-td text-right font-mono">
+                      <td className="text-right font-mono">
                         {split.overall.behind ? formatTime(split.overall.behind) : '0:00'}
                       </td>
                     </tr>

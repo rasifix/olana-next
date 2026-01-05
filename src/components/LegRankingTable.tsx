@@ -40,44 +40,44 @@ function LegRankingTable({ runners, source, competitionId }: LegRankingTableProp
   return (
     <div className="table-container">
       <table className="table-base">
-        <thead className="table-header">
+        <thead>
           <tr>
-            <th className="table-th">
+            <th>
               #
             </th>
-            <th className="table-th">
+            <th>
               {t('table.name')}
             </th>
-            <th className="table-th">
+            <th>
               {t('table.category')}
             </th>
-            <th className="table-th hidden lg:table-cell">
+            <th className="hidden lg:table-cell">
               {t('table.club')}
             </th>
-            <th className="table-th hidden md:table-cell">
+            <th className="hidden md:table-cell">
               {t('table.year')}
             </th>
-            <th className="table-th hidden lg:table-cell">
+            <th className="hidden lg:table-cell">
               {t('table.city')}
             </th>
-            <th className="table-th">
+            <th>
               {t('table.split')}
             </th>
-            <th className="table-th hidden md:table-cell">
+            <th className="hidden md:table-cell">
               {t('table.behind')}
             </th>
-            <th className="table-th hidden md:table-cell">
+            <th className="hidden md:table-cell">
               {t('table.timeLoss')}
             </th>
           </tr>
         </thead>
-        <tbody className="table-body">
+        <tbody>
           {runners.map((runner, index) => (
             <tr key={index} className="hover">
               <td className="table-td font-medium">
                 {runner.splitRank}
               </td>
-              <td className="table-td">
+              <td>
                 <Link
                   to={`/competitions/${source}/${competitionId}/categories/${encodeURIComponent(runner.category)}/runners/${runner.id}`}
                   className="text-link hover:text-link-hover hover:underline"
@@ -85,29 +85,29 @@ function LegRankingTable({ runners, source, competitionId }: LegRankingTableProp
                   {runner.fullName}
                 </Link>
               </td>
-              <td className="table-td-muted">
+              <td>
                 <Link
                   to={`/competitions/${source}/${competitionId}/categories/${encodeURIComponent(runner.category)}`}
                   className="text-link hover:text-link-hover hover:underline">
                   {runner.category}
                 </Link>
               </td>
-              <td className="table-td-muted hidden lg:table-cell">
+              <td className="hidden lg:table-cell">
                 {runner.club}
               </td>
-              <td className="table-td-muted hidden md:table-cell">
+              <td className="hidden md:table-cell">
                 {runner.yearOfBirth}
               </td>
-              <td className="table-td-muted hidden lg:table-cell">
+              <td className="hidden lg:table-cell">
                 {runner.city}
               </td>
-              <td className="table-td font-mono">
+              <td className="font-mono">
                 {runner.split}
               </td>
-              <td className="table-td-muted hidden md:table-cell font-mono">
+              <td className="hidden md:table-cell font-mono">
                 {getTimeBehind(runner.split, fastestSplit)}
               </td>
-              <td className="table-td-muted hidden md:table-cell font-mono">
+              <td className="hidden md:table-cell font-mono">
                 {runner.timeLoss || '-'}
               </td>
             </tr>
