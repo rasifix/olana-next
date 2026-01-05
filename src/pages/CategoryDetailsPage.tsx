@@ -87,6 +87,7 @@ function CategoryDetailsPage() {
             runners={rankedRunners}
             selectedRunners={selectedRunners}
             onToggleRunner={toggleRunnerSelection}
+            onClearSelection={() => setSelectedRunners(new Set())}
             onShowGraph={handleShowGraph}
             showYearColumn={true}
             renderName={(runner) => (

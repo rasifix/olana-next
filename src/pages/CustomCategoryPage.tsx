@@ -205,6 +205,7 @@ function CustomCategoryPage() {
                   runners={rankedRunners}
                   selectedRunners={selectedRunners}
                   onToggleRunner={toggleRunnerSelection}
+                  onClearSelection={() => setSelectedRunners(new Set())}
                   onShowGraph={handleShowGraph}
                   showCategoryColumn={true}
                   renderName={(runner) => (

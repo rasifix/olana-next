@@ -5,6 +5,7 @@ interface RankingTableProps {
   runners: ranking.RankingRunner[];
   selectedRunners: Set<number>;
   onToggleRunner: (index: number) => void;
+  onClearSelection: () => void;
   onShowGraph: () => void;
   showCategoryColumn?: boolean;
   showYearColumn?: boolean;
@@ -16,6 +17,7 @@ function RankingTable({
   runners,
   selectedRunners,
   onToggleRunner,
+  onClearSelection,
   onShowGraph,
   showCategoryColumn = false,
   showYearColumn = false,
@@ -47,10 +49,7 @@ function RankingTable({
               Show Split Graph
             </button>
             <button
-              onClick={() => {
-                selectedRunners.clear();
-                onToggleRunner(-1); // Trigger a re-render
-              }}
+              onClick={onClearSelection}
               className="px-3 py-2 text-sm text-text-tertiary hover:text-text-primary transition-colors"
             >
               Clear
@@ -80,6 +79,9 @@ function RankingTable({
                 )}
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   Club
+                </th>
+                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                  City
                 </th>
                 {showYearColumn && (
                   <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
@@ -122,6 +124,9 @@ function RankingTable({
                   )}
                   <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-muted">
                     {runner.club}
+                  </td>
+                  <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-muted">
+                    {runner.city}
                   </td>
                   {showYearColumn && (
                     <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm text-text-muted">

@@ -81,6 +81,7 @@ function CourseDetailsPage() {
           runners={rankingData.runners}
           selectedRunners={selectedRunners}
           onToggleRunner={handleRunnerToggle}
+          onClearSelection={() => setSelectedRunners(new Set())}
           onShowGraph={() => setShowGraph(true)}
           showCategoryColumn={true}
           renderName={(runner) => (

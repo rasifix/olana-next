@@ -404,7 +404,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     y={hoverInfo.y - 60}
                     width="200"
                     height="84"
-                    fill="white"
+                    fill={isDarkMode ? '#1f2937' : '#ffffff'}
                     stroke={chartColors.infrastructure.axes}
                     strokeWidth="1"
                     rx="4"
@@ -414,7 +414,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y - 40}
-                    fill={chartColors.infrastructure.text}
+                    fill={isDarkMode ? '#f9fafb' : '#111827'}
                     fontSize="13"
                     fontFamily="sans-serif"
                     fontWeight="600"
@@ -424,7 +424,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y - 24}
-                    fill={chartColors.infrastructure.text}
+                    fill={isDarkMode ? '#e5e7eb' : '#374151'}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -433,7 +433,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y - 10}
-                    fill={chartColors.infrastructure.text}
+                    fill={isDarkMode ? '#e5e7eb' : '#374151'}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -442,7 +442,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y + 4}
-                    fill={chartColors.infrastructure.text}
+                    fill={isDarkMode ? '#e5e7eb' : '#374151'}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -451,7 +451,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                   <text
                     x={hoverInfo.x + 20}
                     y={hoverInfo.y + 18}
-                    fill={chartColors.infrastructure.text}
+                    fill={isDarkMode ? '#e5e7eb' : '#374151'}
                     fontSize="12"
                     fontFamily="sans-serif"
                   >
@@ -461,18 +461,6 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
               )}
             </svg>
             </div>
-          </div>
-
-          <div className="mt-4 text-sm text-text-tertiary">
-            <p><strong>How to read:</strong></p>
-            <ul className="list-disc list-inside mt-2 space-y-1">
-              <li>The horizontal dashed line represents the ideal time (0 seconds)</li>
-              <li>The ideal time is the average of the fastest 5 runners for each split (to even out anomalies)</li>
-              <li>Lines going up indicate the runner is ahead of ideal time (faster)</li>
-              <li>Lines going down indicate the runner is behind ideal time (slower)</li>
-              <li>The vertical position shows how many seconds ahead or behind</li>
-              <li><strong>Click on a runner's line or legend entry to highlight them</strong></li>
-            </ul>
           </div>
         </div>
       </div>
