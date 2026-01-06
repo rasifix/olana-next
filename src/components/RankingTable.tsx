@@ -26,12 +26,15 @@ function RankingTable({
   renderCategory
 }: RankingTableProps) {
   const { t } = useTranslation();
-  
+  const timeRegex = /^\d{1,2}:\d{2}(:\d{2})?$/;
+
   function timeBehind(time: string | undefined, fastest: string | undefined) {
-    if (time === fastest) {
+    if (!time || !timeRegex.test(time) || !fastest || !timeRegex.test(fastest)) {
+      return "";
+    } else if (time === fastest) {
       return "";
     } else if (parseTime(time!) && parseTime(fastest!)) {
-      return formatTime(parseTime(time)! - parseTime(fastest)!);
+      return "+" + formatTime(parseTime(time)! - parseTime(fastest)!);
     }
   }
 
@@ -139,7 +142,7 @@ function RankingTable({
                     {runner.time}
                   </td>
                   <td className="table-td hidden md:table-cell">
-                    {index === 0 ? '' : `+${timeBehind(runner.time, runners[0].time)}`}
+                    {index === 0 ? '' : `${timeBehind(runner.time, runners[0].time)}`}
                   </td>
                 </tr>
               ))}
