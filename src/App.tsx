@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from 'react-router-dom';
 import { Suspense } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,14 @@ import { CompetitionProvider } from './contexts/CompetitionContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import './i18n/config';
+
+function EventRedirect() {
+  const params = useParams();
+  const location = useLocation();
+  const pathParts = location.pathname.split('/').slice(2); // Remove leading empty and 'event'
+  const newPath = `/competitions/${pathParts.join('/')}`;
+  return <Navigate to={newPath} replace />;
+}
 
 function ThemeToggle() {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -60,6 +68,7 @@ function AppContent() {
           <div className="max-w-7xl mx-auto mx:px-6 lg:px-8">
             <Routes>
               <Route path="/" element={<Navigate to="/competitions" replace />} />
+              <Route path="/event/*" element={<EventRedirect />} />
               <Route path="/competitions" element={<CompetitionsPage />} />
               <Route path="/competitions/:source/:id" element={<CompetitionProvider />}>
                 <Route index element={<CompetitionDetailsPage />} />
