@@ -21,7 +21,6 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import './i18n/config';
 
 function EventRedirect() {
-  const params = useParams();
   const location = useLocation();
   const pathParts = location.pathname.split('/').slice(2); // Remove leading empty and 'event'
   const newPath = `/competitions/${pathParts.join('/')}`;
