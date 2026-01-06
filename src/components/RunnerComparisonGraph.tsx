@@ -1,5 +1,5 @@
+import { formatTime, ranking } from '@rasifix/orienteering-utils';
 import { useMemo } from 'react';
-import { ranking, formatTime } from '@rasifix/orienteering-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { getChartColors } from '../utils/chartColors';
@@ -21,7 +21,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
   const { t } = useTranslation();
   const { isDarkMode } = useTheme();
   const chartColors = getChartColors(isDarkMode);
-  
+
   const comparisonData = useMemo(() => {
     const currentSplits = currentRunner.splits || [];
     const comparisonSplits = comparisonRunner.splits || [];
@@ -63,29 +63,14 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
     return data;
   }, [currentRunner, comparisonRunner]);
 
-  if (comparisonData.length === 0) {
-    return (
-      <div className="modal-overlay">
-        <div className="modal-content p-6 max-w-6xl w-full">
-          <p className="text-text-muted">{t('error.noComparisonData')}</p>
-          <button
-            onClick={onClose}
-            className="mt-4 px-4 py-2 bg-disabled text-text-primary rounded hover:bg-surface-hover"
-          >
-            {t('button.close')}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   const maxAbsValue = Math.max(
     ...comparisonData.map(d => Math.abs(d.timeDifference)),
-    ...comparisonData.map(d => Math.abs(d.cumulativeTimeDifference))
+    ...comparisonData.map(d => Math.abs(d.cumulativeTimeDifference)),
+    1 // Default value to avoid Math.max() returning -Infinity on empty arrays
   );
 
   // Calculate y-axis ticks at minute boundaries
-  const yAxisTicks = useMemo(() => {    
+  const yAxisTicks = useMemo(() => {
     // Determine interval based on range
     let interval: number;
     if (maxAbsValue <= 120) {
@@ -101,23 +86,39 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
     }
 
     const ticks: number[] = [0];
-    
+
     // Add positive ticks
     let tick = interval;
     while (tick <= maxAbsValue) {
       ticks.push(tick);
       tick += interval;
     }
-    
+
     // Add negative ticks
     tick = -interval;
     while (tick >= -maxAbsValue) {
       ticks.push(tick);
       tick -= interval;
     }
-    
+
     return ticks.sort((a, b) => a - b);
   }, [maxAbsValue]);
+
+  if (comparisonData.length === 0) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content p-6 max-w-6xl w-full">
+          <p className="text-text-muted">{t('error.noComparisonData')}</p>
+          <button
+            onClick={onClose}
+            className="mt-4 px-4 py-2 bg-disabled text-text-primary rounded hover:bg-surface-hover"
+          >
+            {t('button.close')}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const graphHeight = 400;
   const graphWidth = Math.max(800, comparisonData.length * 60);
@@ -171,7 +172,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
               {comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0 ? '+' : ''}
               {formatTime(Math.abs(comparisonData[comparisonData.length - 1].cumulativeTimeDifference))}
             </span>
-            {comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0 
+            {comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0
               ? ` (${currentRunner.fullName} ${t('chart.isFaster')})`
               : ` (${currentRunner.fullName} ${t('chart.isSlower')})`
             }
@@ -236,21 +237,21 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
               const x = padding.left + (i + 0.5) * (chartWidth / comparisonData.length) - barWidth / 2;
               const barY = d.timeDifference >= 0 ? getBarY(d.timeDifference) : zeroY;
               const height = getBarHeight(d.timeDifference);
-              
+
               // Calculate lightness based on performance index difference
               // Performance index difference ranges from 0 to 100+
               // We'll map 0-50% difference to varying lightness levels
               // Higher difference = darker color, lower difference = lighter color
               const maxPIDiff = 50; // Cap at 50% difference for lightness scaling
               const normalizedDiff = Math.min(d.performanceIndexDiff, maxPIDiff) / maxPIDiff;
-              
+
               // Lightness ranges based on theme
               // Light mode: 40-70% (darker colors)
               // Dark mode: 55-85% (lighter colors for visibility)
               const maxLightness = isDarkMode ? 85 : 70;
               const minLightness = isDarkMode ? 55 : 40;
               const lightness = maxLightness - (normalizedDiff * (maxLightness - minLightness));
-              
+
               // Use HSL color format with constant saturation
               const baseColor = d.timeDifference >= 0 ? 'hsl(142, 70%, ' : 'hsl(0, 70%, '; // green or red
               const color = `${baseColor}${lightness}%)`;
@@ -282,7 +283,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
             {/* Leg labels */}
             {comparisonData.map((d, i) => {
               const x = padding.left + (i + 0.5) * (chartWidth / comparisonData.length);
-              
+
               return (
                 <text
                   key={i}
