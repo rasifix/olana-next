@@ -159,18 +159,24 @@ function LegDetailsPage() {
               </div>
               {leg.categories.map(category => {
                 const isSelected = selectedCategories.has(category);
+                const hasSelection = selectedCategories.size > 0 && selectedCategories.size < leg.categories.length;
+                const shouldDim = hasSelection && !isSelected;
                 return (
                   <div
                     key={category}
-                    className="flex items-center gap-2 px-3 py-1 rounded-md bg-surface-secondary cursor-pointer"
+                    className="flex items-center gap-2 px-3 py-1 rounded-md bg-surface-secondary cursor-pointer transition-opacity"
                     onClick={() => toggleCategory(category)}
                     style={{
                       backgroundColor: isSelected ? `${categoryColors[category]}20` : undefined,
+                      opacity: shouldDim ? 0.4 : 1,
                     }}
                   >
                     <div
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: categoryColors[category] }}
+                      style={{ 
+                        backgroundColor: categoryColors[category],
+                        opacity: shouldDim ? 0.5 : 1,
+                      }}
                     />
                     <span className="text-sm font-medium text-text-secondary">{category}</span>
                   </div>
