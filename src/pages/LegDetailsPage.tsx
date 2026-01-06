@@ -151,7 +151,9 @@ function LegDetailsPage() {
                 className="flex items-center gap-2 px-3 py-1 rounded-md bg-surface-secondary cursor-pointer"
                 onClick={toggleAll}
                 style={{
-                  backgroundColor: selectedCategories.size === leg.categories.length ? '#e5e7eb' : undefined,
+                  backgroundColor: selectedCategories.size === leg.categories.length 
+                    ? (isDarkMode ? '#374151' : '#e5e7eb') 
+                    : undefined,
                   fontWeight: selectedCategories.size === leg.categories.length ? '600' : '400',
                 }}
               >
