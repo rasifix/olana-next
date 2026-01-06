@@ -6,6 +6,7 @@ import { parseTime } from '@rasifix/orienteering-utils';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
 import LegRankingTable from '../components/LegRankingTable';
+import CategoryPill from '../components/CategoryPill';
 import { useTheme } from '../contexts/ThemeContext';
 import { getCombinedChartPalette } from '../utils/chartColors';
 
@@ -164,24 +165,14 @@ function LegDetailsPage() {
                 const hasSelection = selectedCategories.size > 0 && selectedCategories.size < leg.categories.length;
                 const shouldDim = hasSelection && !isSelected;
                 return (
-                  <div
+                  <CategoryPill
                     key={category}
-                    className="flex items-center gap-2 px-3 py-1 rounded-md bg-surface-secondary cursor-pointer transition-opacity"
+                    category={category}
+                    color={categoryColors[category]}
+                    isSelected={isSelected}
+                    isDimmed={shouldDim}
                     onClick={() => toggleCategory(category)}
-                    style={{
-                      backgroundColor: isSelected ? `${categoryColors[category]}20` : undefined,
-                      opacity: shouldDim ? 0.4 : 1,
-                    }}
-                  >
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ 
-                        backgroundColor: categoryColors[category],
-                        opacity: shouldDim ? 0.5 : 1,
-                      }}
-                    />
-                    <span className="text-sm font-medium text-text-secondary">{category}</span>
-                  </div>
+                  />
                 );
               })}
             </div>

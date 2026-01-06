@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StartTimeRunner } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 import { getCombinedChartPalette } from '../utils/chartColors';
+import CategoryPill from './CategoryPill';
 
 interface StartTimeGraphProps {
   runners: StartTimeRunner[];
@@ -193,24 +194,19 @@ function StartTimeGraph({ runners }: StartTimeGraphProps) {
       <div className="mb-4 flex flex-wrap gap-3">
         {categories.map(category => {
           const effectiveCategory = activeCategory || hoveredCategory;
+          const isHighlighted = effectiveCategory === category;
+          const shouldDim = effectiveCategory && effectiveCategory !== category;
           return (
-            <div
+            <CategoryPill
               key={category}
-              className="flex items-center gap-2 px-3 py-1 rounded-md bg-surface-secondary"
+              category={category}
+              color={categoryColorMap[category]}
+              isSelected={isHighlighted}
+              isDimmed={!!shouldDim}
               onClick={() => setActiveCategory(activeCategory === category ? null : category)}
               onMouseEnter={() => !activeCategory && setHoveredCategory(category)}
               onMouseLeave={() => !activeCategory && setHoveredCategory(null)}
-              style={{
-                backgroundColor: effectiveCategory === category ? `${categoryColorMap[category]}20` : undefined,
-                cursor: 'pointer',
-              }}
-            >
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: categoryColorMap[category] }}
-              />
-              <span className="text-sm font-medium text-text-secondary">{category}</span>
-            </div>
+            />
           );
         })}
       </div>
