@@ -147,5 +147,12 @@
     "minRunnersForGraph": "Sélectionner au moins 2 coureurs pour afficher le graphique",
     "noSplits": "Aucune donnée de temps partiel disponible",
     "noSplitTimes": "Aucun temps intermédiaire disponible"
+  },
+  "customCategory": {
+    "title": "Catégorie personnalisée",
+    "description": "Créez une catégorie personnalisée en combinant des intervalles de plusieurs catégories.",
+    "createButton": "Créer une catégorie personnalisée",
+    "editButton": "Modifier la sélection",
+    "legs": "intervalles"
   }
 }

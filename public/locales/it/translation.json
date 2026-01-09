@@ -147,5 +147,12 @@
     "minRunnersForGraph": "Seleziona almeno 2 atleti per visualizzare il grafico",
     "noSplits": "Nessun dato di tempo parziale disponibile",
     "noSplitTimes": "Nessun tempo intermedio disponibile"
+  },
+  "customCategory": {
+    "title": "Categoria personalizzata",
+    "description": "Crea una categoria personalizzata combinando frazioni da più categorie.",
+    "createButton": "Crea categoria personalizzata",
+    "editButton": "Modifica selezione",
+    "legs": "frazioni"
   }
 }

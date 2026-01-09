@@ -1,14 +1,13 @@
+import { formatTime, parseTime, ranking } from '@rasifix/orienteering-utils';
 import { useState } from 'react';
-import { useParams, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Runner } from '../types';
-import { ranking, parseTime, formatTime } from '@rasifix/orienteering-utils';
-import SplitGraph from '../components/SplitGraph';
-import RankingTable from '../components/RankingTable';
+import { useParams } from 'react-router-dom';
 import CustomCategoryBuilder from '../components/CustomCategoryBuilder';
-import { CustomCategoryProvider } from '../contexts/CustomCategoryContext';
-import Breadcrumbs from '../components/Breadcrumbs';
+import RankingTable from '../components/RankingTable';
+import SplitGraph from '../components/SplitGraph';
 import { useCompetition } from '../contexts/CompetitionContext';
+import { CustomCategoryProvider } from '../contexts/CustomCategoryContext';
+import { Runner } from '../types';
 
 function CustomCategoryPage() {
   const { t } = useTranslation();
@@ -44,15 +43,15 @@ function CustomCategoryPage() {
       return;
     }
 
-    const selectedCats = competition.categories?.filter(cat => 
+    const selectedCats = competition.categories?.filter(cat =>
       categories.includes(cat.name)
     ) || [];
 
     const selectedLegsSet = new Set(legs);
 
     // Combine all runners from selected categories
-    const allRunners: Runner[] = selectedCats.flatMap(cat => cat.runners.map(runner => ({...runner, category: cat.name})) || []);
-    
+    const allRunners: Runner[] = selectedCats.flatMap(cat => cat.runners.map(runner => ({ ...runner, category: cat.name })) || []);
+
     const adjustedRunners = allRunners.map(runner => {
       const originalSplits = runner.splits || [];
       if (originalSplits.length === 0) return null;
@@ -61,13 +60,13 @@ function CustomCategoryPage() {
       const runnerLegs: string[] = [];
       runnerLegs.push(`St-${originalSplits[0].code}`);
       for (let i = 1; i < originalSplits.length; i++) {
-        runnerLegs.push(`${originalSplits[i-1].code}-${originalSplits[i].code}`);
+        runnerLegs.push(`${originalSplits[i - 1].code}-${originalSplits[i].code}`);
       }
 
       // Check if runner has all selected legs
       const runnerLegSet = new Set(runnerLegs);
       const hasAllLegs = legs.every(leg => runnerLegSet.has(leg));
-      
+
       if (!hasAllLegs) {
         return null;
       }
@@ -75,15 +74,15 @@ function CustomCategoryPage() {
       // Build new splits keeping only the "to" controls of selected legs
       const adjustedSplits: { code: string; time: string }[] = [];
       let cumulativeTime = 0;
-      
+
       for (let i = 0; i < originalSplits.length; i++) {
         const split = originalSplits[i];
         const splitTime = parseTime(split.time)!;
-        const legTime = i === 0 ? splitTime : (splitTime - parseTime(originalSplits[i-1].time)!);
-        
+        const legTime = i === 0 ? splitTime : (splitTime - parseTime(originalSplits[i - 1].time)!);
+
         // Determine the leg for this split
-        const leg = i === 0 ? `St-${split.code}` : `${originalSplits[i-1].code}-${split.code}`;
-        
+        const leg = i === 0 ? `St-${split.code}` : `${originalSplits[i - 1].code}-${split.code}`;
+
         if (selectedLegsSet.has(leg)) {
           // This leg is selected, include its endpoint split
           cumulativeTime += legTime;
@@ -158,89 +157,74 @@ function CustomCategoryPage() {
       selectedCategories={selectedCategories}
       selectedLegs={selectedLegs}
     >
-      <div className="page-layout">
-        <div className="px-4">
-        <Breadcrumbs items={[
-          { label: t('navigation.home'), path: '/competitions', isHome: true },
-          { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
-          { label: t('navigation.customCategory'), path: `/competitions/${source}/${id}/custom` }
-        ]} />
+      {!hasCustomCategory ? (
+        <div>
+          <p className="text-text-tertiary mb-6">
+            {t('customCategory.description')}
+          </p>
+          <button
+            onClick={() => setShowBuilder(true)}
+            className="btn-primary"
+          >
+            {t('customCategory.createButton')}
+          </button>
         </div>
-
-        {!hasCustomCategory ? (
-          <div className="page-container-card">
-            <h2 className="page-title">
-              Custom Category
-            </h2>
-            <p className="text-text-tertiary mb-6">
-              Create a custom category by combining legs from multiple categories.
-            </p>
+      ) : (
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="page-title">
+                {t('customCategory.title')}
+              </h2>
+              <p className="text-sm text-text-tertiary mt-1">
+                {selectedCategories.join(', ')} • {selectedLegs.length} {t('customCategory.legs')}
+              </p>
+            </div>
             <button
-              onClick={() => setShowBuilder(true)}
-              className="btn-primary"
+              onClick={handleEdit}
+              className="px-4 py-2 text-link hover:text-link-hover border border-primary hover:border-rust-800 rounded-lg transition-colors font-semibold"
             >
-              Create Custom Category
+              {t('customCategory.editButton')}
             </button>
           </div>
-        ) : (
-          <div className="page-container-card">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="page-title">
-                  Custom Category
-                </h2>
-                <p className="text-sm text-text-tertiary mt-1">
-                  {selectedCategories.join(', ')} • {selectedLegs.length} legs
-                </p>
-              </div>
-              <button
-                onClick={handleEdit}
-                className="px-4 py-2 text-link hover:text-link-hover border border-primary hover:border-rust-800 rounded-lg transition-colors font-semibold"
-              >
-                Edit Selection
-              </button>
+
+          {rankedRunners && rankedRunners.length > 0 && (
+            <div>
+              <RankingTable
+                runners={rankedRunners}
+                selectedRunners={selectedRunners}
+                onToggleRunner={toggleRunnerSelection}
+                onClearSelection={() => setSelectedRunners(new Set())}
+                onShowGraph={handleShowGraph}
+                showCategoryColumn={true}
+                renderName={(runner) => (
+                  <a
+                    href={`/competitions/${source}/${id}/custom/runners/${runner.id}?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`}
+                    className="text-link hover:text-link-hover hover:underline"
+                  >
+                    {runner.fullName}
+                  </a>
+                )}
+              />
             </div>
+          )}
+        </div>
+      )}
 
-            {rankedRunners && rankedRunners.length > 0 && (
-              <div>
-                <RankingTable
-                  runners={rankedRunners}
-                  selectedRunners={selectedRunners}
-                  onToggleRunner={toggleRunnerSelection}
-                  onClearSelection={() => setSelectedRunners(new Set())}
-                  onShowGraph={handleShowGraph}
-                  showCategoryColumn={true}
-                  renderName={(runner) => (
-                    <a
-                      href={`/competitions/${source}/${id}/custom/runners/${runner.id}?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`}
-                      className="text-link hover:text-link-hover hover:underline"
-                    >
-                      {runner.fullName}
-                    </a>
-                  )}
-                />
-              </div>
-            )}
-          </div>
-        )}
+      {showGraph && (
+        <SplitGraph
+          runners={getSelectedRunners()}
+          onClose={() => setShowGraph(false)}
+        />
+      )}
 
-        {showGraph && (
-          <SplitGraph
-            runners={getSelectedRunners()}
-            onClose={() => setShowGraph(false)}
-          />
-        )}
-
-        {showBuilder && (
-          <CustomCategoryBuilder 
-            competition={competition!} 
-            onComplete={handleBuilderComplete}
-            onCancel={handleBuilderCancel}
-          />
-        )}
-      </div>
-      
-      <Outlet />
+      {showBuilder && (
+        <CustomCategoryBuilder
+          competition={competition!}
+          onComplete={handleBuilderComplete}
+          onCancel={handleBuilderCancel}
+        />
+      )}
     </CustomCategoryProvider>
   );
 }

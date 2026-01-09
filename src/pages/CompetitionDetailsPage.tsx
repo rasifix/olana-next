@@ -1,44 +1,24 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
-import CategoryCard from '../components/CategoryCard';
-import ControlsList from '../components/ControlsList';
-import LegsList from '../components/LegsList';
 import { useCompetition } from '../contexts/CompetitionContext';
 import { competitionService } from '../services/competitionService';
 
 function CompetitionDetailsPage() {
   const { t } = useTranslation();
-  const { source, id, tab } = useParams<{ source: string; id: string; tab?: string }>();
-  const navigate = useNavigate();
+  const { source, id } = useParams<{ source: string; id: string }>();
   const location = useLocation();
   const { competition } = useCompetition();
 
-  // Redirect to categories tab if no tab specified
-  useEffect(() => {
-    if (source && id && !tab && location.pathname === `/competitions/${source}/${id}`) {
-      navigate(`/competitions/${source}/${id}/categories`, { replace: true });
-    }
-  }, [source, id, tab, location.pathname, navigate]);
-
-  const activeTab = tab || 'categories';
-
-  // Calculate data from competition using useMemo
-  const courses = useMemo(() => {
-    if (!competition) return [];
-    return competitionService.getCourses(competition);
-  }, [competition]);
-
-  const legs = useMemo(() => {
-    if (!competition) return [];
-    return competitionService.getLegs(competition);
-  }, [competition]);
-
-  const controls = useMemo(() => {
-    if (!competition) return [];
-    return competitionService.getControls(competition);
-  }, [competition]);
+  // Determine active tab from current path
+  const activeTab = useMemo(() => {
+    const pathParts = location.pathname.split('/');
+    const lastPart = pathParts[pathParts.length - 1];
+    return ['categories', 'courses', 'legs', 'controls', 'custom', 'starttime'].includes(lastPart)
+      ? lastPart
+      : 'categories';
+  }, [location.pathname]);
 
   return (
     <div className="page-layout">
@@ -73,7 +53,7 @@ function CompetitionDetailsPage() {
                 : 'tab-link hover:text-text-secondary hover:border-border-strong'
                 } whitespace-nowrap transition-colors`}
             >
-              {t('navigation.courses')}<span className="hidden md:inline"> ({courses.length})</span>
+              {t('navigation.courses')}<span className="hidden md:inline"> ({competition && competitionService.getCourses(competition).length || 0})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/legs`}
@@ -82,7 +62,7 @@ function CompetitionDetailsPage() {
                 : 'tab-link hover:text-text-secondary hover:border-border-strong'
                 } whitespace-nowrap transition-colors`}
             >
-              {t('navigation.legs')}<span className="hidden md:inline"> ({legs.length})</span>
+              {t('navigation.legs')}<span className="hidden md:inline"> ({competition && competitionService.getLegs(competition).length || 0})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/controls`}
@@ -91,7 +71,7 @@ function CompetitionDetailsPage() {
                 : 'tab-link hover:text-text-secondary hover:border-border-strong'
                 } whitespace-nowrap transition-colors`}
             >
-              {t('navigation.controls')}<span className="hidden md:inline"> ({controls.length})</span>
+              {t('navigation.controls')}<span className="hidden md:inline"> ({competition && competitionService.getControls(competition).length || 0})</span>
             </Link>
             <Link
               to={`/competitions/${source}/${id}/custom`}
@@ -114,73 +94,8 @@ function CompetitionDetailsPage() {
           </nav>
         </div>
 
-        {/* Categories Tab */}
-        {activeTab === 'categories' && (
-          <div>
-            {competition?.categories && competition.categories.length > 0 ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {competition.categories.map((category, index) => (
-                  <Link
-                    key={index}
-                    to={`/competitions/${source}/${id}/categories/${encodeURIComponent(category.name)}`}
-                    className="hover:opacity-80 transition-opacity block"
-                  >
-                    <CategoryCard
-                      name={category.name}
-                      controls={category.controls}
-                      distance={category.distance}
-                      elevation={category.ascent}
-                      runnerCount={category.runners?.length || 0}
-                    />
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p className="text-text-muted">No categories available</p>
-            )}
-          </div>
-        )}
-
-        {/* Courses Tab */}
-        {activeTab === 'courses' && (
-          <div>
-            {courses.length > 0 ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {courses.map((course) => (
-                  <Link
-                    key={course.id}
-                    to={`/competitions/${source}/${id}/courses/${encodeURIComponent(course.id)}`}
-                    className="hover:opacity-80 transition-opacity block"
-                  >
-                    <CategoryCard
-                      name={course.name}
-                      controls={course.controls}
-                      distance={course.distance}
-                      elevation={course.ascent}
-                      runnerCount={course.runners || 0}
-                    />
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p className="text-text-muted">No courses available</p>
-            )}
-          </div>
-        )}
-
-        {/* Legs Tab */}
-        {activeTab === 'legs' && (
-          <div>
-            <LegsList legs={legs} />
-          </div>
-        )}
-
-        {/* Controls Tab */}
-        {activeTab === 'controls' && (
-          <div>
-            <ControlsList controls={controls} />
-          </div>
-        )}
+        {/* Outlet for nested routes */}
+        <Outlet />
       </div>
     </div>
   );

@@ -147,5 +147,12 @@
     "minRunnersForGraph": "Wähle mindestens 2 Läufer aus, um die Grafik anzuzeigen",
     "noSplits": "Keine Zwischenzeitdaten verfügbar",
     "noSplitTimes": "Keine Zwischenzeiten verfügbar"
+  },
+  "customCategory": {
+    "title": "Eigene Kategorie",
+    "description": "Erstellen Sie eine benutzerdefinierte Kategorie durch Kombination von Teilstrecken aus mehreren Kategorien.",
+    "createButton": "Eigene Kategorie erstellen",
+    "editButton": "Auswahl bearbeiten",
+    "legs": "Teilstrecken"
   }
 }

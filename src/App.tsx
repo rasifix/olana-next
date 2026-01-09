@@ -1,24 +1,28 @@
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Moon, Sun } from 'lucide-react';
 import { Suspense } from 'react';
-import { Sun, Moon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import CompetitionsPage from './pages/CompetitionsPage';
-import CompetitionDetailsPage from './pages/CompetitionDetailsPage';
-import CategoryDetailsPage from './pages/CategoryDetailsPage';
-import RunnerDetailsPage from './pages/RunnerDetailsPage';
-import CourseDetailsPage from './pages/CourseDetailsPage';
-import CourseRunnerDetailsPage from './pages/CourseRunnerDetailsPage';
-import LegDetailsPage from './pages/LegDetailsPage';
-import ControlDetailsPage from './pages/ControlDetailsPage';
-import CustomCategoryPage from './pages/CustomCategoryPage';
-import CustomCategoryRunnerDetailsPage from './pages/CustomCategoryRunnerDetailsPage';
-import StartTimeAnalysisPage from './pages/StartTimeAnalysisPage';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import CompassLogo from './components/CompassLogo';
 import LanguageSelector from './components/LanguageSelector';
 import { CompetitionProvider } from './contexts/CompetitionContext';
-import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import './i18n/config';
+import CategoriesTabPage from './pages/CategoriesTabPage';
+import CategoryDetailsPage from './pages/CategoryDetailsPage';
+import CompetitionDetailsPage from './pages/CompetitionDetailsPage';
+import CompetitionsPage from './pages/CompetitionsPage';
+import ControlDetailsPage from './pages/ControlDetailsPage';
+import ControlsTabPage from './pages/ControlsTabPage';
+import CourseDetailsPage from './pages/CourseDetailsPage';
+import CourseRunnerDetailsPage from './pages/CourseRunnerDetailsPage';
+import CoursesTabPage from './pages/CoursesTabPage';
+import CustomCategoryPage from './pages/CustomCategoryPage';
+import CustomCategoryRunnerDetailsPage from './pages/CustomCategoryRunnerDetailsPage';
+import LegDetailsPage from './pages/LegDetailsPage';
+import LegsTabPage from './pages/LegsTabPage';
+import RunnerDetailsPage from './pages/RunnerDetailsPage';
+import StartTimeAnalysisPage from './pages/StartTimeAnalysisPage';
 
 function EventRedirect() {
   const location = useLocation();
@@ -30,7 +34,7 @@ function EventRedirect() {
 function ThemeToggle() {
   const { isDarkMode, toggleTheme } = useTheme();
   const { t } = useTranslation();
-  
+
   return (
     <button
       onClick={toggleTheme}
@@ -70,17 +74,22 @@ function AppContent() {
               <Route path="/event/*" element={<EventRedirect />} />
               <Route path="/competitions" element={<CompetitionsPage />} />
               <Route path="/competitions/:source/:id" element={<CompetitionProvider />}>
-                <Route index element={<CompetitionDetailsPage />} />
-                <Route path=":tab" element={<CompetitionDetailsPage />} />
+                <Route element={<CompetitionDetailsPage />}>
+                  <Route index element={<Navigate to="categories" replace />} />
+                  <Route path="categories" element={<CategoriesTabPage />} />
+                  <Route path="courses" element={<CoursesTabPage />} />
+                  <Route path="legs" element={<LegsTabPage />} />
+                  <Route path="controls" element={<ControlsTabPage />} />
+                  <Route path="custom" element={<CustomCategoryPage />} />
+                  <Route path="starttime" element={<StartTimeAnalysisPage />} />
+                </Route>
                 <Route path="courses/:courseCode" element={<CourseDetailsPage />} />
                 <Route path="courses/:courseCode/runners/:runnerId" element={<CourseRunnerDetailsPage />} />
                 <Route path="categories/:categoryName" element={<CategoryDetailsPage />} />
                 <Route path="categories/:categoryName/runners/:runnerId" element={<RunnerDetailsPage />} />
                 <Route path="legs/:legId" element={<LegDetailsPage />} />
                 <Route path="controls/:controlCode" element={<ControlDetailsPage />} />
-                <Route path="custom" element={<CustomCategoryPage />} />
                 <Route path="custom/runners/:runnerId" element={<CustomCategoryRunnerDetailsPage />} />
-                <Route path="starttime" element={<StartTimeAnalysisPage />} />
               </Route>
             </Routes>
           </div>
