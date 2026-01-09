@@ -1,7 +1,7 @@
 import { ranking } from '@rasifix/orienteering-utils';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
 import CategoryCard from '../components/CategoryCard';
 import RankingTable from '../components/RankingTable';
@@ -106,21 +106,21 @@ function CourseDetailsPage() {
               onClearSelection={() => setSelectedRunners(new Set())}
               onShowGraph={handleShowGraph}
               renderName={(runner) => (
-                <a
-                  href={`/competitions/${source}/${id}/courses/${courseCode}/runners/${runner.id}`}
+                <Link
+                  to={`/competitions/${source}/${id}/courses/${courseCode}/runners/${runner.id}`}
                   className="text-link hover:text-link-hover hover:underline"
                 >
                   {runner.fullName}
-                </a>
+                </Link>
               )}
               renderCategory={(runner) => (
                 runner.category ? (
-                  <a
-                    href={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
+                  <Link
+                    to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
                     className="text-link hover:text-link-hover hover:underline"
                   >
                     {runner.category}
-                  </a>
+                  </Link>
                 ) : '-'
               )}
             />
