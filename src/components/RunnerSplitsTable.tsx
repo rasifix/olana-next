@@ -83,7 +83,7 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                             ⚠
                           </span>
                         }
-                        {split.leg.behind ? formatTime(split.leg.behind) : '0:00'}
+                        {split.leg.behind ? '+' + formatTime(split.leg.behind) : ''}
                       </td>
                       <td className="text-right">
                         {split.overall.rank}
@@ -92,7 +92,7 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                         {formatTime(split.time)}
                       </td>
                       <td className="text-right font-mono">
-                        {split.overall.behind ? formatTime(split.overall.behind) : '0:00'}
+                        {split.overall.behind ? '+' + formatTime(split.overall.behind) : ''}
                       </td>
                     </tr>
                   );
