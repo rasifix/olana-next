@@ -25,18 +25,34 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
   const [selectedRunner, setSelectedRunner] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isPortrait, setIsPortrait] = useState(false);
 
   useEffect(() => {
     const updateDimensions = () => {
-      const width = Math.min(window.innerWidth - 100, 1200);
-      const height = Math.min(window.innerHeight - 300, 600);
-      setDimensions({ width, height });
+      const mobile = window.innerWidth < 768;
+      const portrait = window.innerHeight > window.innerWidth;
+      setIsMobile(mobile);
+      setIsPortrait(portrait);
+
+      if (mobile) {
+        // On mobile: use a wider canvas for horizontal scrolling
+        const numSplits = runners[0]?.splits?.length || 10;
+        const minWidth = numSplits * 50 + 80; // 50px per split + padding
+        const width = Math.max(minWidth, window.innerWidth - 40);
+        const height = portrait ? 280 : Math.min(window.innerHeight - 200, 400);
+        setDimensions({ width, height });
+      } else {
+        const width = Math.min(window.innerWidth - 100, 1200);
+        const height = Math.min(window.innerHeight - 300, 600);
+        setDimensions({ width, height });
+      }
     };
 
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
+  }, [runners]);
 
   const graphData = useMemo(() => {
     if (runners.length === 0) return null;
@@ -63,8 +79,10 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
     const minSpread = Math.floor(spread[0] / 60) * 60; // Most ahead (most negative)
     const maxSpread = Math.ceil(spread[1] / 60) * 60;  // Most behind (most positive)
 
-    // Drawing parameters
-    const padding = { top: 40, right: 40, bottom: 60, left: 60 };
+    // Drawing parameters - reduce padding on mobile
+    const padding = isMobile
+      ? { top: 25, right: 20, bottom: 50, left: 40 }
+      : { top: 40, right: 40, bottom: 60, left: 60 };
     const graphWidth = dimensions.width - padding.left - padding.right;
     const graphHeight = dimensions.height - padding.top - padding.bottom;
 
@@ -79,7 +97,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
       graphHeight,
       zeroLineY,
     };
-  }, [runners, dimensions]);
+  }, [runners, dimensions, isMobile]);
 
   if (runners.length === 0 || !graphData) {
     return null;
@@ -107,363 +125,371 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content max-w-7xl w-full max-h-[90vh] overflow-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="section-heading">{t('chart.splitAnalysis')}</h3>
-            <button
-              onClick={onClose}
-              className="btn-close hover:text-text-secondary"
-            >
-              ×
-            </button>
-          </div>
+    <div>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="section-heading">{t('chart.splitAnalysis')}</h3>
+        <button
+          onClick={onClose}
+          className="text-2xl text-text-muted hover:text-text-primary transition-colors"
+        >
+          ←
+        </button>
+      </div>
 
-          <div className="flex justify-center">
-            <div className="relative">
-              <svg
-                width={dimensions.width}
-                height={dimensions.height}
-                className="border border-border-default rounded"
-              >
-                {/* Horizontal grid lines */}
-                {[...Array(6)].map((_, i) => {
-                  const y = padding.top + (i * graphHeight) / 5;
-                  return (
-                    <line
-                      key={`hgrid-${i}`}
-                      x1={padding.left}
-                      y1={y}
-                      x2={padding.left + graphWidth}
-                      y2={y}
-                      stroke={chartColors.infrastructure.gridLines}
-                      strokeWidth="1"
-                    />
-                  );
-                })}
+      {/* Rotation hint for portrait mobile */}
+      {isMobile && isPortrait && (
+        <div className="mb-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg flex items-center gap-3 text-sm">
+          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span className="text-yellow-600 dark:text-yellow-400">
+            {t('chart.rotateDeviceHint') || 'Rotate your device to landscape for a better view'}
+          </span>
+        </div>
+      )}
 
-                {/* Vertical grid lines (at each control) */}
-                {runners[0]?.splits?.map((split, i) => {
-                  const x = getX(split.position);
-                  if (x === null) return null; // Skip if position is invalid
-                  return (
-                    <line
-                      key={`vgrid-${i}`}
-                      x1={x}
-                      y1={padding.top}
-                      x2={x}
-                      y2={padding.top + graphHeight}
-                      stroke={chartColors.infrastructure.gridLines}
-                      strokeWidth="1"
-                    />
-                  );
-                })}
-
-                {/* Ideal time line (0 line) */}
+      <div className={isMobile ? "overflow-x-auto min-h-[150px]" : "flex justify-center min-h-[150px]"}>
+        <div className="relative">
+          <svg
+            width={dimensions.width}
+            height={dimensions.height}
+            className="border border-border-default rounded"
+          >
+            {/* Horizontal grid lines */}
+            {[...Array(6)].map((_, i) => {
+              const y = padding.top + (i * graphHeight) / 5;
+              return (
                 <line
-                  id="ideal-time-line"
+                  key={`hgrid-${i}`}
                   x1={padding.left}
-                  y1={zeroLineY}
+                  y1={y}
                   x2={padding.left + graphWidth}
-                  y2={zeroLineY}
-                  stroke={chartColors.infrastructure.zeroLine}
-                  strokeWidth="2"
-                  strokeDasharray="5,5"
+                  y2={y}
+                  stroke={chartColors.infrastructure.gridLines}
+                  strokeWidth="1"
                 />
+              );
+            })}
 
-                {/* Axes */}
+            {/* Vertical grid lines (at each control) */}
+            {runners[0]?.splits?.map((split, i) => {
+              const x = getX(split.position);
+              if (x === null) return null; // Skip if position is invalid
+              return (
                 <line
-                  x1={padding.left}
+                  key={`vgrid-${i}`}
+                  x1={x}
                   y1={padding.top}
-                  x2={padding.left}
+                  x2={x}
                   y2={padding.top + graphHeight}
-                  stroke={chartColors.infrastructure.axes}
-                  strokeWidth="2"
+                  stroke={chartColors.infrastructure.gridLines}
+                  strokeWidth="1"
                 />
-                <line
-                  x1={padding.left}
-                  y1={padding.top + graphHeight}
-                  x2={padding.left + graphWidth}
-                  y2={padding.top + graphHeight}
-                  stroke={chartColors.infrastructure.axes}
-                  strokeWidth="2"
-                />
+              );
+            })}
 
-                {/* Control labels */}
-                {runners[0]?.splits?.map((split, i) => {
-                  const x = getX(split.position);
-                  if (x === null) return null; // Skip if position is invalid
-                  return (
-                    <text
-                      key={`label-${i}`}
-                      x={x}
-                      y={dimensions.height - padding.bottom + 20}
-                      textAnchor="middle"
-                      fill={chartColors.infrastructure.text}
-                      fontSize="12"
-                      fontFamily="sans-serif"
-                    >
-                      {split.code}
-                    </text>
-                  );
-                })}
+            {/* Ideal time line (0 line) */}
+            <line
+              id="ideal-time-line"
+              x1={padding.left}
+              y1={zeroLineY}
+              x2={padding.left + graphWidth}
+              y2={zeroLineY}
+              stroke={chartColors.infrastructure.zeroLine}
+              strokeWidth="2"
+              strokeDasharray="5,5"
+            />
 
-                {/* Y-axis labels */}
+            {/* Axes */}
+            <line
+              x1={padding.left}
+              y1={padding.top}
+              x2={padding.left}
+              y2={padding.top + graphHeight}
+              stroke={chartColors.infrastructure.axes}
+              strokeWidth="2"
+            />
+            <line
+              x1={padding.left}
+              y1={padding.top + graphHeight}
+              x2={padding.left + graphWidth}
+              y2={padding.top + graphHeight}
+              stroke={chartColors.infrastructure.axes}
+              strokeWidth="2"
+            />
+
+            {/* Control labels */}
+            {runners[0]?.splits?.map((split, i) => {
+              const x = getX(split.position);
+              if (x === null) return null; // Skip if position is invalid
+              return (
                 <text
-                  x={padding.left - 10}
-                  y={padding.top + 5}
-                  textAnchor="end"
+                  key={`label-${i}`}
+                  x={x}
+                  y={dimensions.height - padding.bottom + 20}
+                  textAnchor="middle"
                   fill={chartColors.infrastructure.text}
-                  fontSize="12"
+                  fontSize={isMobile ? "10" : "12"}
                   fontFamily="sans-serif"
                 >
-                  {formatTime(minSpread)}
+                  {split.code}
                 </text>
-                <text
-                  x={padding.left - 10}
-                  y={zeroLineY + 5}
-                  textAnchor="end"
-                  fill={chartColors.infrastructure.text}
-                  fontSize="12"
-                  fontFamily="sans-serif"
-                >
-                  0:00
-                </text>
-                <text
-                  x={padding.left - 10}
-                  y={padding.top + graphHeight + 5}
-                  textAnchor="end"
-                  fill={chartColors.infrastructure.text}
-                  fontSize="12"
-                  fontFamily="sans-serif"
-                >
-                  {formatTime(maxSpread)}
-                </text>
+              );
+            })}
 
-                {/* Runner lines */}
-                {runners
-                  .map((runner, index) => ({ runner, index }))
-                  .sort((a, b) => {
-                    // Draw selected runner last (on top)
-                    if (a.index === selectedRunner) return 1;
-                    if (b.index === selectedRunner) return -1;
-                    return 0;
-                  })
-                  .map(({ runner, index: runnerIndex }) => {
-                    const color = getChartColorByIndex(runnerIndex, isDarkMode);
-                    const isSelected = runnerIndex === selectedRunner;
-                    if (!runner.splits || runner.splits.length === 0) return null;
+            {/* Y-axis labels */}
+            <text
+              x={padding.left - 10}
+              y={padding.top + 5}
+              textAnchor="end"
+              fill={chartColors.infrastructure.text}
+              fontSize={isMobile ? "10" : "12"}
+              fontFamily="sans-serif"
+            >
+              {formatTime(minSpread)}
+            </text>
+            <text
+              x={padding.left - 10}
+              y={zeroLineY + 5}
+              textAnchor="end"
+              fill={chartColors.infrastructure.text}
+              fontSize={isMobile ? "10" : "12"}
+              fontFamily="sans-serif"
+            >
+              0:00
+            </text>
+            <text
+              x={padding.left - 10}
+              y={padding.top + graphHeight + 5}
+              textAnchor="end"
+              fill={chartColors.infrastructure.text}
+              fontSize={isMobile ? "10" : "12"}
+              fontFamily="sans-serif"
+            >
+              {formatTime(maxSpread)}
+            </text>
 
-                    return (
-                      <g
-                        key={`runner-${runnerIndex}`}
-                        onClick={() => setSelectedRunner(isSelected ? null : runnerIndex)}
-                        className="cursor-pointer"
-                      >
-                        {/* Line segments from start to first split and between splits */}
-                        {runner.splits.map((split, i) => {
-                          const x2 = getX(split.position);
-                          const y2 = getY(split.overall?.idealBehind);
-                          // Skip if current split has invalid position
-                          if (x2 === null || y2 === null) return null;
+            {/* Runner lines */}
+            {runners
+              .map((runner, index) => ({ runner, index }))
+              .sort((a, b) => {
+                // Draw selected runner last (on top)
+                if (a.index === selectedRunner) return 1;
+                if (b.index === selectedRunner) return -1;
+                return 0;
+              })
+              .map(({ runner, index: runnerIndex }) => {
+                const color = getChartColorByIndex(runnerIndex, isDarkMode);
+                const isSelected = runnerIndex === selectedRunner;
+                if (!runner.splits || runner.splits.length === 0) return null;
 
-                          let x1: number | null, y1: number | null;
-                          if (i === 0) {
-                            // First segment: from start to first split
-                            x1 = padding.left;
-                            y1 = zeroLineY;
-                          } else {
-                            // Subsequent segments: from previous split to current
-                            const prevSplit = runner.splits[i - 1];
-                            x1 = getX(prevSplit.position);
-                            y1 = getY(prevSplit.overall?.idealBehind);
-                            // Skip if previous split has invalid position
-                            if (x1 === null || y1 === null) return null
-                          }
+                return (
+                  <g
+                    key={`runner-${runnerIndex}`}
+                    onClick={() => setSelectedRunner(isSelected ? null : runnerIndex)}
+                    className="cursor-pointer"
+                  >
+                    {/* Line segments from start to first split and between splits */}
+                    {runner.splits.map((split, i) => {
+                      const x2 = getX(split.position);
+                      const y2 = getY(split.overall?.idealBehind);
+                      // Skip if current split has invalid position
+                      if (x2 === null || y2 === null) return null;
 
-                          return (
-                            <g key={`segment-${runnerIndex}-${i}`}>
-                              {/* Visible line */}
-                              <line
-                                id={`line-${runnerIndex}-${i}`}
-                                x1={x1}
-                                y1={y1}
-                                x2={x2}
-                                y2={y2}
-                                stroke={color}
-                                strokeWidth={isSelected ? "3.5" : "2.5"}
-                                strokeLinecap="round"
-                                pointerEvents="none"
-                                opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
-                              />
-                              {/* Invisible wider line for hover detection */}
-                              <line
-                                x1={x1}
-                                y1={y1}
-                                x2={x2}
-                                y2={y2}
-                                stroke="transparent"
-                                strokeWidth="15"
-                                strokeLinecap="round"
-                                className="cursor-pointer"
-                                onMouseEnter={() => {
-                                  setHoverInfo({
-                                    runnerIndex,
-                                    splitIndex: i,
-                                    x: x2,
-                                    y: y2,
-                                    split,
-                                    runnerName: runner.fullName || '',
-                                  });
-                                }}
-                                onMouseLeave={() => setHoverInfo(null)}
-                              />
-                            </g>
-                          );
-                        })}
+                      let x1: number | null, y1: number | null;
+                      if (i === 0) {
+                        // First segment: from start to first split
+                        x1 = padding.left;
+                        y1 = zeroLineY;
+                      } else {
+                        // Subsequent segments: from previous split to current
+                        const prevSplit = runner.splits[i - 1];
+                        x1 = getX(prevSplit.position);
+                        y1 = getY(prevSplit.overall?.idealBehind);
+                        // Skip if previous split has invalid position
+                        if (x1 === null || y1 === null) return null
+                      }
 
-                        {/* Start point */}
+                      return (
+                        <g key={`segment-${runnerIndex}-${i}`}>
+                          {/* Visible line */}
+                          <line
+                            id={`line-${runnerIndex}-${i}`}
+                            x1={x1}
+                            y1={y1}
+                            x2={x2}
+                            y2={y2}
+                            stroke={color}
+                            strokeWidth={isSelected ? "3.5" : "2.5"}
+                            strokeLinecap="round"
+                            pointerEvents="none"
+                            opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
+                          />
+                          {/* Invisible wider line for hover detection */}
+                          <line
+                            x1={x1}
+                            y1={y1}
+                            x2={x2}
+                            y2={y2}
+                            stroke="transparent"
+                            strokeWidth="15"
+                            strokeLinecap="round"
+                            className="cursor-pointer"
+                            onMouseEnter={() => {
+                              setHoverInfo({
+                                runnerIndex,
+                                splitIndex: i,
+                                x: x2,
+                                y: y2,
+                                split,
+                                runnerName: runner.fullName || '',
+                              });
+                            }}
+                            onMouseLeave={() => setHoverInfo(null)}
+                          />
+                        </g>
+                      );
+                    })}
+
+                    {/* Start point */}
+                    <rect
+                      x={padding.left - 3}
+                      y={zeroLineY - 3}
+                      width="6"
+                      height="6"
+                      fill={color}
+                      opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
+                    />
+                    if (x === null || y === null) return null; // Skip if position is invalid
+
+                    {/* Split points */}
+                    {runner.splits.map((split, i) => {
+                      const x = getX(split.position);
+                      const y = getY(split.overall?.idealBehind);
+                      if (x === null || y === null) return null;
+                      return (
                         <rect
-                          x={padding.left - 3}
-                          y={zeroLineY - 3}
+                          key={`point-${runnerIndex}-${i}`}
+                          x={x - 3}
+                          y={y - 3}
                           width="6"
                           height="6"
                           fill={color}
                           opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
                         />
-                        if (x === null || y === null) return null; // Skip if position is invalid
-
-                        {/* Split points */}
-                        {runner.splits.map((split, i) => {
-                          const x = getX(split.position);
-                          const y = getY(split.overall?.idealBehind);
-                          if (x === null || y === null) return null;
-                          return (
-                            <rect
-                              key={`point-${runnerIndex}-${i}`}
-                              x={x - 3}
-                              y={y - 3}
-                              width="6"
-                              height="6"
-                              fill={color}
-                              opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
-                            />
-                          );
-                        })}
-                      </g>
-                    );
-                  })}
-
-                {/* Legend */}
-                {runners.map((runner, index) => {
-                  const color = getChartColorByIndex(index, isDarkMode);
-                  const isSelected = index === selectedRunner;
-                  const row = Math.floor(index / 5);
-                  const col = index % 5;
-                  const legendItemWidth = graphWidth / Math.min(runners.length, 5);
-                  const x = padding.left + col * legendItemWidth;
-                  const y = padding.top + graphHeight + 40 + row * 20;
-
-                  return (
-                    <g
-                      key={`legend-${index}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedRunner(isSelected ? null : index);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <rect
-                        x={x}
-                        y={y - 2}
-                        width="20"
-                        height="3"
-                        fill={color}
-                        opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
-                      />
-                      <text
-                        x={x + 25}
-                        y={y + 3}
-                        fill={chartColors.infrastructure.text}
-                        fontSize="14"
-                        fontFamily="sans-serif"
-                        fontWeight={isSelected ? "600" : "400"}
-                        opacity={isSelected ? 1 : selectedRunner !== null ? 0.5 : 1}
-                      >
-                        {runner.fullName}
-                      </text>
-                    </g>
-                  );
-                })}
-
-                {/* Tooltip */}
-                {hoverInfo && (
-                  <g>
-                    {/* Tooltip background */}
-                    <rect
-                      x={hoverInfo.x + 10}
-                      y={hoverInfo.y - 60}
-                      width="200"
-                      height="84"
-                      fill={isDarkMode ? '#1f2937' : '#ffffff'}
-                      stroke={chartColors.infrastructure.axes}
-                      strokeWidth="1"
-                      rx="4"
-                      opacity="0.95"
-                    />
-                    {/* Tooltip text */}
-                    <text
-                      x={hoverInfo.x + 20}
-                      y={hoverInfo.y - 40}
-                      fill={isDarkMode ? '#f9fafb' : '#111827'}
-                      fontSize="13"
-                      fontFamily="sans-serif"
-                      fontWeight="600"
-                    >
-                      {hoverInfo.runnerName}
-                    </text>
-                    <text
-                      x={hoverInfo.x + 20}
-                      y={hoverInfo.y - 24}
-                      fill={isDarkMode ? '#e5e7eb' : '#374151'}
-                      fontSize="12"
-                      fontFamily="sans-serif"
-                    >
-                      {t('table.control')}: {hoverInfo.split.code}
-                    </text>
-                    <text
-                      x={hoverInfo.x + 20}
-                      y={hoverInfo.y - 10}
-                      fill={isDarkMode ? '#e5e7eb' : '#374151'}
-                      fontSize="12"
-                      fontFamily="sans-serif"
-                    >
-                      {t('table.splitTime')}: {hoverInfo.split.splitTime ? formatTime(hoverInfo.split.splitTime) : 'N/A'}
-                    </text>
-                    <text
-                      x={hoverInfo.x + 20}
-                      y={hoverInfo.y + 4}
-                      fill={isDarkMode ? '#e5e7eb' : '#374151'}
-                      fontSize="12"
-                      fontFamily="sans-serif"
-                    >
-                      {t('table.splitRank')}: {hoverInfo.split.leg.rank || 'N/A'}
-                    </text>
-                    <text
-                      x={hoverInfo.x + 20}
-                      y={hoverInfo.y + 18}
-                      fill={isDarkMode ? '#e5e7eb' : '#374151'}
-                      fontSize="12"
-                      fontFamily="sans-serif"
-                    >
-                      {t('table.behind')}: {hoverInfo.split.leg.behind ? formatTime(hoverInfo.split.leg.behind) : '0:00'}
-                    </text>
+                      );
+                    })}
                   </g>
-                )}
-              </svg>
-            </div>
-          </div>
+                );
+              })}
+
+            {/* Legend */}
+            {runners.map((runner, index) => {
+              const color = getChartColorByIndex(index, isDarkMode);
+              const isSelected = index === selectedRunner;
+              const row = Math.floor(index / 5);
+              const col = index % 5;
+              const legendItemWidth = graphWidth / Math.min(runners.length, 5);
+              const x = padding.left + col * legendItemWidth;
+              const y = padding.top + graphHeight + 40 + row * 20;
+
+              return (
+                <g
+                  key={`legend-${index}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedRunner(isSelected ? null : index);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <rect
+                    x={x}
+                    y={y - 2}
+                    width="20"
+                    height="3"
+                    fill={color}
+                    opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
+                  />
+                  <text
+                    x={x + 25}
+                    y={y + 3}
+                    fill={chartColors.infrastructure.text}
+                    fontSize={isMobile ? "11" : "14"}
+                    fontFamily="sans-serif"
+                    fontWeight={isSelected ? "600" : "400"}
+                    opacity={isSelected ? 1 : selectedRunner !== null ? 0.5 : 1}
+                  >
+                    {runner.fullName}
+                  </text>
+                </g>
+              );
+            })}
+
+            {/* Tooltip */}
+            {hoverInfo && (
+              <g>
+                {/* Tooltip background */}
+                <rect
+                  x={hoverInfo.x + 10}
+                  y={hoverInfo.y - 60}
+                  width="200"
+                  height="84"
+                  fill={isDarkMode ? '#1f2937' : '#ffffff'}
+                  stroke={chartColors.infrastructure.axes}
+                  strokeWidth="1"
+                  rx="4"
+                  opacity="0.95"
+                />
+                {/* Tooltip text */}
+                <text
+                  x={hoverInfo.x + 20}
+                  y={hoverInfo.y - 40}
+                  fill={isDarkMode ? '#f9fafb' : '#111827'}
+                  fontSize="13"
+                  fontFamily="sans-serif"
+                  fontWeight="600"
+                >
+                  {hoverInfo.runnerName}
+                </text>
+                <text
+                  x={hoverInfo.x + 20}
+                  y={hoverInfo.y - 24}
+                  fill={isDarkMode ? '#e5e7eb' : '#374151'}
+                  fontSize="12"
+                  fontFamily="sans-serif"
+                >
+                  {t('table.control')}: {hoverInfo.split.code}
+                </text>
+                <text
+                  x={hoverInfo.x + 20}
+                  y={hoverInfo.y - 10}
+                  fill={isDarkMode ? '#e5e7eb' : '#374151'}
+                  fontSize="12"
+                  fontFamily="sans-serif"
+                >
+                  {t('table.splitTime')}: {hoverInfo.split.splitTime ? formatTime(hoverInfo.split.splitTime) : 'N/A'}
+                </text>
+                <text
+                  x={hoverInfo.x + 20}
+                  y={hoverInfo.y + 4}
+                  fill={isDarkMode ? '#e5e7eb' : '#374151'}
+                  fontSize="12"
+                  fontFamily="sans-serif"
+                >
+                  {t('table.splitRank')}: {hoverInfo.split.leg.rank || 'N/A'}
+                </text>
+                <text
+                  x={hoverInfo.x + 20}
+                  y={hoverInfo.y + 18}
+                  fill={isDarkMode ? '#e5e7eb' : '#374151'}
+                  fontSize="12"
+                  fontFamily="sans-serif"
+                >
+                  {t('table.behind')}: {hoverInfo.split.leg.behind ? formatTime(hoverInfo.split.leg.behind) : '0:00'}
+                </text>
+              </g>
+            )}
+          </svg>
         </div>
       </div>
     </div>

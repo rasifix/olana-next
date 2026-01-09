@@ -92,7 +92,8 @@
     "vs": "vs",
     "totalTimeDifference": "Differenza di tempo totale:",
     "isFaster": "è più veloce",
-    "isSlower": "è più lento"
+    "isSlower": "è più lento",
+    "rotateDeviceHint": "Ruota il dispositivo in orizzontale per una vista migliore"
   },
   "form": {
     "filter": "Filtra",
@@ -117,7 +118,9 @@
     "error": "Errore",
     "backToCustomCategory": "← Torna alla categoria personalizzata",
     "compareWith": "Confronta con un altro atleta:",
-    "selectRunner": "Seleziona un atleta..."
+    "selectRunner": "Seleziona un atleta...",
+    "selectRunners": "Seleziona atleti",
+    "selectUpTo5": "Seleziona fino a 5 atleti da confrontare"
   },
   "leg": {
     "count": "{{count}} tratta",

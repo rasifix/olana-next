@@ -1,11 +1,12 @@
-import { useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
 import { ranking } from '@rasifix/orienteering-utils';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import SplitGraph from '../components/SplitGraph';
-import RankingTable from '../components/RankingTable';
+import { Link, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
 import CategoryCard from '../components/CategoryCard';
+import RankingTable from '../components/RankingTable';
+import RunnerSelectorSheet from '../components/RunnerSelectorSheet';
+import SplitGraph from '../components/SplitGraph';
 import { useCompetition } from '../contexts/CompetitionContext';
 
 
@@ -15,6 +16,15 @@ function CategoryDetailsPage() {
   const { competition } = useCompetition();
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
+  const [showRunnerSelector, setShowRunnerSelector] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const category = useMemo(() => {
     if (!competition || !categoryName) return null;
@@ -50,7 +60,9 @@ function CategoryDetailsPage() {
   };
 
   const handleShowGraph = () => {
-    if (selectedRunners.size >= 2) {
+    if (isMobile && selectedRunners.size === 0) {
+      setShowRunnerSelector(true);
+    } else if (selectedRunners.size >= 2) {
       setShowGraph(true);
     }
   };
@@ -65,12 +77,12 @@ function CategoryDetailsPage() {
   return (
     <div className="page-layout">
       <div className="px-4">
-      <Breadcrumbs items={[
-        { label: t('navigation.home'), path: '/competitions', isHome: true },
-        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
-        { label: t('navigation.categories'), path: `/competitions/${source}/${id}/categories` },
-        { label: categoryName || t('table.category'), path: `/competitions/${source}/${id}/categories/${categoryName}` }
-      ]} />
+        <Breadcrumbs items={[
+          { label: t('navigation.home'), path: '/competitions', isHome: true },
+          { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+          { label: t('navigation.categories'), path: `/competitions/${source}/${id}/categories` },
+          { label: categoryName || t('table.category'), path: `/competitions/${source}/${id}/categories/${categoryName}` }
+        ]} />
       </div>
 
       <div className="page-container-card">
@@ -84,30 +96,43 @@ function CategoryDetailsPage() {
           />
         </div>
 
-        <div className="mt-6">
-          <RankingTable
-            runners={rankedRunners}
-            selectedRunners={selectedRunners}
-            onToggleRunner={toggleRunnerSelection}
-            onClearSelection={() => setSelectedRunners(new Set())}
-            onShowGraph={handleShowGraph}
-            showYearColumn={true}
-            renderName={(runner) => (
-              <Link 
-                to={`/competitions/${source}/${id}/categories/${encodeURIComponent(categoryName!)}/runners/${runner.id}`}
-                className="text-link hover:text-link-hover hover:underline"
-              >
-                {runner.fullName}
-              </Link>
-            )}
+        {!showGraph ? (
+          <div className="mt-6">
+            <RankingTable
+              runners={rankedRunners}
+              selectedRunners={selectedRunners}
+              onToggleRunner={toggleRunnerSelection}
+              onClearSelection={() => setSelectedRunners(new Set())}
+              onShowGraph={handleShowGraph}
+              showYearColumn={true}
+              renderName={(runner) => (
+                <Link
+                  to={`/competitions/${source}/${id}/categories/${encodeURIComponent(categoryName!)}/runners/${runner.id}`}
+                  className="text-link hover:text-link-hover hover:underline"
+                >
+                  {runner.fullName}
+                </Link>
+              )}
+            />
+          </div>
+        ) : (
+          <SplitGraph
+            runners={getSelectedRunners()}
+            onClose={() => setShowGraph(false)}
           />
-        </div>
+        )}
       </div>
 
-      {showGraph && (
-        <SplitGraph
-          runners={getSelectedRunners()}
-          onClose={() => setShowGraph(false)}
+      {showRunnerSelector && (
+        <RunnerSelectorSheet
+          runners={rankedRunners}
+          selectedRunners={selectedRunners}
+          onToggleRunner={toggleRunnerSelection}
+          onConfirm={() => {
+            setShowRunnerSelector(false);
+            setShowGraph(true);
+          }}
+          onClose={() => setShowRunnerSelector(false)}
         />
       )}
     </div>

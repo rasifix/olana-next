@@ -92,7 +92,8 @@
     "vs": "vs",
     "totalTimeDifference": "Différence de temps totale :",
     "isFaster": "est plus rapide",
-    "isSlower": "est plus lent"
+    "isSlower": "est plus lent",
+    "rotateDeviceHint": "Tournez votre appareil en mode paysage pour une meilleure vue"
   },
   "form": {
     "filter": "Filtrer",
@@ -117,7 +118,9 @@
     "error": "Erreur",
     "backToCustomCategory": "← Retour à la catégorie personnalisée",
     "compareWith": "Comparer avec un autre coureur :",
-    "selectRunner": "Sélectionner un coureur..."
+    "selectRunner": "Sélectionner un coureur...",
+    "selectRunners": "Sélectionner des coureurs",
+    "selectUpTo5": "Sélectionnez jusqu'à 5 coureurs à comparer"
   },
   "leg": {
     "count": "{{count}} tronçon",

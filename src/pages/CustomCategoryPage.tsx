@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import CustomCategoryBuilder from '../components/CustomCategoryBuilder';
 import RankingTable from '../components/RankingTable';
+import RunnerSelectorSheet from '../components/RunnerSelectorSheet';
 import SplitGraph from '../components/SplitGraph';
 import { useCompetition } from '../contexts/CompetitionContext';
 import { useCustomCategory } from '../contexts/CustomCategoryContext';
@@ -26,6 +27,15 @@ function CustomCategoryPage() {
   const [showBuilder, setShowBuilder] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showRunnerSelector, setShowRunnerSelector] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const hasCustomCategory = selectedCategories.length > 0 && selectedLegs.length > 0;
 
@@ -190,7 +200,9 @@ function CustomCategoryPage() {
   };
 
   const handleShowGraph = () => {
-    if (selectedRunners.size >= 2) {
+    if (isMobile && selectedRunners.size === 0) {
+      setShowRunnerSelector(true);
+    } else if (selectedRunners.size >= 2) {
       setShowGraph(true);
     }
   };
@@ -248,40 +260,40 @@ function CustomCategoryPage() {
 
           {rankedRunners && rankedRunners.length > 0 && (
             <div>
-              <RankingTable
-                runners={rankedRunners}
-                selectedRunners={selectedRunners}
-                onToggleRunner={toggleRunnerSelection}
-                onClearSelection={() => setSelectedRunners(new Set())}
-                onShowGraph={handleShowGraph}
-                showCategoryColumn={true}
-                renderName={(runner) => (
-                  <Link
-                    to={`/competitions/${source}/${id}/custom/runners/${runner.id}?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`}
-                    className="text-link hover:text-link-hover hover:underline"
-                  >
-                    {runner.fullName}
-                  </Link>
-                )}
-                renderCategory={(runner) => (
-                  <Link
-                    to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category!)}`}
-                    className="text-link hover:text-link-hover hover:underline"
-                  >
-                    {runner.category}
-                  </Link>
-                )}
-              />
+              {!showGraph ? (
+                <RankingTable
+                  runners={rankedRunners}
+                  selectedRunners={selectedRunners}
+                  onToggleRunner={toggleRunnerSelection}
+                  onClearSelection={() => setSelectedRunners(new Set())}
+                  onShowGraph={handleShowGraph}
+                  showCategoryColumn={true}
+                  renderName={(runner) => (
+                    <Link
+                      to={`/competitions/${source}/${id}/custom/runners/${runner.id}?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`}
+                      className="text-link hover:text-link-hover hover:underline"
+                    >
+                      {runner.fullName}
+                    </Link>
+                  )}
+                  renderCategory={(runner) => (
+                    <Link
+                      to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category!)}`}
+                      className="text-link hover:text-link-hover hover:underline"
+                    >
+                      {runner.category}
+                    </Link>
+                  )}
+                />
+              ) : (
+                <SplitGraph
+                  runners={getSelectedRunners()}
+                  onClose={() => setShowGraph(false)}
+                />
+              )}
             </div>
           )}
         </div>
-      )}
-
-      {showGraph && (
-        <SplitGraph
-          runners={getSelectedRunners()}
-          onClose={() => setShowGraph(false)}
-        />
       )}
 
       {showBuilder && (
@@ -320,6 +332,19 @@ function CustomCategoryPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {showRunnerSelector && rankedRunners && (
+        <RunnerSelectorSheet
+          runners={rankedRunners}
+          selectedRunners={selectedRunners}
+          onToggleRunner={toggleRunnerSelection}
+          onConfirm={() => {
+            setShowRunnerSelector(false);
+            setShowGraph(true);
+          }}
+          onClose={() => setShowRunnerSelector(false)}
+        />
       )}
     </>
   );

@@ -1,5 +1,5 @@
 import { formatTime, parseTime, ranking } from '@rasifix/orienteering-utils';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface RankingTableProps {
@@ -27,6 +27,14 @@ function RankingTable({
 }: RankingTableProps) {
   const { t } = useTranslation();
   const timeRegex = /^\d{1,2}:\d{2}(:\d{2})?$/;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   function timeBehind(time: string | undefined, fastest: string | undefined) {
     if (!time || !timeRegex.test(time) || !fastest || !timeRegex.test(fastest)) {
@@ -40,25 +48,31 @@ function RankingTable({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        {selectedRunners.size > 0 && (
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-text-tertiary">
-              {t('runner.selected', { count: selectedRunners.size })}
-            </span>
-            <button
-              onClick={onShowGraph}
-              disabled={selectedRunners.size < 2}
-              className="btn-primary hover:bg-primary-hover transition-colors disabled"
-            >
-              {t('button.showSplitGraph')}
-            </button>
-            <button
-              onClick={onClearSelection}
-              className="btn-secondary hover:text-text-primary transition-colors"
-            >
-              {t('button.clear')}
-            </button>
+      <div className="mb-4">
+        {(selectedRunners.size > 0 || isMobile) && (
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            {selectedRunners.size > 0 && (
+              <span className="text-sm text-text-tertiary">
+                {t('runner.selected', { count: selectedRunners.size })}
+              </span>
+            )}
+            <div className="flex gap-2">
+              <button
+                onClick={onShowGraph}
+                disabled={!isMobile && selectedRunners.size < 2}
+                className="btn-primary hover:bg-primary-hover transition-colors disabled flex-1 sm:flex-initial"
+              >
+                {t('button.showSplitGraph')}
+              </button>
+              {selectedRunners.size > 0 && (
+                <button
+                  onClick={onClearSelection}
+                  className="btn-secondary hover:text-text-primary transition-colors flex-1 sm:flex-initial"
+                >
+                  {t('button.clear')}
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>

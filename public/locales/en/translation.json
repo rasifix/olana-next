@@ -92,7 +92,8 @@
     "vs": "vs",
     "totalTimeDifference": "Total time difference:",
     "isFaster": "is faster",
-    "isSlower": "is slower"
+    "isSlower": "is slower",
+    "rotateDeviceHint": "Rotate your device to landscape for a better view"
   },
   "form": {
     "filter": "Filter",
@@ -117,7 +118,9 @@
     "error": "Error",
     "backToCustomCategory": "← Back to custom category",
     "compareWith": "Compare with another runner:",
-    "selectRunner": "Select a runner..."
+    "selectRunner": "Select a runner...",
+    "selectRunners": "Select Runners",
+    "selectUpTo5": "Select up to 5 runners to compare"
   },
   "leg": {
     "count": "{{count}} leg",

@@ -1,13 +1,14 @@
-import { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { competitionService } from '../services/competitionService';
 import { ranking } from '@rasifix/orienteering-utils';
-import SplitGraph from '../components/SplitGraph';
-import RankingTable from '../components/RankingTable';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
 import CategoryCard from '../components/CategoryCard';
+import RankingTable from '../components/RankingTable';
+import RunnerSelectorSheet from '../components/RunnerSelectorSheet';
+import SplitGraph from '../components/SplitGraph';
 import { useCompetition } from '../contexts/CompetitionContext';
+import { competitionService } from '../services/competitionService';
 
 function CourseDetailsPage() {
   const { t } = useTranslation();
@@ -15,6 +16,15 @@ function CourseDetailsPage() {
   const { competition } = useCompetition();
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
+  const [showRunnerSelector, setShowRunnerSelector] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const category = useMemo(() => {
     if (!competition || !courseCode) return null;
@@ -43,6 +53,14 @@ function CourseDetailsPage() {
     setSelectedRunners(newSelected);
   };
 
+  const handleShowGraph = () => {
+    if (isMobile && selectedRunners.size === 0) {
+      setShowRunnerSelector(true);
+    } else if (selectedRunners.size >= 2) {
+      setShowGraph(true);
+    }
+  };
+
   if (!category || !rankingData) {
     return (
       <div className="px-4 py-6">
@@ -60,12 +78,12 @@ function CourseDetailsPage() {
   return (
     <div className="page-layout">
       <div className="px-4">
-      <Breadcrumbs items={[
-        { label: t('navigation.home'), path: '/competitions', isHome: true },
-        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
-        { label: t('navigation.courses'), path: `/competitions/${source}/${id}/courses` },
-        { label: courseCode || t('navigation.courses'), path: `/competitions/${source}/${id}/courses/${courseCode}` }
-      ]} />
+        <Breadcrumbs items={[
+          { label: t('navigation.home'), path: '/competitions', isHome: true },
+          { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+          { label: t('navigation.courses'), path: `/competitions/${source}/${id}/courses` },
+          { label: courseCode || t('navigation.courses'), path: `/competitions/${source}/${id}/courses/${courseCode}` }
+        ]} />
       </div>
 
       <div className="page-container-card">
@@ -79,44 +97,61 @@ function CourseDetailsPage() {
           />
         </div>
 
-        <RankingTable
-          runners={rankingData.runners}
-          selectedRunners={selectedRunners}
-          onToggleRunner={handleRunnerToggle}
-          onClearSelection={() => setSelectedRunners(new Set())}
-          onShowGraph={() => setShowGraph(true)}
-          showCategoryColumn={true}
-          renderName={(runner) => (
-            <a
-              href={`/competitions/${source}/${id}/courses/${courseCode}/runners/${runner.id}`}
-              className="text-link hover:text-link-hover hover:underline"
-            >
-              {runner.fullName}
-            </a>
-          )}
-          renderCategory={(runner) => (
-            runner.category ? (
-              <a
-                href={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
-                className="text-link hover:text-link-hover hover:underline"
-              >
-                {runner.category}
-              </a>
-            ) : '-'
-          )}
-        />
+        {!showGraph ? (
+          <>
+            <RankingTable
+              runners={rankingData.runners}
+              selectedRunners={selectedRunners}
+              onToggleRunner={handleRunnerToggle}
+              onClearSelection={() => setSelectedRunners(new Set())}
+              onShowGraph={handleShowGraph}
+              showCategoryColumn={true}
+              renderName={(runner) => (
+                <a
+                  href={`/competitions/${source}/${id}/courses/${courseCode}/runners/${runner.id}`}
+                  className="text-link hover:text-link-hover hover:underline"
+                >
+                  {runner.fullName}
+                </a>
+              )}
+              renderCategory={(runner) => (
+                runner.category ? (
+                  <a
+                    href={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
+                    className="text-link hover:text-link-hover hover:underline"
+                  >
+                    {runner.category}
+                  </a>
+                ) : '-'
+              )}
+            />
 
-        {selectedRunners.size > 0 && (
-          <div className="mt-4 text-sm text-text-tertiary">
-            Selected {selectedRunners.size} of 5 runners maximum for split graph
-          </div>
+            {selectedRunners.size > 0 && (
+              <div className="mt-4 text-sm text-text-tertiary">
+                Selected {selectedRunners.size} of 5 runners maximum for split graph
+              </div>
+            )}
+          </>
+        ) : (
+          selectedRankedRunners.length > 0 && (
+            <SplitGraph
+              runners={selectedRankedRunners}
+              onClose={() => setShowGraph(false)}
+            />
+          )
         )}
       </div>
 
-      {showGraph && selectedRankedRunners.length > 0 && (
-        <SplitGraph
-          runners={selectedRankedRunners}
-          onClose={() => setShowGraph(false)}
+      {showRunnerSelector && (
+        <RunnerSelectorSheet
+          runners={rankingData.runners}
+          selectedRunners={selectedRunners}
+          onToggleRunner={handleRunnerToggle}
+          onConfirm={() => {
+            setShowRunnerSelector(false);
+            setShowGraph(true);
+          }}
+          onClose={() => setShowRunnerSelector(false)}
         />
       )}
     </div>
