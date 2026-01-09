@@ -27,6 +27,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
   const [selectedRunner, setSelectedRunner] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isPortrait, setIsPortrait] = useState(false);
+  const [containerElement, setContainerElement] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -43,7 +44,9 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
         const height = portrait ? 280 : Math.min(window.innerHeight - 200, 400);
         setDimensions({ width, height });
       } else {
-        const width = Math.min(window.innerWidth - 100, 1200);
+        // On desktop: fit within the actual container width
+        const containerWidth = containerElement?.offsetWidth || window.innerWidth;
+        const width = Math.min(containerWidth - 32, 1200); // 32px for some breathing room
         const height = Math.min(window.innerHeight - 300, 600);
         setDimensions({ width, height });
       }
@@ -52,7 +55,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
-  }, [runners]);
+  }, [runners, containerElement]);
 
   const graphData = useMemo(() => {
     if (runners.length === 0) return null;
@@ -124,8 +127,37 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
     return padding.left + value * graphWidth;
   };
 
+  // Calculate nice time intervals for grid lines
+  const getTimeGridLines = () => {
+    const range = maxSpread - minSpread;
+    let interval: number;
+
+    // Choose appropriate interval based on range
+    if (range <= 60) {
+      interval = 10; // 10 second intervals
+    } else if (range <= 180) {
+      interval = 30; // 30 second intervals
+    } else if (range <= 720) {
+      interval = 60; // 1 minute intervals
+    } else if (range <= 1440) {
+      interval = 120; // 2 minute intervals
+    } else {
+      interval = 300; // 5 minute intervals
+    }
+
+    const gridLines: number[] = [];
+    // Start from the first interval boundary at or below minSpread
+    const start = Math.floor(minSpread / interval) * interval;
+    for (let time = start; time <= maxSpread; time += interval) {
+      gridLines.push(time);
+    }
+    return gridLines;
+  };
+
+  const timeGridLines = getTimeGridLines();
+
   return (
-    <div>
+    <div ref={setContainerElement}>
       <div className="flex justify-between items-center mb-4">
         <h3 className="section-heading">{t('chart.splitAnalysis')}</h3>
         <button
@@ -149,18 +181,19 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
       )}
 
       <div className={isMobile ? "overflow-x-auto min-h-[150px]" : "flex justify-center min-h-[150px]"}>
-        <div className="relative">
+        <div className={isMobile ? "relative" : "relative max-w-full"}>
           <svg
             width={dimensions.width}
             height={dimensions.height}
-            className="border border-border-default rounded"
+            className={isMobile ? "border border-border-default rounded" : "border border-border-default rounded max-w-full"}
           >
-            {/* Horizontal grid lines */}
-            {[...Array(6)].map((_, i) => {
-              const y = padding.top + (i * graphHeight) / 5;
+            {/* Horizontal grid lines at time boundaries */}
+            {timeGridLines.map((time) => {
+              const y = getY(time);
+              if (y === null) return null;
               return (
                 <line
-                  key={`hgrid-${i}`}
+                  key={`hgrid-${time}`}
                   x1={padding.left}
                   y1={y}
                   x2={padding.left + graphWidth}
@@ -237,37 +270,24 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
               );
             })}
 
-            {/* Y-axis labels */}
-            <text
-              x={padding.left - 10}
-              y={padding.top + 5}
-              textAnchor="end"
-              fill={chartColors.infrastructure.text}
-              fontSize={isMobile ? "10" : "12"}
-              fontFamily="sans-serif"
-            >
-              {formatTime(minSpread)}
-            </text>
-            <text
-              x={padding.left - 10}
-              y={zeroLineY + 5}
-              textAnchor="end"
-              fill={chartColors.infrastructure.text}
-              fontSize={isMobile ? "10" : "12"}
-              fontFamily="sans-serif"
-            >
-              0:00
-            </text>
-            <text
-              x={padding.left - 10}
-              y={padding.top + graphHeight + 5}
-              textAnchor="end"
-              fill={chartColors.infrastructure.text}
-              fontSize={isMobile ? "10" : "12"}
-              fontFamily="sans-serif"
-            >
-              {formatTime(maxSpread)}
-            </text>
+            {/* Y-axis labels at time boundaries */}
+            {timeGridLines.map((time) => {
+              const y = getY(time);
+              if (y === null) return null;
+              return (
+                <text
+                  key={`ylabel-${time}`}
+                  x={padding.left - 10}
+                  y={y + 5}
+                  textAnchor="end"
+                  fill={chartColors.infrastructure.text}
+                  fontSize={isMobile ? "10" : "12"}
+                  fontFamily="sans-serif"
+                >
+                  {formatTime(time)}
+                </text>
+              );
+            })}
 
             {/* Runner lines */}
             {runners
