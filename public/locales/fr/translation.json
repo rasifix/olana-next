@@ -153,6 +153,11 @@
     "description": "Créez une catégorie personnalisée en combinant des intervalles de plusieurs catégories.",
     "createButton": "Créer une catégorie personnalisée",
     "editButton": "Modifier la sélection",
+    "shareButton": "Partager",
+    "shareTitle": "Partager la catégorie personnalisée",
+    "shareDescription": "Copiez ce lien pour partager votre configuration de catégorie personnalisée :",
+    "copyLink": "Copier le lien",
+    "copied": "Copié !",
     "legs": "intervalles"
   }
 }

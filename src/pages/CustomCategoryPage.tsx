@@ -1,7 +1,7 @@
 import { formatTime, parseTime, ranking } from '@rasifix/orienteering-utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import CustomCategoryBuilder from '../components/CustomCategoryBuilder';
 import RankingTable from '../components/RankingTable';
 import SplitGraph from '../components/SplitGraph';
@@ -12,6 +12,7 @@ import { Runner } from '../types';
 function CustomCategoryPage() {
   const { t } = useTranslation();
   const { source, id } = useParams<{ source: string; id: string }>();
+  const [searchParams] = useSearchParams();
   const { competition } = useCompetition();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLegs, setSelectedLegs] = useState<string[]>([]);
@@ -19,8 +20,29 @@ function CustomCategoryPage() {
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
   const [showBuilder, setShowBuilder] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const hasCustomCategory = selectedCategories.length > 0 && selectedLegs.length > 0;
+
+  // Initialize from URL parameters
+  useEffect(() => {
+    if (!competition) return;
+
+    const categoriesParam = searchParams.get('categories');
+    const legsParam = searchParams.get('legs');
+
+    if (categoriesParam && legsParam) {
+      const categories = categoriesParam.split(',').filter(Boolean);
+      const legs = legsParam.split(',').filter(Boolean);
+
+      if (categories.length > 0 && legs.length > 0) {
+        setSelectedCategories(categories);
+        setSelectedLegs(legs);
+        calculateRanking(categories, legs);
+      }
+    }
+  }, [competition, searchParams]);
 
   const handleBuilderComplete = (categories: string[], legs: string[]) => {
     setSelectedCategories(categories);
@@ -36,6 +58,25 @@ function CustomCategoryPage() {
 
   const handleBuilderCancel = () => {
     setShowBuilder(false);
+  };
+
+  const handleShare = () => {
+    setCopySuccess(false);
+    setShowShareModal(true);
+  };
+
+  const handleCopyLink = async () => {
+    const categoriesParam = selectedCategories.join(',');
+    const legsParam = selectedLegs.join(',');
+    const shareUrl = `${window.location.origin}/competitions/${source}/${id}/custom?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`;
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
   };
 
   const calculateRanking = (categories: string[], legs: string[]) => {
@@ -180,12 +221,20 @@ function CustomCategoryPage() {
                 {selectedCategories.join(', ')} • {selectedLegs.length} {t('customCategory.legs')}
               </p>
             </div>
-            <button
-              onClick={handleEdit}
-              className="px-4 py-2 text-link hover:text-link-hover border border-primary hover:border-rust-800 rounded-lg transition-colors font-semibold"
-            >
-              {t('customCategory.editButton')}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleShare}
+                className="px-4 py-2 text-link hover:text-link-hover border border-primary hover:border-rust-800 rounded-lg transition-colors font-semibold"
+              >
+                {t('customCategory.shareButton')}
+              </button>
+              <button
+                onClick={handleEdit}
+                className="px-4 py-2 text-link hover:text-link-hover border border-primary hover:border-rust-800 rounded-lg transition-colors font-semibold"
+              >
+                {t('customCategory.editButton')}
+              </button>
+            </div>
           </div>
 
           {rankedRunners && rankedRunners.length > 0 && (
@@ -224,6 +273,36 @@ function CustomCategoryPage() {
           onComplete={handleBuilderComplete}
           onCancel={handleBuilderCancel}
         />
+      )}
+
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-surface-primary rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-semibold mb-4">
+              {t('customCategory.shareTitle')}
+            </h3>
+            <p className="text-text-tertiary text-sm mb-4">
+              {t('customCategory.shareDescription')}
+            </p>
+            <div className="bg-background p-3 rounded border border-border mb-4 break-all text-sm font-mono">
+              {`${window.location.origin}/competitions/${source}/${id}/custom?categories=${encodeURIComponent(selectedCategories.join(','))}&legs=${encodeURIComponent(selectedLegs.join(','))}`}
+            </div>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="px-4 py-2 text-text-tertiary hover:text-text-primary transition-colors"
+              >
+                {t('button.close')}
+              </button>
+              <button
+                onClick={handleCopyLink}
+                className="btn-primary"
+              >
+                {copySuccess ? t('customCategory.copied') : t('customCategory.copyLink')}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </CustomCategoryProvider>
   );

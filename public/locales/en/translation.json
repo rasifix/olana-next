@@ -153,6 +153,11 @@
     "description": "Create a custom category by combining legs from multiple categories.",
     "createButton": "Create Custom Category",
     "editButton": "Edit Selection",
+    "shareButton": "Share",
+    "shareTitle": "Share Custom Category",
+    "shareDescription": "Copy this link to share your custom category configuration:",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
     "legs": "legs"
   }
 }

@@ -153,6 +153,11 @@
     "description": "Erstellen Sie eine benutzerdefinierte Kategorie durch Kombination von Teilstrecken aus mehreren Kategorien.",
     "createButton": "Eigene Kategorie erstellen",
     "editButton": "Auswahl bearbeiten",
+    "shareButton": "Teilen",
+    "shareTitle": "Eigene Kategorie teilen",
+    "shareDescription": "Kopieren Sie diesen Link, um Ihre benutzerdefinierte Kategorie zu teilen:",
+    "copyLink": "Link kopieren",
+    "copied": "Kopiert!",
     "legs": "Teilstrecken"
   }
 }
