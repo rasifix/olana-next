@@ -1,7 +1,8 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { useParams, Outlet } from 'react-router-dom';
-import { Competition } from '../types';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { Outlet, useParams } from 'react-router-dom';
 import { competitionService } from '../services/competitionService';
+import { Competition } from '../types';
+import { CustomCategoryProvider } from './CustomCategoryContext';
 
 interface CompetitionContextType {
   competition: Competition | null;
@@ -59,7 +60,9 @@ export function CompetitionProvider() {
 
   return (
     <CompetitionContext.Provider value={{ competition, loading, error }}>
-      <Outlet />
+      <CustomCategoryProvider>
+        <Outlet />
+      </CustomCategoryProvider>
     </CompetitionContext.Provider>
   );
 }

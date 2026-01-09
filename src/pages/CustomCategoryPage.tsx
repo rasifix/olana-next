@@ -1,12 +1,12 @@
 import { formatTime, parseTime, ranking } from '@rasifix/orienteering-utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import CustomCategoryBuilder from '../components/CustomCategoryBuilder';
 import RankingTable from '../components/RankingTable';
 import SplitGraph from '../components/SplitGraph';
 import { useCompetition } from '../contexts/CompetitionContext';
-import { CustomCategoryProvider } from '../contexts/CustomCategoryContext';
+import { useCustomCategory } from '../contexts/CustomCategoryContext';
 import { Runner } from '../types';
 
 function CustomCategoryPage() {
@@ -14,8 +14,12 @@ function CustomCategoryPage() {
   const { source, id } = useParams<{ source: string; id: string }>();
   const [searchParams] = useSearchParams();
   const { competition } = useCompetition();
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedLegs, setSelectedLegs] = useState<string[]>([]);
+  const customCategory = useCustomCategory();
+
+  // Use context state
+  const selectedCategories = customCategory?.selectedCategories || [];
+  const selectedLegs = customCategory?.selectedLegs || [];
+
   const [rankedRunners, setRankedRunners] = useState<ranking.RankingRunner[] | null>(null);
   const [selectedRunners, setSelectedRunners] = useState<Set<number>>(new Set());
   const [showGraph, setShowGraph] = useState(false);
@@ -27,7 +31,7 @@ function CustomCategoryPage() {
 
   // Initialize from URL parameters
   useEffect(() => {
-    if (!competition) return;
+    if (!competition || !customCategory) return;
 
     const categoriesParam = searchParams.get('categories');
     const legsParam = searchParams.get('legs');
@@ -37,16 +41,24 @@ function CustomCategoryPage() {
       const legs = legsParam.split(',').filter(Boolean);
 
       if (categories.length > 0 && legs.length > 0) {
-        setSelectedCategories(categories);
-        setSelectedLegs(legs);
+        customCategory.setSelectedCategories(categories);
+        customCategory.setSelectedLegs(legs);
         calculateRanking(categories, legs);
       }
     }
   }, [competition, searchParams]);
 
+  // Recalculate ranking when custom category state changes
+  useEffect(() => {
+    if (selectedCategories.length > 0 && selectedLegs.length > 0) {
+      calculateRanking(selectedCategories, selectedLegs);
+    }
+  }, [selectedCategories, selectedLegs, competition]);
+
   const handleBuilderComplete = (categories: string[], legs: string[]) => {
-    setSelectedCategories(categories);
-    setSelectedLegs(legs);
+    if (!customCategory) return;
+    customCategory.setSelectedCategories(categories);
+    customCategory.setSelectedLegs(legs);
     setShowBuilder(false);
     // Automatically calculate ranking
     calculateRanking(categories, legs);
@@ -194,10 +206,7 @@ function CustomCategoryPage() {
   const legsParam = selectedLegs.join(',');
 
   return (
-    <CustomCategoryProvider
-      selectedCategories={selectedCategories}
-      selectedLegs={selectedLegs}
-    >
+    <>
       {!hasCustomCategory ? (
         <div>
           <p className="text-text-tertiary mb-6">
@@ -247,12 +256,20 @@ function CustomCategoryPage() {
                 onShowGraph={handleShowGraph}
                 showCategoryColumn={true}
                 renderName={(runner) => (
-                  <a
-                    href={`/competitions/${source}/${id}/custom/runners/${runner.id}?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`}
+                  <Link
+                    to={`/competitions/${source}/${id}/custom/runners/${runner.id}?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`}
                     className="text-link hover:text-link-hover hover:underline"
                   >
                     {runner.fullName}
-                  </a>
+                  </Link>
+                )}
+                renderCategory={(runner) => (
+                  <Link
+                    to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category!)}`}
+                    className="text-link hover:text-link-hover hover:underline"
+                  >
+                    {runner.category}
+                  </Link>
                 )}
               />
             </div>
@@ -304,7 +321,7 @@ function CustomCategoryPage() {
           </div>
         </div>
       )}
-    </CustomCategoryProvider>
+    </>
   );
 }
 
