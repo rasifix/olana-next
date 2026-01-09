@@ -1,18 +1,18 @@
 import { parseTime } from "@rasifix/orienteering-utils";
+import {
+  Category,
+  Competition,
+  Control,
+  ControlDetails,
+  Course,
+  Leg,
+  LegDetails,
+  StartTimeRunner,
+} from "../types";
 import api from "./api";
 import defineControl, { defineControls } from "./control-builder";
 import { buildCourseDetails, buildCourseSummaries } from "./course-builder";
 import { buildDetailedLegs, buildLegs } from "./leg-builder";
-import {
-  Competition,
-  Course,
-  Category,
-  Leg,
-  LegDetails,
-  Control,
-  ControlDetails,
-  StartTimeRunner,
-} from "../types";
 
 interface ResponseWrapper {
   events: Competition[];
