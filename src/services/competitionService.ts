@@ -100,17 +100,7 @@ export const competitionService = {
       }
     }
 
-    const result = Array.from(deduplicated.values());
-
-    // Add test competition for current year
-    try {
-      const testComp = await loadTestCompetition();
-      result.unshift(testComp); // Add at the beginning
-    } catch (error) {
-      console.error("Failed to load test competition:", error);
-    }
-
-    return result;
+    return Array.from(deduplicated.values());
   },
 
   async getCompetitionById(source: string, id: string): Promise<Competition> {
@@ -152,9 +142,7 @@ export const competitionService = {
   },
 
   getLegs(competition: Competition): Leg[] {
-    const legs = buildLegs(competition.categories || []);
-    console.log("getLegs result:", legs.slice(0, 2)); // Debug: check first 2 legs
-    return legs;
+    return buildLegs(competition.categories || []);
   },
 
   getLegDetails(competition: Competition, legId: string): LegDetails {
