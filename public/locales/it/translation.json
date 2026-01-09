@@ -93,7 +93,8 @@
     "totalTimeDifference": "Differenza di tempo totale:",
     "isFaster": "è più veloce",
     "isSlower": "è più lento",
-    "rotateDeviceHint": "Ruota il dispositivo in orizzontale per una vista migliore"
+    "rotateDeviceHint": "Ruota il dispositivo in orizzontale per una vista migliore",
+    "hoverForDetails": "Passa sopra una linea per vedere i dettagli"
   },
   "form": {
     "filter": "Filtra",

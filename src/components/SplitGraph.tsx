@@ -24,6 +24,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
   const chartColors = getChartColors(isDarkMode);
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
+  const [hoveredLegIndex, setHoveredLegIndex] = useState<number | null>(null);
   const [selectedRunner, setSelectedRunner] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isPortrait, setIsPortrait] = useState(false);
@@ -168,6 +169,17 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
         </button>
       </div>
 
+      {/* Hover info display */}
+      <div className="mb-2 h-6 flex items-center text-sm">
+        {hoverInfo ? (
+          <span className="text-text-primary font-medium">
+            {hoverInfo.runnerName} • {t('table.control')}: {hoverInfo.split.code} • {t('table.splitTime')}: {hoverInfo.split.splitTime ? formatTime(hoverInfo.split.splitTime) : 'N/A'} • {t('table.splitRank')}: {hoverInfo.split.leg.rank || 'N/A'} • {t('table.behind')}: {hoverInfo.split.leg.behind ? formatTime(hoverInfo.split.leg.behind) : '0:00'}
+          </span>
+        ) : (
+          <span className="text-text-muted">{t('chart.hoverForDetails')}</span>
+        )}
+      </div>
+
       {/* Rotation hint for portrait mobile */}
       {isMobile && isPortrait && (
         <div className="mb-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg flex items-center gap-3 text-sm">
@@ -187,6 +199,30 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
             height={dimensions.height}
             className={isMobile ? "border border-border-default rounded" : "border border-border-default rounded max-w-full"}
           >
+            {/* Leg background highlighting */}
+            {runners[0]?.splits?.map((split, i) => {
+              const x1 = i === 0 ? padding.left : getX(runners[0].splits[i - 1].position);
+              const x2 = getX(split.position);
+              if (x1 === null || x2 === null) return null;
+
+              const isHovered = hoveredLegIndex === i;
+
+              return (
+                <rect
+                  key={`leg-bg-${i}`}
+                  x={x1}
+                  y={padding.top}
+                  width={x2 - x1}
+                  height={graphHeight}
+                  fill={isDarkMode ? '#374151' : '#f3f4f6'}
+                  opacity={isHovered ? 0.3 : 0}
+                  className="cursor-pointer transition-opacity duration-150"
+                  onMouseEnter={() => setHoveredLegIndex(i)}
+                  onMouseLeave={() => setHoveredLegIndex(null)}
+                />
+              );
+            })}
+
             {/* Horizontal grid lines at time boundaries */}
             {timeGridLines.map((time) => {
               const y = getY(time);
@@ -445,70 +481,6 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
               );
             })}
 
-            {/* Tooltip */}
-            {hoverInfo && (
-              <g>
-                {/* Tooltip background */}
-                <rect
-                  x={hoverInfo.x + 10}
-                  y={hoverInfo.y - 60}
-                  width="200"
-                  height="84"
-                  fill={isDarkMode ? '#1f2937' : '#ffffff'}
-                  stroke={chartColors.infrastructure.axes}
-                  strokeWidth="1"
-                  rx="4"
-                  opacity="0.95"
-                />
-                {/* Tooltip text */}
-                <text
-                  x={hoverInfo.x + 20}
-                  y={hoverInfo.y - 40}
-                  fill={isDarkMode ? '#f9fafb' : '#111827'}
-                  fontSize="13"
-                  fontFamily="sans-serif"
-                  fontWeight="600"
-                >
-                  {hoverInfo.runnerName}
-                </text>
-                <text
-                  x={hoverInfo.x + 20}
-                  y={hoverInfo.y - 24}
-                  fill={isDarkMode ? '#e5e7eb' : '#374151'}
-                  fontSize="12"
-                  fontFamily="sans-serif"
-                >
-                  {t('table.control')}: {hoverInfo.split.code}
-                </text>
-                <text
-                  x={hoverInfo.x + 20}
-                  y={hoverInfo.y - 10}
-                  fill={isDarkMode ? '#e5e7eb' : '#374151'}
-                  fontSize="12"
-                  fontFamily="sans-serif"
-                >
-                  {t('table.splitTime')}: {hoverInfo.split.splitTime ? formatTime(hoverInfo.split.splitTime) : 'N/A'}
-                </text>
-                <text
-                  x={hoverInfo.x + 20}
-                  y={hoverInfo.y + 4}
-                  fill={isDarkMode ? '#e5e7eb' : '#374151'}
-                  fontSize="12"
-                  fontFamily="sans-serif"
-                >
-                  {t('table.splitRank')}: {hoverInfo.split.leg.rank || 'N/A'}
-                </text>
-                <text
-                  x={hoverInfo.x + 20}
-                  y={hoverInfo.y + 18}
-                  fill={isDarkMode ? '#e5e7eb' : '#374151'}
-                  fontSize="12"
-                  fontFamily="sans-serif"
-                >
-                  {t('table.behind')}: {hoverInfo.split.leg.behind ? formatTime(hoverInfo.split.leg.behind) : '0:00'}
-                </text>
-              </g>
-            )}
           </svg>
         </div>
       </div>
