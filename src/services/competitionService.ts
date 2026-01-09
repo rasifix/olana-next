@@ -1,15 +1,4 @@
 import { parseTime } from "@rasifix/orienteering-utils";
-import { oware } from "@rasifix/orienteering-utils/lib/formats";
-import {
-  Category,
-  Competition,
-  Control,
-  ControlDetails,
-  Course,
-  Leg,
-  LegDetails,
-  StartTimeRunner,
-} from "../types";
 import api from "./api";
 import defineControl, { defineControls } from "./control-builder";
 import { buildCourseDetails, buildCourseSummaries } from "./course-builder";
@@ -17,54 +6,6 @@ import { buildDetailedLegs, buildLegs } from "./leg-builder";
 
 interface ResponseWrapper {
   events: Competition[];
-}
-
-// Cache for the parsed test competition
-let testCompetition: Competition | null = null;
-
-async function loadTestCompetition(): Promise<Competition> {
-  if (testCompetition) {
-    return testCompetition;
-  }
-
-  try {
-    const response = await fetch("/bbn.csv");
-    const csvText = await response.text();
-    const parser = new oware.OwareFormat();
-    const parsed = parser.parse(csvText);
-
-    // Convert to our Competition format with today's date
-    testCompetition = {
-      id: "test-bbn",
-      source: "test",
-      name: parsed.name,
-      date: new Date("2025-12-31"), // Today's date
-      map: parsed.map || "Test Map",
-      categories: parsed.categories.map((cat) => ({
-        name: cat.name,
-        controls: cat.controls || 0,
-        distance: cat.distance || 0,
-        ascent: cat.ascent || 0,
-        runners: cat.runners.map((runner) => ({
-          id: runner.id || "",
-          fullName: runner.fullName,
-          yearOfBirth: runner.yearOfBirth || "",
-          sex: runner.sex,
-          club: runner.club || "",
-          city: runner.city || "",
-          category: cat.name,
-          startTime: runner.startTime,
-          time: runner.time,
-          splits: runner.splits || [],
-        })),
-      })),
-    };
-
-    return testCompetition;
-  } catch (error) {
-    console.error("Error loading test competition:", error);
-    throw error;
-  }
 }
 
 export const competitionService = {
@@ -104,11 +45,6 @@ export const competitionService = {
   },
 
   async getCompetitionById(source: string, id: string): Promise<Competition> {
-    // Check if it's the test competition
-    if (source === "test" && id === "test-bbn") {
-      return await loadTestCompetition();
-    }
-
     const response = await api.get<Competition>(`/events/${source}/${id}`);
     return response.data;
   },
