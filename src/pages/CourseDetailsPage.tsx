@@ -105,7 +105,6 @@ function CourseDetailsPage() {
               onToggleRunner={handleRunnerToggle}
               onClearSelection={() => setSelectedRunners(new Set())}
               onShowGraph={handleShowGraph}
-              showCategoryColumn={true}
               renderName={(runner) => (
                 <a
                   href={`/competitions/${source}/${id}/courses/${courseCode}/runners/${runner.id}`}

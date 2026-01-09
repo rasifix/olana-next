@@ -8,8 +8,6 @@ interface RankingTableProps {
   onToggleRunner: (index: number) => void;
   onClearSelection: () => void;
   onShowGraph: () => void;
-  showCategoryColumn?: boolean;
-  showYearColumn?: boolean;
   renderName?: (runner: ranking.RankingRunner, index: number) => ReactNode;
   renderCategory?: (runner: ranking.RankingRunner, index: number) => ReactNode;
 }
@@ -20,8 +18,6 @@ function RankingTable({
   onToggleRunner,
   onClearSelection,
   onShowGraph,
-  showCategoryColumn = false,
-  showYearColumn = false,
   renderName,
   renderCategory
 }: RankingTableProps) {
@@ -90,22 +86,18 @@ function RankingTable({
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.name')}
                 </th>
-                {showCategoryColumn && (
-                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    {t('table.category')}
-                  </th>
-                )}
+                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                  {t('table.category')}
+                </th>
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.club')}
                 </th>
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.city')}
                 </th>
-                {showYearColumn && (
-                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                    {t('table.year')}
-                  </th>
-                )}
+                <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                  {t('table.year')}
+                </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.time')}
                 </th>
@@ -135,22 +127,18 @@ function RankingTable({
                   <td className="table-td">
                     {renderName ? renderName(runner, index) : runner.fullName}
                   </td>
-                  {showCategoryColumn && (
-                    <td className="table-td-muted hidden md:table-cell">
-                      {renderCategory ? renderCategory(runner, index) : (runner.category || '-')}
-                    </td>
-                  )}
+                  <td className="table-td-muted hidden md:table-cell">
+                    {renderCategory ? renderCategory(runner, index) : (runner.category || '-')}
+                  </td>
                   <td className="table-td-muted hidden md:table-cell">
                     {runner.club}
                   </td>
                   <td className="table-td-muted hidden md:table-cell">
                     {runner.city}
                   </td>
-                  {showYearColumn && (
-                    <td className="table-td-muted hidden md:table-cell">
-                      {runner.yearOfBirth}
-                    </td>
-                  )}
+                  <td className="table-td-muted hidden lg:table-cell">
+                    {runner.yearOfBirth}
+                  </td>
                   <td className="table-td">
                     {runner.time}
                   </td>

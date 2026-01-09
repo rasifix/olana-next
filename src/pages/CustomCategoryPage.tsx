@@ -267,7 +267,6 @@ function CustomCategoryPage() {
                   onToggleRunner={toggleRunnerSelection}
                   onClearSelection={() => setSelectedRunners(new Set())}
                   onShowGraph={handleShowGraph}
-                  showCategoryColumn={true}
                   renderName={(runner) => (
                     <Link
                       to={`/competitions/${source}/${id}/custom/runners/${runner.id}?categories=${encodeURIComponent(categoriesParam)}&legs=${encodeURIComponent(legsParam)}`}

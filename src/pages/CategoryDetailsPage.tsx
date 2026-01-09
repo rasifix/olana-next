@@ -104,7 +104,6 @@ function CategoryDetailsPage() {
               onToggleRunner={toggleRunnerSelection}
               onClearSelection={() => setSelectedRunners(new Set())}
               onShowGraph={handleShowGraph}
-              showYearColumn={true}
               renderName={(runner) => (
                 <Link
                   to={`/competitions/${source}/${id}/categories/${encodeURIComponent(categoryName!)}/runners/${runner.id}`}
