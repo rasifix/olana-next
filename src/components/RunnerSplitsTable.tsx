@@ -1,6 +1,6 @@
-import { ranking, formatTime } from '@rasifix/orienteering-utils';
-import { Link } from 'react-router-dom';
+import { formatTime, ranking } from '@rasifix/orienteering-utils';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 interface RunnerSplitsTableProps {
   runner: ranking.RankingRunner;
@@ -10,7 +10,7 @@ interface RunnerSplitsTableProps {
 
 function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
   const { t } = useTranslation();
-  
+
   return (
     <div className="mt-6">
       <h3 className="section-heading">{t('table.splitTimes')}</h3>
@@ -22,6 +22,9 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
             <table className="table-base">
               <thead>
                 <tr>
+                  <th>
+                    Nr
+                  </th>
                   <th>
                     #
                   </th>
@@ -47,14 +50,17 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
               </thead>
               <tbody>
                 {runner.splits.map((split, index) => {
-                  const legId = index === 0 
-                    ? `St-${split.code}` 
+                  const legId = index === 0
+                    ? `St-${split.code}`
                     : `${runner.splits[index - 1].code}-${split.code}`;
-                  
+
                   return (
                     <tr key={index} className="hover">
                       <td className="font-medium">
-                        <Link 
+                        {index + 1}
+                      </td>
+                      <td className="font-medium">
+                        <Link
                           to={`/competitions/${source}/${id}/legs/${encodeURIComponent(legId)}`}
                           className="text-link hover:text-link-hover hover:underline"
                         >
@@ -68,13 +74,13 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                         {formatTime(split.splitTime)}
                       </td>
                       <td className="text-right border-r border-border-strong font-mono">
-                        {split.timeLoss && 
-                          <span 
-                            className="text-error font-medium cursor-pointer" 
+                        {split.timeLoss &&
+                          <span
+                            className="text-error font-medium cursor-pointer"
                             title={`Time loss: ${formatTime(split.timeLoss)}`}
                             onClick={() => alert(`Time loss: ${formatTime(split.timeLoss)}`)}
                           >
-                            ⚠ 
+                            ⚠
                           </span>
                         }
                         {split.leg.behind ? formatTime(split.leg.behind) : '0:00'}
@@ -98,21 +104,21 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
           {/* Mobile layout */}
           <div className="md:hidden space-y-4">
             {runner.splits.map((split, index) => {
-              const legId = index === 0 
-                ? `St-${split.code}` 
+              const legId = index === 0
+                ? `St-${split.code}`
                 : `${runner.splits[index - 1].code}-${split.code}`;
-              
+
               return (
                 <div key={index} className="bg-surface-primary border border-border-default rounded-lg p-4">
                   <div className="mb-3">
-                    <Link 
+                    <Link
                       to={`/competitions/${source}/${id}/legs/${encodeURIComponent(legId)}`}
                       className="text-lg font-semibold text-link hover:text-link-hover hover:underline"
                     >
                       {split.code}
                     </Link>
                   </div>
-                  
+
                   {/* Split row */}
                   <div className="mb-3 pb-3 border-b border-border-default">
                     <div className="text-xs font-medium text-text-muted uppercase mb-2">{t('table.split')}</div>
@@ -130,13 +136,13 @@ function RunnerSplitsTable({ runner, source, id }: RunnerSplitsTableProps) {
                         <div className="text-text-primary font-medium font-mono flex items-center justify-end gap-1">
                           {split.leg.behind ? formatTime(split.leg.behind) : '0:00'}
                         </div>
-                          {split.timeLoss && 
-                            <div className="text-error font-medium font-mono">{split.timeLoss ? formatTime(split.timeLoss) : '-'}</div>
-                          }
+                        {split.timeLoss &&
+                          <div className="text-error font-medium font-mono">{split.timeLoss ? formatTime(split.timeLoss) : '-'}</div>
+                        }
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Overall row */}
                   <div>
                     <div className="text-xs font-medium text-text-muted uppercase mb-2">{t('table.overall')}</div>

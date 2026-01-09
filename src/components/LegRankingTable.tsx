@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { parseTime, formatTime } from '@rasifix/orienteering-utils';
+import { formatTime, parseTime } from '@rasifix/orienteering-utils';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 interface LegRunner {
   id: number | string;
@@ -22,7 +22,7 @@ interface LegRankingTableProps {
 
 function LegRankingTable({ runners, source, competitionId }: LegRankingTableProps) {
   const { t } = useTranslation();
-  
+
   const getTimeBehind = (split: string, fastestSplit: string): string => {
     if (split === fastestSplit) {
       return '';

@@ -1,5 +1,5 @@
+import { formatTime, parseTime, ranking } from '@rasifix/orienteering-utils';
 import { ReactNode } from 'react';
-import { ranking, formatTime, parseTime } from '@rasifix/orienteering-utils';
 import { useTranslation } from 'react-i18next';
 
 interface RankingTableProps {
@@ -69,7 +69,6 @@ function RankingTable({
             <thead>
               <tr>
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  {t('table.select')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.rank')}
@@ -103,8 +102,8 @@ function RankingTable({
             </thead>
             <tbody className="table-body">
               {runners.map((runner, index) => (
-                <tr 
-                  key={runner.id || index} 
+                <tr
+                  key={runner.id || index}
                   className={`hover ${selectedRunners.has(index) ? 'selected' : ''}`}
                 >
                   <td className="table-td hidden md:table-cell">
