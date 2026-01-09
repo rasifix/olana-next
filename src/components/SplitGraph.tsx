@@ -58,6 +58,28 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
     return () => window.removeEventListener('resize', updateDimensions);
   }, [runners, containerElement]);
 
+  // Check if runners have different courses (different control sequences)
+  const hasDifferentCourses = useMemo(() => {
+    if (runners.length <= 1) return false;
+
+    const firstControls = runners[0]?.splits?.map(s => s.code).join(',') || '';
+    return runners.some(runner => {
+      const controls = runner.splits?.map(s => s.code).join(',') || '';
+      return controls !== firstControls;
+    });
+  }, [runners]);
+
+  // Determine which runner's controls to display for grid lines and labels
+  const referenceRunner = useMemo(() => {
+    if (!hasDifferentCourses) {
+      return runners[0]; // All same course, use first runner
+    }
+    if (selectedRunner !== null && runners[selectedRunner]) {
+      return runners[selectedRunner]; // Different courses, use selected runner
+    }
+    return null; // Different courses but no selection
+  }, [runners, hasDifferentCourses, selectedRunner]);
+
   const graphData = useMemo(() => {
     if (runners.length === 0) return null;
 
@@ -157,6 +179,9 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
 
   const timeGridLines = getTimeGridLines();
 
+  console.log('split first positions', runners[0]?.splits?.map(s => s.code));
+  console.log('split last positions', runners[1]?.splits?.map(s => s.code));
+
   return (
     <div ref={setContainerElement}>
       <div className="flex justify-between items-center mb-4">
@@ -200,8 +225,8 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
             className={isMobile ? "border border-border-default rounded" : "border border-border-default rounded max-w-full"}
           >
             {/* Leg background highlighting */}
-            {runners[0]?.splits?.map((split, i) => {
-              const x1 = i === 0 ? padding.left : getX(runners[0].splits[i - 1].position);
+            {referenceRunner?.splits?.map((split, i) => {
+              const x1 = i === 0 ? padding.left : getX(referenceRunner.splits[i - 1].position);
               const x2 = getX(split.position);
               if (x1 === null || x2 === null) return null;
 
@@ -241,7 +266,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
             })}
 
             {/* Vertical grid lines (at each control) */}
-            {runners[0]?.splits?.map((split, i) => {
+            {referenceRunner?.splits?.map((split, i) => {
               const x = getX(split.position);
               if (x === null) return null; // Skip if position is invalid
               return (
@@ -288,7 +313,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
             />
 
             {/* Control labels */}
-            {runners[0]?.splits?.map((split, i) => {
+            {referenceRunner?.splits?.map((split, i) => {
               const x = getX(split.position);
               if (x === null) return null; // Skip if position is invalid
               return (
