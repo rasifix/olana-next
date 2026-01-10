@@ -112,6 +112,8 @@ function CategoryDetailsPage() {
                   {runner.fullName}
                 </Link>
               )}
+              source={source}
+              id={id}
             />
           </div>
         ) : (

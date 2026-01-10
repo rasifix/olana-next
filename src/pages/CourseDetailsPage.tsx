@@ -113,16 +113,8 @@ function CourseDetailsPage() {
                   {runner.fullName}
                 </Link>
               )}
-              renderCategory={(runner) => (
-                runner.category ? (
-                  <Link
-                    to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
-                    className="text-link hover:text-link-hover hover:underline"
-                  >
-                    {runner.category}
-                  </Link>
-                ) : '-'
-              )}
+              source={source}
+              id={id}
             />
 
             {selectedRunners.size > 0 && (

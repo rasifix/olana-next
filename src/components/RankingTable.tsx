@@ -1,6 +1,7 @@
 import { formatTime, parseTime, ranking } from '@rasifix/orienteering-utils';
 import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 interface RankingTableProps {
   runners: ranking.RankingRunner[];
@@ -10,6 +11,8 @@ interface RankingTableProps {
   onShowGraph: () => void;
   renderName?: (runner: ranking.RankingRunner, index: number) => ReactNode;
   renderCategory?: (runner: ranking.RankingRunner, index: number) => ReactNode;
+  source?: string;
+  id?: string;
 }
 
 function RankingTable({
@@ -19,7 +22,9 @@ function RankingTable({
   onClearSelection,
   onShowGraph,
   renderName,
-  renderCategory
+  renderCategory,
+  source,
+  id
 }: RankingTableProps) {
   const { t } = useTranslation();
   const timeRegex = /^\d{1,2}:\d{2}(:\d{2})?$/;
@@ -128,7 +133,14 @@ function RankingTable({
                     {renderName ? renderName(runner, index) : runner.fullName}
                   </td>
                   <td className="table-td-muted hidden md:table-cell">
-                    {renderCategory ? renderCategory(runner, index) : (runner.category || '-')}
+                    {renderCategory ? renderCategory(runner, index) : source && id && runner.category ? (
+                      <Link
+                        to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
+                        className="text-link hover:text-link-hover hover:underline"
+                      >
+                        {runner.category}
+                      </Link>
+                    ) : (runner.category || '-')}
                   </td>
                   <td className="table-td-muted hidden md:table-cell">
                     {runner.club}
