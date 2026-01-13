@@ -114,6 +114,7 @@ function CategoryDetailsPage() {
               )}
               source={source}
               id={id}
+              showCategory={false}
             />
           </div>
         ) : (

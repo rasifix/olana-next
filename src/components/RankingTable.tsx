@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom';
 interface RankingTableProps {
   runners: ranking.RankingRunner[];
   selectedRunners: Set<number>;
+  showCategory?: boolean;
+  showCourse?: boolean;
   onToggleRunner: (index: number) => void;
   onClearSelection: () => void;
   onShowGraph: () => void;
   renderName?: (runner: ranking.RankingRunner, index: number) => ReactNode;
-  renderCategory?: (runner: ranking.RankingRunner, index: number) => ReactNode;
   source?: string;
   id?: string;
 }
@@ -18,11 +19,12 @@ interface RankingTableProps {
 function RankingTable({
   runners,
   selectedRunners,
+  showCategory = true,
+  showCourse = true,
   onToggleRunner,
   onClearSelection,
   onShowGraph,
   renderName,
-  renderCategory,
   source,
   id
 }: RankingTableProps) {
@@ -46,6 +48,8 @@ function RankingTable({
       return "+" + formatTime(parseTime(time)! - parseTime(fastest)!);
     }
   }
+
+  console.log('Rendering RankingTable with runners:', runners[0]);
 
   return (
     <div>
@@ -91,9 +95,12 @@ function RankingTable({
                 <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.name')}
                 </th>
-                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                {showCategory && <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.category')}
-                </th>
+                </th>}
+                {showCourse && <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                  {t('table.course')}
+                </th>}
                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   {t('table.club')}
                 </th>
@@ -132,16 +139,24 @@ function RankingTable({
                   <td className="table-td">
                     {renderName ? renderName(runner, index) : runner.fullName}
                   </td>
-                  <td className="table-td-muted hidden md:table-cell">
-                    {renderCategory ? renderCategory(runner, index) : source && id && runner.category ? (
+                  {showCategory && <td className="table-td-muted hidden md:table-cell">
+                    <Link
+                      to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
+                      className="text-link hover:text-link-hover hover:underline"
+                    >
+                      {runner.category}
+                    </Link>
+                  </td>}
+                  {showCourse && <td className="table-td-muted hidden md:table-cell">
+                    {runner.course ? (
                       <Link
-                        to={`/competitions/${source}/${id}/categories/${encodeURIComponent(runner.category)}`}
+                        to={`/competitions/${source}/${id}/courses/${encodeURIComponent(runner.course)}`}
                         className="text-link hover:text-link-hover hover:underline"
                       >
-                        {runner.category}
+                        {runner.course}
                       </Link>
-                    ) : (runner.category || '-')}
-                  </td>
+                    ) : (runner.course || '-')}
+                  </td>}
                   <td className="table-td-muted hidden md:table-cell">
                     {runner.club}
                   </td>

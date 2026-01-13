@@ -179,9 +179,6 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
 
   const timeGridLines = getTimeGridLines();
 
-  console.log('split first positions', runners[0]?.splits?.map(s => s.code));
-  console.log('split last positions', runners[1]?.splits?.map(s => s.code));
-
   return (
     <div ref={setContainerElement}>
       <div className="flex justify-between items-center mb-4">

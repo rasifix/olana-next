@@ -115,6 +115,7 @@ function CourseDetailsPage() {
               )}
               source={source}
               id={id}
+              showCourse={false}
             />
 
             {selectedRunners.size > 0 && (
