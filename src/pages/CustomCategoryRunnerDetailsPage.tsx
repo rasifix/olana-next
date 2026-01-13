@@ -1,13 +1,14 @@
+import { formatTime, parseTime, ranking } from '@rasifix/orienteering-utils';
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Runner } from '../types';
-import { competitionService } from '../services/competitionService';
-import { ranking, parseTime, formatTime } from '@rasifix/orienteering-utils';
-import RunnerSplitsTable from '../components/RunnerSplitsTable';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import RunnerComparisonGraph from '../components/RunnerComparisonGraph';
 import RunnerSelector from '../components/RunnerSelector';
+import RunnerSplitsTable from '../components/RunnerSplitsTable';
+import { useCompetition } from '../contexts/CompetitionContext';
 import { useCustomCategory } from '../contexts/CustomCategoryContext';
+import { Runner } from '../types';
+
 import Breadcrumbs from '../components/Breadcrumbs';
 
 function CustomCategoryRunnerDetailsPage() {
@@ -20,10 +21,10 @@ function CustomCategoryRunnerDetailsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const customCategoryContext = useCustomCategory();
-  
+  const { competition: contextCompetition } = useCompetition();
+
   const [runner, setRunner] = useState<ranking.RankingRunner | null>(null);
   const [rankedRunners, setRankedRunners] = useState<ranking.RankingRunner[]>([]);
-  const [competition, setCompetition] = useState<{ name: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [comparisonRunnerId, setComparisonRunnerId] = useState<string | null>(null);
@@ -50,7 +51,7 @@ function CustomCategoryRunnerDetailsPage() {
           // Parse from URL params
           const categoriesParam = searchParams.get('categories');
           const legsParam = searchParams.get('legs');
-          
+
           if (!categoriesParam || !legsParam) {
             setError('Missing custom category configuration. Please navigate from the custom category page.');
             setLoading(false);
@@ -68,17 +69,21 @@ function CustomCategoryRunnerDetailsPage() {
         }
 
         // Fetch competition data
-        const competition = await competitionService.getCompetitionById(source, id);
-        setCompetition({ name: competition.name });
+        const competition = contextCompetition;
+        if (!competition) {
+          setError('Competition not found');
+          setLoading(false);
+          return;
+        }
 
         // Get selected category runners
-        const selectedCats = competition.categories?.filter(cat => 
+        const selectedCats = competition.categories?.filter(cat =>
           selectedCategories.includes(cat.name)
         ) || [];
 
         // Combine all runners from selected categories
-        const allRunners: Runner[] = selectedCats.flatMap(cat => 
-          cat.runners.map(runner => ({...runner, category: cat.name})) || []
+        const allRunners: Runner[] = selectedCats.flatMap(cat =>
+          cat.runners.map(runner => ({ ...runner, category: cat.name })) || []
         );
 
         // Find the specific runner
@@ -101,13 +106,13 @@ function CustomCategoryRunnerDetailsPage() {
         const runnerLegs: string[] = [];
         runnerLegs.push(`St-${originalSplits[0].code}`);
         for (let i = 1; i < originalSplits.length; i++) {
-          runnerLegs.push(`${originalSplits[i-1].code}-${originalSplits[i].code}`);
+          runnerLegs.push(`${originalSplits[i - 1].code}-${originalSplits[i].code}`);
         }
 
         // Check if runner has all selected legs
         const runnerLegSet = new Set(runnerLegs);
         const hasAllLegs = selectedLegs.every(leg => runnerLegSet.has(leg));
-        
+
         if (!hasAllLegs) {
           setError('Runner does not have all selected legs');
           setLoading(false);
@@ -117,13 +122,13 @@ function CustomCategoryRunnerDetailsPage() {
         // Build new splits keeping only the "to" controls of selected legs
         const adjustedSplits: { code: string; time: string }[] = [];
         let cumulativeTime = 0;
-        
+
         for (let i = 0; i < runnerLegs.length; i++) {
           const leg = runnerLegs[i];
           const split = originalSplits[i];
           const splitTime = parseTime(split.time)!;
-          const legTime = i === 0 ? splitTime : (splitTime - parseTime(originalSplits[i-1].time)!);
-          
+          const legTime = i === 0 ? splitTime : (splitTime - parseTime(originalSplits[i - 1].time)!);
+
           if (selectedLegs.includes(leg)) {
             cumulativeTime += legTime;
             adjustedSplits.push({
@@ -141,23 +146,23 @@ function CustomCategoryRunnerDetailsPage() {
           const runnerLegs: string[] = [];
           runnerLegs.push(`St-${originalSplits[0].code}`);
           for (let i = 1; i < originalSplits.length; i++) {
-            runnerLegs.push(`${originalSplits[i-1].code}-${originalSplits[i].code}`);
+            runnerLegs.push(`${originalSplits[i - 1].code}-${originalSplits[i].code}`);
           }
 
           const runnerLegSet = new Set(runnerLegs);
           const hasAllLegs = selectedLegs.every(leg => runnerLegSet.has(leg));
-          
+
           if (!hasAllLegs) return null;
 
           const adjustedSplits: { code: string; time: string }[] = [];
           let cumulativeTime = 0;
-          
+
           for (let i = 0; i < runnerLegs.length; i++) {
             const leg = runnerLegs[i];
             const split = originalSplits[i];
             const splitTime = parseTime(split.time)!;
-            const legTime = i === 0 ? splitTime : (splitTime - parseTime(originalSplits[i-1].time)!);
-            
+            const legTime = i === 0 ? splitTime : (splitTime - parseTime(originalSplits[i - 1].time)!);
+
             if (selectedLegs.includes(leg)) {
               cumulativeTime += legTime;
               adjustedSplits.push({
@@ -179,7 +184,7 @@ function CustomCategoryRunnerDetailsPage() {
         // Calculate ranking
         const ranked = ranking.parseRanking(adjustedRunners);
         const rankedRunner = ranked.runners.find((r) => r.id === runnerId);
-        
+
         if (rankedRunner) {
           setRunner(rankedRunner);
           setRankedRunners(ranked.runners);
@@ -195,7 +200,7 @@ function CustomCategoryRunnerDetailsPage() {
     };
 
     loadRunnerDetails();
-  }, [source, id, runnerId, customCategoryContext, searchParams]);
+  }, [source, id, runnerId, customCategoryContext, searchParams, contextCompetition]);
 
   if (loading) {
     return (
@@ -240,12 +245,12 @@ function CustomCategoryRunnerDetailsPage() {
   return (
     <div className="page-layout">
       <div className="px-4">
-      <Breadcrumbs items={[
-        { label: t('navigation.home'), path: '/competitions', isHome: true },
-        { label: competition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
-        { label: t('navigation.customCategory'), path: `/competitions/${source}/${id}/custom` },
-        { label: runner.fullName, path: `/competitions/${source}/${id}/custom/runners/${runnerId}` }
-      ]} />
+        <Breadcrumbs items={[
+          { label: t('navigation.home'), path: '/competitions', isHome: true },
+          { label: contextCompetition?.name || t('navigation.competitions'), path: `/competitions/${source}/${id}` },
+          { label: t('navigation.customCategory'), path: `/competitions/${source}/${id}/custom` },
+          { label: runner.fullName, path: `/competitions/${source}/${id}/custom/runners/${runnerId}` }
+        ]} />
       </div>
 
       <div className="page-container-card">
