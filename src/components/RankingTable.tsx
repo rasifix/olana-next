@@ -49,8 +49,6 @@ function RankingTable({
     }
   }
 
-  console.log('Rendering RankingTable with runners:', runners[0]);
-
   return (
     <div>
       <div className="mb-4">
