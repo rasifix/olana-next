@@ -4,6 +4,7 @@ export interface Competition {
   name: string;
   date: Date;
   map: string;
+  relay: boolean;
   categories: Category[];
 }
 
@@ -98,8 +99,8 @@ export interface Runner {
 }
 
 export enum Sex {
-    male = 'm',
-    female = 'f'
+  male = "m",
+  female = "f",
 }
 
 export interface Split {

@@ -420,7 +420,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                                 x: x2,
                                 y: y2,
                                 split,
-                                runnerName: runner.fullName || '',
+                                runnerName: runner.team || runner.fullName || '',
                               });
                             }}
                             onMouseLeave={() => setHoverInfo(null)}
@@ -430,7 +430,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     })}
 
                     {/* Start point */}
-                    <rect
+                    { /*<rect
                       x={padding.left - 3}
                       y={zeroLineY - 3}
                       width="6"
@@ -438,10 +438,11 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                       fill={color}
                       opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
                     />
+                    */ }
                     if (x === null || y === null) return null; // Skip if position is invalid
 
                     {/* Split points */}
-                    {runner.splits.map((split, i) => {
+                    { /* runner.splits.map((split, i) => {
                       const x = getX(split.position);
                       const y = getY(split.overall?.idealBehind);
                       if (x === null || y === null) return null;
@@ -456,7 +457,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                           opacity={isSelected ? 1 : selectedRunner !== null ? 0.4 : 1}
                         />
                       );
-                    })}
+                    }) */}
                   </g>
                 );
               })}
@@ -497,7 +498,7 @@ function SplitGraph({ runners, onClose }: SplitGraphProps) {
                     fontWeight={isSelected ? "600" : "400"}
                     opacity={isSelected ? 1 : selectedRunner !== null ? 0.5 : 1}
                   >
-                    {runner.fullName}
+                    {runner.team || runner.fullName}
                   </text>
                 </g>
               );

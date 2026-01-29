@@ -10,8 +10,7 @@ function CompetitionsPage() {
   const getDefaultYear = () => {
     const now = new Date();
     const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth(); // 0 = January
-    return currentMonth === 0 ? currentYear - 1 : currentYear;
+    return currentYear;
   };
 
   const [competitions, setCompetitions] = useState<Competition[]>([]);

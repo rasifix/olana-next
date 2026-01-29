@@ -23,12 +23,7 @@ export const competitionService = {
     const response = await api.get<ResponseWrapper>(`/events?year=${year}`);
     const competitions = response.data.events.filter(
       (competition) =>
-        competition !== null &&
-        competition.date &&
-        competition.name &&
-        competition.name !== "TEST OL" &&
-        competition.name !== "tom test" &&
-        competition.name !== "test OL"
+        competition !== null && competition.date && competition.name
     );
 
     // Deduplicate by name and date, preferring picoevents source

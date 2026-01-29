@@ -1,4 +1,3 @@
-import { ranking } from '@rasifix/orienteering-utils';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -109,7 +108,7 @@ function CategoryDetailsPage() {
                   to={`/competitions/${source}/${id}/categories/${encodeURIComponent(categoryName!)}/runners/${runner.id}`}
                   className="text-link hover:text-link-hover hover:underline"
                 >
-                  {runner.fullName}
+                  {runner.team ? runner.team : runner.fullName}
                 </Link>
               )}
               source={source}
