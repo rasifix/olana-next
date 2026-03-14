@@ -34,42 +34,39 @@ export interface CourseDetail extends CourseBase {
 }
 
 export function buildCourseSummaries(categories: Category[]): CourseSummary[] {
-  const courses: CourseSummary[] = [];
+  const sequences: { [key: string]: { category: Category; runners: Runner[] } } = {};
 
   categories.forEach((category) => {
-    if (category.runners.length === 0) {
-      return;
-    }
-
-    const sequences: { [key: string]: Runner[] } = {};
     category.runners.forEach((runner) => {
       if (!runner.splits || runner.splits.length === 0) {
         return;
       }
       const controls = runner.splits.map((split) => split.code).join("-");
       if (!sequences[controls]) {
-        sequences[controls] = [];
+        sequences[controls] = { category, runners: [] };
       }
-      sequences[controls].push(runner);
-    });
-
-    const seqKeys = Object.keys(sequences).sort();
-    const hasMultiple = seqKeys.length > 1;
-
-    seqKeys.forEach((seq, index) => {
-      const runners = sequences[seq];
-      const suffix = hasMultiple ? String.fromCharCode(65 + index) : "";
-      const id = category.name + suffix;
-      courses.push({
-        id: id,
-        name: id,
-        distance: category.distance ?? 0,
-        ascent: category.ascent ?? 0,
-        controls: runners[0].splits.length,
-        runners: runners.length,
-      });
+      sequences[controls].runners.push(runner);
     });
   });
+
+  const seqKeys = Object.keys(sequences).sort();
+  const courses: CourseSummary[] = [];
+
+  seqKeys.forEach((seq) => {
+    const { category, runners } = sequences[seq];
+    const uniqueCategories = [...new Set(runners.map(r => r.category))].sort();
+    const courseName = uniqueCategories.join('-');
+    courses.push({
+      id: seq,
+      name: courseName,
+      distance: category.distance ?? 0,
+      ascent: category.ascent ?? 0,
+      controls: runners[0].splits.length,
+      runners: runners.length,
+    });
+  });
+
+  console.log(categories.length, courses.length);
 
   courses.sort((c1, c2) => {
     if (c1.id < c2.id) {
@@ -88,51 +85,42 @@ export function buildCourseSummaries(categories: Category[]): CourseSummary[] {
  * Builds detailed course list (with full runner objects)
  */
 export function buildCourseDetails(categories: Category[]): CourseDetail[] {
-  const courses: CourseDetail[] = [];
+  const sequences: { [key: string]: { category: Category; runners: Runner[] } } = {};
 
   categories.forEach((category) => {
-    if (category.runners.length === 0) {
-      return;
-    }
-
-    const sequences: { [key: string]: Runner[] } = {};
     category.runners.forEach((runner) => {
       if (!runner.splits || runner.splits.length === 0) {
         return;
       }
       const controls = runner.splits.map((split) => split.code).join("-");
       if (!sequences[controls]) {
-        sequences[controls] = [];
+        sequences[controls] = { category, runners: [] };
       }
-      sequences[controls].push(runner);
-    });
-
-    const seqKeys = Object.keys(sequences).sort();
-    const hasMultiple = seqKeys.length > 1;
-
-    seqKeys.forEach((seq, index) => {
-      const runners = sequences[seq];
-      const suffix = hasMultiple ? String.fromCharCode(65 + index) : "";
-      const id = category.name + suffix;
-      let idx = 0;
-      courses.push({
-        id: id,
-        name: id,
-        distance: category.distance ?? 0,
-        ascent: category.ascent ?? 0,
-        controls: runners[0].splits.length,
-        runners: runners.map((runner) => ({
-          id: "" + ++idx,
-          startTime: runner.startTime,
-          yearOfBirth: runner.yearOfBirth,
-          time: runner.time,
-          splits: runner.splits,
-          club: runner.club,
-          fullName: runner.fullName,
-          city: runner.city,
-          category: category.name,
-        })),
+      sequences[controls].runners.push({
+        ...runner,
+        category: category.name,
       });
+    });
+  });
+
+  const seqKeys = Object.keys(sequences).sort();
+  const courses: CourseDetail[] = [];
+
+  seqKeys.forEach((seq) => {
+    const { category, runners } = sequences[seq];
+    const uniqueCategories = [...new Set(runners.map(r => r.category))].sort();
+    const courseName = uniqueCategories.join('-');
+    let idx = 0;
+    courses.push({
+      id: seq,
+      name: courseName,
+      distance: category.distance ?? 0,
+      ascent: category.ascent ?? 0,
+      controls: runners[0].splits.length,
+      runners: runners.map((runner) => ({
+        ...runner,
+        id: "" + ++idx,
+      })),
     });
   });
 
