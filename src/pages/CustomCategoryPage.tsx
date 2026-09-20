@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import CustomCategoryBuilder from '../components/CustomCategoryBuilder';
 import RankingTable from '../components/RankingTable';
+import { parseRanking } from '../utils/ranking';
 import RunnerSelectorSheet from '../components/RunnerSelectorSheet';
 import SplitGraph from '../components/SplitGraph';
 import { useCompetition } from '../contexts/CompetitionContext';
@@ -185,7 +186,7 @@ function CustomCategoryPage() {
     });
 
     // Use parseRanking to calculate the ranking
-    const ranked = ranking.parseRanking(sortedRunners);
+    const ranked = parseRanking(sortedRunners);
     setRankedRunners(ranked.runners);
   };
 

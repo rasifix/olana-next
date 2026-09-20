@@ -1,4 +1,3 @@
-import { ranking } from '@rasifix/orienteering-utils';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -8,6 +7,7 @@ import RankingTable from '../components/RankingTable';
 import RunnerSelectorSheet from '../components/RunnerSelectorSheet';
 import SplitGraph from '../components/SplitGraph';
 import { useCompetition } from '../contexts/CompetitionContext';
+import { parseRanking } from '../utils/ranking';
 
 
 function CategoryDetailsPage() {
@@ -35,7 +35,7 @@ function CategoryDetailsPage() {
 
   const rankedRunners = useMemo(() => {
     if (!category) return [];
-    const ranked = ranking.parseRanking(category.runners || []);
+    const ranked = parseRanking(category.runners || []);
     return ranked.runners;
   }, [category]);
 

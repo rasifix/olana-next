@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ranking } from '@rasifix/orienteering-utils';
 import { useTranslation } from 'react-i18next';
 import RunnerSplitsTable from '../components/RunnerSplitsTable';
 import RunnerComparisonGraph from '../components/RunnerComparisonGraph';
 import RunnerSelector from '../components/RunnerSelector';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
+import { parseRanking } from '../utils/ranking';
 
 function RunnerDetailsPage() {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ function RunnerDetailsPage() {
     
     if (!foundCategory) return { category: null, runner: null, rankedRunners: [] };
     
-    const ranked = ranking.parseRanking(foundCategory.runners || []);
+    const ranked = parseRanking(foundCategory.runners || []);
     const selectedRunner = ranked.runners.find((r) => r.id === runnerId) || null;
     
     return { category: foundCategory, runner: selectedRunner, rankedRunners: ranked.runners };

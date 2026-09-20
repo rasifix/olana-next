@@ -2,12 +2,12 @@ import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { competitionService } from '../services/competitionService';
-import { ranking } from '@rasifix/orienteering-utils';
 import RunnerSplitsTable from '../components/RunnerSplitsTable';
 import RunnerComparisonGraph from '../components/RunnerComparisonGraph';
 import RunnerSelector from '../components/RunnerSelector';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { useCompetition } from '../contexts/CompetitionContext';
+import { parseRanking } from '../utils/ranking';
 
 function CourseRunnerDetailsPage() {
     const { t } = useTranslation();
@@ -26,7 +26,7 @@ function CourseRunnerDetailsPage() {
 
         try {
             const courseData = competitionService.getCourseRankings(competition, courseCode);
-            const ranked = ranking.parseRanking(courseData.runners || []);
+            const ranked = parseRanking(courseData.runners || []);
             const selectedRunner = ranked.runners.find((r) => r.id == runnerId) || null;
 
             return { runner: selectedRunner, courseName: courseCode, rankedRunners: ranked.runners };

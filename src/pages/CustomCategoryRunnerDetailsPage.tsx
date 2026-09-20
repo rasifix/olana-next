@@ -6,6 +6,7 @@ import RunnerComparisonGraph from '../components/RunnerComparisonGraph';
 import RunnerSelector from '../components/RunnerSelector';
 import RunnerSplitsTable from '../components/RunnerSplitsTable';
 import { useCompetition } from '../contexts/CompetitionContext';
+import { parseRanking } from '../utils/ranking';
 import { useCustomCategory } from '../contexts/CustomCategoryContext';
 import { Runner } from '../types';
 
@@ -182,7 +183,7 @@ function CustomCategoryRunnerDetailsPage() {
         }).filter((r) => r !== null);
 
         // Calculate ranking
-        const ranked = ranking.parseRanking(adjustedRunners);
+        const ranked = parseRanking(adjustedRunners);
         const rankedRunner = ranked.runners.find((r) => r.id === runnerId);
 
         if (rankedRunner) {
