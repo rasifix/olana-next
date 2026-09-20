@@ -1,5 +1,5 @@
 import { formatTime, ranking } from '@rasifix/orienteering-utils';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { getChartColors } from '../utils/chartColors';
@@ -21,6 +21,19 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
   const { t } = useTranslation();
   const { isDarkMode } = useTheme();
   const chartColors = getChartColors(isDarkMode);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isPortrait, setIsPortrait] = useState(false);
+
+  useEffect(() => {
+    const updateOrientation = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsPortrait(window.innerHeight > window.innerWidth);
+    };
+
+    updateOrientation();
+    window.addEventListener('resize', updateOrientation);
+    return () => window.removeEventListener('resize', updateOrientation);
+  }, []);
 
   const comparisonData = useMemo(() => {
     const currentSplits = currentRunner.splits || [];
@@ -107,7 +120,7 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
   if (comparisonData.length === 0) {
     return (
       <div className="modal-overlay">
-        <div className="modal-content p-6 max-w-6xl w-full">
+        <div className="modal-content max-h-[90vh] w-full max-w-6xl overflow-y-auto overflow-x-hidden p-4 sm:p-6">
           <p className="text-text-muted">{t('error.noComparisonData')}</p>
           <button
             onClick={onClose}
@@ -147,26 +160,27 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content p-6 max-w-6xl w-full max-h-[90vh] overflow-auto">
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h3 className="text-xl font-bold text-text-primary">{t('chart.runnerComparison')}</h3>
-            <p className="text-sm text-text-tertiary mt-1">
+    <div className="modal-overlay p-2 sm:p-4">
+      <div className="modal-content max-h-[95vh] min-w-0 w-full max-w-6xl overflow-y-auto overflow-x-hidden p-3 sm:max-h-[90vh] sm:p-6">
+        <div className="mb-4 flex min-w-0 items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-lg font-bold text-text-primary sm:text-xl">{t('chart.runnerComparison')}</h3>
+            <p className="mt-1 break-words text-sm text-text-tertiary">
               <span className="font-semibold text-success">{currentRunner.fullName}</span> {t('chart.vs')}{' '}
               <span className="font-semibold text-info">{comparisonRunner.fullName}</span>
             </p>
           </div>
           <button
             onClick={onClose}
-            className="btn-icon-close"
+            className="btn-icon-close shrink-0"
+            aria-label={t('button.close')}
           >
             ×
           </button>
         </div>
 
-        <div className="mb-4 flex gap-6 text-secondary">
-          <div>
+        <div className="mb-4 flex min-w-0 gap-6 text-secondary">
+          <div className="min-w-0 break-words">
             <span className="font-semibold">{t('chart.totalTimeDifference')} </span>
             <span className={comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0 ? 'text-green-600' : 'text-red-600'}>
               {comparisonData[comparisonData.length - 1].cumulativeTimeDifference > 0 ? '+' : ''}
@@ -179,8 +193,19 @@ function RunnerComparisonGraph({ currentRunner, comparisonRunner, onClose }: Run
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <svg width={graphWidth} height={graphHeight} className="mx-auto">
+        {isMobile && isPortrait && (
+          <div className="mb-3 flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3 text-sm">
+            <svg className="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span className="text-yellow-600 dark:text-yellow-400">
+              {t('chart.rotateDeviceHint')}
+            </span>
+          </div>
+        )}
+
+        <div className="max-w-full overflow-x-auto overscroll-x-contain" tabIndex={0}>
+          <svg width={graphWidth} height={graphHeight} className="block max-w-none">
             {/* Grid lines */}
             {yAxisTicks.map((value, i) => (
               <g key={i}>

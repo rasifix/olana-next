@@ -19,15 +19,15 @@ function RunnerSelector({
   const { t } = useTranslation();
   
   return (
-    <div className="hidden md:block mb-6 p-4 bg-surface-secondary rounded-lg">
+    <div className="mb-6 max-w-full rounded-lg bg-surface-secondary p-4">
       <label className="block text-sm font-medium text-text-secondary mb-2">
         {t('runner.compareWith')}
       </label>
-      <div className="flex gap-2">
+      <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
         <select
           value={comparisonRunnerId || ''}
           onChange={(e) => onSelectionChange(e.target.value || null)}
-          className="select-input flex-1 focus"
+          className="select-input min-w-0 w-full flex-1 focus"
         >
           <option value="">{t('runner.selectRunner')}</option>
           {rankedRunners
@@ -41,7 +41,7 @@ function RunnerSelector({
         <button
           onClick={onCompare}
           disabled={!comparisonRunnerId}
-          className="btn-primary hover:bg-primary-hover disabled transition-colors"
+          className="btn-primary w-full hover:bg-primary-hover disabled transition-colors sm:w-auto"
         >
           {t('button.compare')}
         </button>
