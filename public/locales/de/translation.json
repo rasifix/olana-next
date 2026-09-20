@@ -7,7 +7,10 @@
     "legs": "Strecken",
     "controls": "Posten",
     "customCategory": "Eigene Kategorie",
-    "startTimes": "Startzeiten"
+    "startTimes": "Startzeiten",
+    "eventNavigation": "Wettkampfnavigation",
+    "openMenu": "Navigationsmenü öffnen",
+    "closeMenu": "Navigationsmenü schließen"
   },
   "table": {
     "rank": "Rang",

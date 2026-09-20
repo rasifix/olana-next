@@ -7,7 +7,10 @@
     "legs": "Legs",
     "controls": "Controls",
     "customCategory": "Custom Category",
-    "startTimes": "Start Times"
+    "startTimes": "Start Times",
+    "eventNavigation": "Event navigation",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
   },
   "table": {
     "rank": "Rank",

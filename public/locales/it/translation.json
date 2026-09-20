@@ -7,7 +7,10 @@
     "legs": "Tratte",
     "controls": "Punti",
     "customCategory": "Categoria personalizzata",
-    "startTimes": "Orari di partenza"
+    "startTimes": "Orari di partenza",
+    "eventNavigation": "Navigazione della competizione",
+    "openMenu": "Apri il menu di navigazione",
+    "closeMenu": "Chiudi il menu di navigazione"
   },
   "table": {
     "rank": "Posizione",
