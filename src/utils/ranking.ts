@@ -10,6 +10,29 @@ import { Runner } from '../types';
 export function parseRanking(runners: Runner[]): ranking.Ranking {
   const parsed = ranking.parseRanking(runners);
   const positionTolerance = 1e-10;
+  const idealTimeByLeg = new Map(
+    parsed.legs.map((leg) => [leg.code, leg.idealSplit || 0])
+  );
+
+  // The upstream utility omits the ideal time of an invalid split from that
+  // runner's course length. This stretches the remaining positions and can
+  // make a runner with missing splits appear far ahead. Normalize every course
+  // with all of its legs, whether or not that runner has a time for each leg.
+  parsed.runners.forEach((runner) => {
+    const idealCourseTime = runner.splits.reduce(
+      (total, split) => total + (idealTimeByLeg.get(split.legCode) || 0),
+      0
+    );
+    let position = 0;
+
+    runner.splits.forEach((split) => {
+      const idealSplit = idealTimeByLeg.get(split.legCode) || 0;
+      split.leg.idealSplit = idealSplit;
+      split.weight = idealCourseTime > 0 ? idealSplit / idealCourseTime : undefined;
+      position += split.weight || 0;
+      split.position = Math.min(1, position);
+    });
+  });
 
   const timeAtPosition = (runner: ranking.RankingRunner, position: number) => {
     if (position >= 1 - positionTolerance) {
